@@ -307,8 +307,11 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
 .setfeedback{font-size:13px;font-weight:700;color:var(--good)}
 #timer .in{padding:12px 10px 12px 16px;gap:12px}
 #timer b{font-size:36px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-#timer button{min-height:44px;white-space:nowrap;padding-inline:12px}
+#timer button{min-height:44px;white-space:nowrap;padding-inline:12px;pointer-events:auto;touch-action:manipulation;position:relative;z-index:1}
+#timer #tpause{background:transparent;border:0;border-radius:8px;padding:0;text-align:left;min-width:0}
+#timer button:disabled{opacity:.6;cursor:default}
 #timer.end small{color:var(--good)}
+.panelx{position:sticky;top:12px;z-index:2;display:grid;place-items:center;width:44px;height:44px;margin:12px 16px -48px auto;border:0;border-radius:50%;background:var(--raised);color:var(--fg);font-size:26px;line-height:1}
 </style>
 
 </head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -330,7 +333,7 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
 </div></header>
 <main><div class="wrap" id="view"></div></main>
 <div id="timer" hidden><div class="wrap"><div class="in" id="timerin">
-  <div><small id="tlbl" role="status">Отдых</small><b id="tclock" role="timer" aria-live="off">0:00</b></div><span class="sp"></span>
+  <button type="button" id="tpause" aria-label="Поставить отдых на паузу" aria-pressed="false"><small id="tlbl" role="status">Отдых</small><b id="tclock" role="timer" aria-live="off">0:00</b></button><span class="sp"></span>
   <button type="button" id="tplus">+30 с</button><button type="button" id="tstop" aria-label="Пропустить отдых">Пропустить</button>
 </div></div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><mask id="pm1" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><circle cx="606" cy="603" r="277" fill="#000"/><path d="M468 396C500 300 590 232 700 222C752 217 800 226 832 246C792 318 716 378 622 400C566 413 512 411 468 396Z" fill="#000" stroke="#000" stroke-width="60" stroke-linejoin="round"/></mask><mask id="pm2" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><path d="M468 396C500 300 590 232 700 222C752 217 800 226 832 246C792 318 716 378 622 400C566 413 512 411 468 396Z" fill="#000" stroke="#000" stroke-width="60" stroke-linejoin="round"/></mask></defs><symbol id="peach" viewBox="150 195 740 680"><circle cx="400" cy="610" r="214" mask="url(#pm1)"/><circle cx="606" cy="603" r="219" mask="url(#pm2)"/><path d="M468 396C500 300 590 232 700 222C752 217 800 226 832 246C792 318 716 378 622 400C566 413 512 411 468 396Z"/></symbol></svg>
@@ -340,7 +343,7 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
   <button type="button" data-tab="setup"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2.8" y="7.6" width="8.3" height="2.8" rx="1.4"/><circle cx="16" cy="9" r="3.6"/><rect x="20.9" y="7.6" width="4.3" height="2.8" rx="1.4"/><rect x="2.8" y="17.6" width="4.3" height="2.8" rx="1.4"/><circle cx="12" cy="19" r="3.6"/><rect x="16.9" y="17.6" width="8.3" height="2.8" rx="1.4"/></svg>Настройки</button>
 </div></div></nav>
 <div id="sheet" hidden><button type="button" id="sheetx" aria-label="Закрыть"></button>
-<div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-h" tabindex="-1"><div class="wrap"><span class="grab"></span>
+<div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-h" tabindex="-1"><button type="button" class="panelx" id="sheetclose" aria-label="Закрыть">×</button><div class="wrap"><span class="grab"></span>
   <svg class="okmark" id="sh-ok" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="42"/><path d="M25 43.5l11.5 11.5L60 31"/></svg><span class="peachmark" id="sh-peach" hidden aria-hidden="true"><svg><use href="#peach"/></svg></span>
   <h3 id="sh-h">Тренировка закрыта</h3><p id="sh-sub"></p>
   <div class="stats"><div class="stat"><b id="sh-ton"></b><span>тоннаж</span></div><div class="stat"><b id="sh-diff"></b><span>к прошлой неделе</span></div><div class="stat"><b id="sh-n"></b><span>тренировок</span></div></div>
@@ -348,7 +351,7 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
 </div></div></div>
 
 <div id="info" hidden><button type="button" id="infox" aria-label="Закрыть"></button>
-<div class="panel" role="dialog" aria-modal="true" aria-label="Информация" tabindex="-1"><div class="wrap"><span class="grab"></span><div id="infobody" style="display:flex;flex-direction:column;gap:16px"></div>
+<div class="panel" role="dialog" aria-modal="true" aria-label="Информация" tabindex="-1"><button type="button" class="panelx" id="infoclose" aria-label="Закрыть">×</button><div class="wrap"><span class="grab"></span><div id="infobody" style="display:flex;flex-direction:column;gap:16px"></div>
   <button type="button" class="cta" id="infook">Понятно</button>
 </div></div></div>
 
@@ -845,22 +848,30 @@ function renderSetup(){
 function render(fresh){applyTheme();awake();renderChrome(true);({train:isFirst()?renderWelcome:renderTrain,progress:renderProgress,setup:renderSetup})[tab]();const v=$("view");if(fresh){v.classList.remove("in");void v.offsetWidth;v.classList.add("in");clearTimeout(render.t);render.t=setTimeout(()=>v.classList.remove("in"),900)}}
 
 /* ---------- rest timer ---------- */
-let tEnd=0,tLen=0,tInt=null,audio=null;
+let tEnd=0,tLen=0,tInt=null,audio=null,tPaused=0,tLabel="";
+function clockText(left){const s=Math.max(0,Math.ceil(left/1000));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function pauseUI(){$("tpause").setAttribute("aria-pressed",String(!!tPaused));$("tpause").setAttribute("aria-label",tPaused?"Продолжить отдых":"Поставить отдых на паузу")}
 function beep(){try{if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=880;g.gain.value=.15;o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.35)}catch(e){}}
 function startTimer(sec,label){
   try{if(!audio){const A=window.AudioContext||window.webkitAudioContext;if(A)audio=new A()}if(audio&&audio.state==="suspended")audio.resume()}catch(e){}
-  tLen=sec*1000;tEnd=Date.now()+tLen;$("tlbl").textContent="Отдых · "+label;$("timer").hidden=false;$("timer").classList.remove("end");
+  tLabel=label;tPaused=0;tLen=sec*1000;tEnd=Date.now()+tLen;$("tlbl").textContent="Отдых · "+label;$("timer").hidden=false;$("timer").classList.remove("end");$("tpause").disabled=false;pauseUI();
   clearInterval(tInt);tInt=setInterval(tick,250);tick();
 }
 function tick(){
+  if(tPaused)return;
   const left=tEnd-Date.now();
-  if(left<=0){clearInterval(tInt);$("tlbl").textContent="Отдых закончен";$("tclock").textContent="Погнали";$("timerin").style.setProperty("--p","100%");$("timer").classList.add("end");
+  if(left<=0){clearInterval(tInt);tPaused=0;$("tlbl").textContent="Отдых закончен";$("tclock").textContent="Погнали";$("timerin").style.setProperty("--p","100%");$("timer").classList.add("end");$("tpause").disabled=true;pauseUI();
     beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
     setTimeout(()=>{if(Date.now()>=tEnd)$("timer").hidden=true},6000);return}
-  const s=Math.ceil(left/1000);$("tclock").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+  $("tclock").textContent=clockText(left);
   $("timerin").style.setProperty("--p",Math.max(0,100-left/tLen*100)+"%");
 }
-function stopTimer(){clearInterval(tInt);$("timer").hidden=true}
+function toggleTimer(){
+  if($("timer").hidden||$("tpause").disabled)return;
+  if(tPaused){tEnd=Date.now()+tPaused;tPaused=0;$("tlbl").textContent="Отдых · "+tLabel;clearInterval(tInt);tInt=setInterval(tick,250);pauseUI();tick()}
+  else{tPaused=Math.max(0,tEnd-Date.now());clearInterval(tInt);tInt=null;$("tlbl").textContent="Пауза · "+tLabel;pauseUI()}
+}
+function stopTimer(){clearInterval(tInt);tInt=null;tPaused=0;$("timer").hidden=true}
 
 /* ---------- bottom sheet for a closed workout ---------- */
 function party(){
@@ -1070,7 +1081,7 @@ document.addEventListener("click",e=>{
     if(b.dataset.armed){newBlock();edit=null;save();tab="train";render(true);window.scrollTo(0,0)}
     else{b.dataset.armed="1";b.textContent="Точно начать";$("nbmsg").textContent="Записи этого блока сотрутся. Нажми ещё раз"}
   }
-  else if(b.id==="infook"||b.id==="infox"){closeDialog("info")}
+  else if(b.id==="infook"||b.id==="infox"||b.id==="infoclose"){closeDialog("info")}
   else if(b.dataset.awake!==undefined){S.awake=!S.awake;b.setAttribute("aria-checked",String(S.awake));save()}
   else if(b.dataset.copy){copyText(b.dataset.copy==="report"?report():backupCode())}
   else if(b.id==="restore"){
@@ -1093,8 +1104,9 @@ document.addEventListener("click",e=>{
       .catch(()=>{closeDialog("sheet");tab="setup";render(true);const el=$("restore");if(el)el.scrollIntoView({block:"center"})});
   }
   else if(b.id==="sheetnext"){const n=nextPos();closeDialog("sheet");if(n){S.cur=n;edit=null;save(true);tab="train";render(true);window.scrollTo(0,0)}}
-  else if(b.id==="sheetok"||b.id==="sheetx"){closeDialog("sheet")}
-  else if(b.id==="tplus"){if(Date.now()<tEnd){tEnd+=30000;tLen+=30000;tick()}}
+  else if(b.id==="sheetok"||b.id==="sheetx"||b.id==="sheetclose"){closeDialog("sheet")}
+  else if(b.id==="tplus"){if(tPaused){tPaused+=30000;tLen+=30000;$("tclock").textContent=clockText(tPaused)}else if(Date.now()<tEnd){tEnd+=30000;tLen+=30000;tick()}}
+  else if(b.id==="tpause"){toggleTimer()}
   else if(b.id==="tstop"){stopTimer()}
   else if(b.id==="reset"){
     if(b.dataset.armed){const c=S.cur,th=S.theme;S=def();S.cur=c;S.theme=th;edit=null;save();render(true)}
