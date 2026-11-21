@@ -300,6 +300,7 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
 #launch.out svg{transform:scale(1.18);opacity:0}
 @media (prefers-reduced-motion:reduce){#launch.out svg{transform:none}}
 /* v13: focused workout flow; existing palette stays unchanged */
+#photoguide{scroll-margin-top:12px}
 .coach summary{min-height:44px}
 .coach-body{display:flex;flex-direction:column;gap:8px;padding:4px 0 6px}
 .coach-body .ghostbtn{align-self:flex-start;padding-inline:0}
@@ -708,7 +709,7 @@ function bodyCard(){
   h+=`<div class="pht">${PHO.map(([k,n])=>`<div class="${p[k]?"on":k===due?"due":""}"><b>${p[k]?"✓ ":""}${n}</b><span>${p[k]?dt(p[k]):k==="a"?"сегодня":k==="m"?"недели 6–8":"после 12-й недели"}</span></div>`).join("")}</div>`;
   if(due)h+=`<button type="button" class="easy" data-photo="${due}">${due==="a"?"Фото «до» сделала":due==="m"?"Фото на середине сделала":"Фото «после» сделала"}</button>`;
   else if(p.z)h+=`<p><b>Открой оба фото рядом.</b> Вот ради этого кадра всё и было.</p>`;
-  h+=`<details class="why"><summary>Как снять, чтобы было честно</summary><ul style="padding-left:18px;margin:6px 0 0">
+  h+=`<details class="why" id="photoguide"><summary>Как снять, чтобы было честно</summary><ul style="padding-left:18px;margin:6px 0 0">
       <li><b>Одно место, один свет, одно время.</b>Утром, у того же окна или под той же лампой. Другой свет меняет картинку сильнее, чем месяц тренировок.</li>
       <li><b>Телефон на полке, не в руке.</b>На высоте таза, по таймеру. Съёмка в зеркало и с руки каждый раз даёт другой угол.</li>
       <li><b>Три кадра.</b>Сзади, сбоку, спереди. Стопы на ширине таза, поза расслабленная: без прогиба и без напряжения ягодиц.</li>
@@ -989,7 +990,12 @@ function visibleDialog(){return ["info","sheet"].map($).find(el=>el&&!el.hidden)
 /* ---------- events ---------- */
 function stamp(){const k=S.cur.w+"-"+S.cur.d;if(!S.dates[k])S.dates[k]=new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit"})}
 function setRow(id,s,val){const key=S.cur.w+"-"+id,arr=(S.log[key]||[]).slice();for(let i=0;i<=s;i++)arr[i]=(arr[i]||["",""]).slice();arr[s]=val;S.log[key]=arr}
-function toEditor(){const el=$("editor");if(el)el.scrollIntoView({block:"center",behavior:"smooth"})}
+function toEditor(){
+  const el=$("editor");if(!el)return;
+  const r=el.getBoundingClientRect(),reserved=$("timer").hidden?96:184,bottom=innerHeight-reserved;
+  if(r.top<12)window.scrollBy({top:r.top-12,behavior:"smooth"});
+  else if(r.bottom>bottom)window.scrollBy({top:r.bottom-bottom,behavior:"smooth"});
+}
 function bad(el){el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake");el.focus()}
 function nextPos(){const {w,d}=S.cur;return d===1?{w,d:2}:w<12?{w:w+1,d:1}:null}
 document.addEventListener("click",e=>{
@@ -1023,7 +1029,7 @@ document.addEventListener("click",e=>{
   else if(b.dataset.photo){S.photo=S.photo||{};S.photo[b.dataset.photo]=Date.now();save();renderProgress();const el=$("bodycard");if(el)el.scrollIntoView({block:"start"})}
   else if(b.dataset.photoundo!==undefined){const p=S.photo||{},k=["z","m","a"].find(x=>p[x]);if(k)delete p[k];save();renderProgress();const el=$("bodycard");if(el)el.scrollIntoView({block:"start"})}
   else if(b.dataset.seen){S.seen=S.seen||{};S.seen[b.dataset.seen]=Date.now();save();renderTrain()}
-  else if(b.dataset.gobody!==undefined){tab="progress";render(true);const el=$("bodycard");if(el)el.scrollIntoView({block:"start"})}
+  else if(b.dataset.gobody!==undefined){tab="progress";render(true);const el=$("photoguide");if(el){el.open=true;el.scrollIntoView({block:"start",behavior:"smooth"});const sum=el.querySelector("summary");if(sum)sum.focus({preventScroll:true})}}
   else if(b.dataset.stall){const l=LIFTS.find(x=>x.id===b.dataset.stall),B=isBeg(w);if(!l)return;
     $("infobody").innerHTML=`<h3>${esc(l.name)}: что проверить</h3><div class="hw"><p>Иди по списку сверху вниз — причины стоят от частых к редким.</p><ol style="padding-left:20px;margin:0;display:flex;flex-direction:column;gap:10px">
       <li><b>Запас повторений.</b> После подхода могла бы сделать ещё 4–5 — вес лёгкий, прибавляй. Не выходит нижняя цифра — тяжёлый, сбрось на один шаг.</li>
