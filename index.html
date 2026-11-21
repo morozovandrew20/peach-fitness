@@ -4,39 +4,39 @@
 /* Layout: iOS-style phone app. Blurred large-title header with a "wave" week strip, inset grouped cards,
    round tap-to-check sets, floating rest capsule, translucent tab bar, bottom sheet when a workout closes. */
 :root{
-  --bg:#FFEFE9; --surface:#ffffff; --raised:#f2e7e3; --line:rgba(26,74,72,.14);
-  --fg:#1A4A48; --muted:#5b6f6d; --a1:#E85A3C; --a2:#E87A3C; --on-accent:#ffffff; --accent-text:#b74330;
+  --bg:#f2f2f7; --surface:#ffffff; --raised:#e9e9ef; --line:rgba(60,60,67,.14);
+  --fg:#0b0b0f; --muted:#6e6e78; --a1:#f04a36; --a2:#ff8a5c; --on-accent:#ffffff;
   --good:#1fa85a; --good-bg:#e3f6ea; --warn:#b26a00; --bad:#d93025;
-  --input:#f8e9e3; --bar:rgba(255,239,233,.92); --scrim:rgba(26,36,35,.38);
+  --input:#eeeef3; --bar:rgba(246,246,250,.92); --scrim:rgba(0,0,0,.32);
   --shadow:0 12px 32px -14px rgba(20,20,40,.28);
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --display:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   --grad:linear-gradient(120deg,var(--a1),var(--a2));
   --spring:cubic-bezier(.2,.9,.25,1.25); --ease:cubic-bezier(.25,.8,.25,1);
-  --r:20px; --tint:0%;
+  --r:22px; --tint:5%;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#000000; --surface:#1c1c1e; --raised:#2c2c2e; --line:rgba(120,120,128,.3);
-  --fg:#ffffff; --muted:#a6a6ad; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff; --accent-text:#ff8a73;
+  --fg:#ffffff; --muted:#98989f; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff;
   --good:#32d074; --good-bg:#12301f; --warn:#ffcc55; --bad:#ff6961;
   --input:#2c2c2e; --bar:rgba(18,18,20,.9); --scrim:rgba(0,0,0,.55);
   --shadow:0 14px 36px -14px rgba(0,0,0,.9); color-scheme:dark } }
 :root[data-theme="dark"],:root[data-look="dark"]{
   --bg:#000000; --surface:#1c1c1e; --raised:#2c2c2e; --line:rgba(120,120,128,.3);
-  --fg:#ffffff; --muted:#a6a6ad; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff; --accent-text:#ff8a73;
+  --fg:#ffffff; --muted:#98989f; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff;
   --good:#32d074; --good-bg:#12301f; --warn:#ffcc55; --bad:#ff6961;
   --input:#2c2c2e; --bar:rgba(18,18,20,.9); --scrim:rgba(0,0,0,.55);
   --shadow:0 14px 36px -14px rgba(0,0,0,.9); color-scheme:dark }
 
-:root[data-look="light"]{  --bg:#FFEFE9; --surface:#ffffff; --raised:#f2e7e3; --line:rgba(26,74,72,.14);
-  --fg:#1A4A48; --muted:#5b6f6d; --a1:#E85A3C; --a2:#E87A3C; --on-accent:#ffffff; --accent-text:#b74330;
+:root[data-look="light"]{  --bg:#f2f2f7; --surface:#ffffff; --raised:#e9e9ef; --line:rgba(60,60,67,.14);
+  --fg:#0b0b0f; --muted:#6e6e78; --a1:#f04a36; --a2:#ff8a5c; --on-accent:#ffffff;
   --good:#1fa85a; --good-bg:#e3f6ea; --warn:#b26a00; --bad:#d93025;
-  --input:#f8e9e3; --bar:rgba(255,239,233,.92); --scrim:rgba(26,36,35,.38);
+  --input:#eeeef3; --bar:rgba(246,246,250,.92); --scrim:rgba(0,0,0,.32);
   --shadow:0 12px 32px -14px rgba(20,20,40,.28); color-scheme:light }
-:root[data-accent="ocean"]{--a1:#0a84ff;--a2:#2ec4d6;--accent-text:var(--a1)}
-:root[data-accent="mint"]{--a1:#10b981;--a2:#8bd43a;--accent-text:var(--a1)}
-:root[data-accent="lavender"]{--a1:#8b5cf6;--a2:#e36bd6;--accent-text:var(--a1)}
-:root[data-accent="sunset"]{--a1:#ff6a00;--a2:#ffb62e;--accent-text:var(--a1)}
+:root[data-accent="ocean"]{--a1:#0a84ff;--a2:#2ec4d6}
+:root[data-accent="mint"]{--a1:#10b981;--a2:#8bd43a}
+:root[data-accent="lavender"]{--a1:#8b5cf6;--a2:#e36bd6}
+:root[data-accent="sunset"]{--a1:#ff6a00;--a2:#ffb62e}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);background:color-mix(in srgb,var(--a1) var(--tint),var(--bg));color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.35;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
@@ -299,22 +299,6 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
 #launch.out{opacity:0;visibility:hidden;pointer-events:none}
 #launch.out svg{transform:scale(1.18);opacity:0}
 @media (prefers-reduced-motion:reduce){#launch.out svg{transform:none}}
-/* PEACH design system: warm brand surfaces, readable accent text, consistent touch targets */
-::selection{background:color-mix(in srgb,var(--a1) 24%,var(--surface));color:var(--fg)}
-.cap,.hint,.ecap,.easy,.pw small,.note .ghostbtn,.meta .ghostbtn,.why summary,nav button[aria-pressed="true"]{color:var(--accent-text)}
-.card,.hero,.summary{box-shadow:0 1px 0 color-mix(in srgb,var(--fg) 4%,transparent)}
-.card{padding:18px;gap:12px}
-.hero{padding:18px}
-.wk{flex-basis:44px;min-width:44px}
-.srow{min-height:56px}
-nav button{min-height:52px}
-.swb,.opt,.tgl{min-height:44px}
-.cta{min-height:54px;letter-spacing:-.01em}
-.step button{min-width:44px}
-.meta .ghostbtn[data-how]{min-height:44px;display:inline-flex;align-items:center;vertical-align:middle;margin:-13px 0;padding:0 6px}
-input:focus-visible,button:focus-visible,textarea:focus-visible,summary:focus-visible{outline-width:3px;outline-offset:3px}
-button:disabled,input:disabled{cursor:not-allowed;opacity:.45}
-@media (max-width:389px){.card,.hero{padding:16px}.steps{grid-template-columns:1fr 1fr}.step{grid-template-columns:36px 1fr 36px}}
 </style>
 
 </head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
