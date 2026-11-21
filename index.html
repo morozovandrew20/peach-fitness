@@ -299,6 +299,15 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
 #launch.out{opacity:0;visibility:hidden;pointer-events:none}
 #launch.out svg{transform:scale(1.18);opacity:0}
 @media (prefers-reduced-motion:reduce){#launch.out svg{transform:none}}
+/* v13: focused workout flow; existing palette stays unchanged */
+.coach summary{min-height:44px}
+.coach-body{display:flex;flex-direction:column;gap:8px;padding:4px 0 6px}
+.coach-body .ghostbtn{align-self:flex-start;padding-inline:0}
+.setfeedback{font-size:13px;font-weight:700;color:var(--good)}
+#timer .in{padding:12px 10px 12px 16px;gap:12px}
+#timer b{font-size:36px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+#timer button{min-height:44px;white-space:nowrap;padding-inline:12px}
+#timer.end small{color:var(--good)}
 </style>
 
 </head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -320,8 +329,8 @@ textarea.code::placeholder{font-family:var(--font);word-break:normal}
 </div></header>
 <main><div class="wrap" id="view"></div></main>
 <div id="timer" hidden><div class="wrap"><div class="in" id="timerin">
-  <div><small id="tlbl">Отдых</small><b id="tclock">0:00</b></div><span class="sp"></span>
-  <button type="button" id="tplus">+30 с</button><button type="button" id="tstop" aria-label="Остановить таймер">✕</button>
+  <div><small id="tlbl" role="status">Отдых</small><b id="tclock" role="timer" aria-live="off">0:00</b></div><span class="sp"></span>
+  <button type="button" id="tplus">+30 с</button><button type="button" id="tstop" aria-label="Пропустить отдых">Пропустить</button>
 </div></div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><mask id="pm1" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><circle cx="606" cy="603" r="277" fill="#000"/><path d="M468 396C500 300 590 232 700 222C752 217 800 226 832 246C792 318 716 378 622 400C566 413 512 411 468 396Z" fill="#000" stroke="#000" stroke-width="60" stroke-linejoin="round"/></mask><mask id="pm2" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><path d="M468 396C500 300 590 232 700 222C752 217 800 226 832 246C792 318 716 378 622 400C566 413 512 411 468 396Z" fill="#000" stroke="#000" stroke-width="60" stroke-linejoin="round"/></mask></defs><symbol id="peach" viewBox="150 195 740 680"><circle cx="400" cy="610" r="214" mask="url(#pm1)"/><circle cx="606" cy="603" r="219" mask="url(#pm2)"/><path d="M468 396C500 300 590 232 700 222C752 217 800 226 832 246C792 318 716 378 622 400C566 413 512 411 468 396Z"/></symbol></svg>
 <nav><div class="wrap"><div class="bar">
@@ -555,7 +564,7 @@ function current(w,d){
 }
 const stepper=(f,v,unit,mode)=>`<div class="step"><button type="button" data-step="-1" data-f="${f}" aria-label="Меньше">−</button><label><input id="ed-${f}" inputmode="${mode}" autocomplete="off" value="${esc(v)}" placeholder="0" aria-label="${unit}"><span>${unit}</span></label><button type="button" data-step="1" data-f="${f}" aria-label="Больше">+</button></div>`;
 function renderTrain(fresh){
-  const {w,d}=S.cur, beg=isBeg(w), p=beg?0:ph(w), date=S.dates[w+"-"+d], c=counts(w,d), cur=current(w,d), t=tonnage(w,d), ez=easy(w,d);
+  const {w,d}=S.cur, beg=isBeg(w), p=beg?0:ph(w), date=S.dates[w+"-"+d], c=counts(w,d), cur=current(w,d), t=tonnage(w,d), ez=easy(w,d), jd=justDone;
   let h=`<section class="hero"><div class="hring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="35"/><circle class="pr" id="hbar" cx="42" cy="42" r="35" stroke-dasharray="219.9" stroke-dashoffset="${lastOff}"/></svg><b>${c.done}/${c.total}</b></div>
     <div class="htxt"><span class="cap">${d===1?"День 1 · сила":"День 2 · объём"}${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка закрыта":(n=>{const a=n%10,b=n%100;return a===1&&b!==11?"Ещё "+n+" подход":a>=2&&a<=4&&(b<12||b>14)?"Ещё "+n+" подхода":"Ещё "+n+" подходов"})(c.total-c.done)}</strong>
     <p>${ez?"Лёгкий день: веса на 10% меньше и на подход меньше. Тренировка засчитывается."+(p===2?" Подход ★ сегодня не считается — веса следующей волны останутся прежними.":""):beg?"Дошла до верхней цифры во всех подходах — в следующий раз вес больше. После подхода нажми «Готово» — пойдёт таймер отдыха.":p===2?"Тяжёлая неделя: в упражнениях со ★ первый подход — на максимум повторений.":p===3?"Неделя отдыха: вдвое меньше подходов, в главных упражнениях вес ниже.":"Проверь вес и повторения, нажми «Готово» — пойдёт таймер отдыха."}</p>${p===3?"":`<button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть неделю отдыха</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Сил хватает — без отдыха</button>`):""}</div></section>`;
@@ -581,6 +590,7 @@ function renderTrain(fresh){
       <p class="hint">${ez?"Лёгкий день: возьми вес чуть меньше обычного":p===3?"Неделя отдыха: тот же вес, но остановись с запасом 3–4 повторения":(beg||ex.main)&&!lt&&!fin?"Подбери вес: запас 2–3 повторения, первый подход — лёгкий":"Верхняя цифра во всех подходах — в следующий раз вес больше"}</p>`;
       if(lt){const hit=p!==3&&hitTop(ex,lt);
         h+=`<p class="meta">${lt.w?"Неделя "+lt.w:"Прошлый блок"}: ${lt.r.map(x=>fk(num(x[0]))+" × "+num(x[1])).join(" · ")}</p>`+(hit?`<p class="hint">${ex.main?"В прошлый раз все подходы по верхней границе — сегодня вес больше, уже подставлен":"В прошлый раз все подходы по верхней границе — сегодня прибавь вес"}</p>`:"")}}
+    let coach="";
     {const adv=lvl(w)==="adv", pk=ex.wave&&pick(ex.id,w);
      const ef=pk?"":ez?"все подходы легко, с запасом 3–4 повторения. До отказа не доводи"
       :ex.wave?(p===3?"вес лёгкий, все подходы спокойно. До отказа не доводи":p===2?"1-й подход ★ — до отказа: сколько получится с чистой техникой. Остальные подходы — ровно по плану"
@@ -589,12 +599,16 @@ function renderTrain(fresh){
       :beg?"заканчивай подход, когда могла бы сделать ещё 2–3 повторения. До отказа не доводи"
       :ex.iso?(adv?"заканчивай за 0–1 повторение до отказа, последний подход — до отказа":"заканчивай за 1–2 повторения до отказа; последний подход можно довести до отказа")
       :"заканчивай за 1–2 повторения до отказа";
-     if(ef)h+=`<p class="meta"><b>Усилие:</b> ${ef}.</p>`}
-    h+=`<p class="meta">Отдых ${ex.rest}.${ex.tip?" "+esc(ex.tip)+".":""}${(ex.alt?HOWA[ex.name]:HOW[ex.id])?` <button type="button" class="ghostbtn" data-how="${ex.id}">Техника ›</button>`:""}</p><div class="sets">`;
+     if(ef)coach+=`<p class="meta"><b>Усилие:</b> ${ef}.</p>`}
+    if(ex.tip)coach+=`<p class="meta">${esc(ex.tip)}.</p>`;
+    if(ex.alt?HOWA[ex.name]:HOW[ex.id])coach+=`<button type="button" class="ghostbtn" data-how="${ex.id}">Полная техника ›</button>`;
+    h+=`<p class="meta">Отдых ${ex.rest}.</p>`;
+    if(coach)h+=`<details class="why coach"${cur&&cur.id===ex.id&&c.done===0?" open":""}><summary>Усилие и техника</summary><div class="coach-body">${coach}</div></details>`;
+    h+=`<div class="sets">`;
     for(let s=0;s<n;s++){
       const on=full(r[s]), sg=suggest(ex,w,d,s), v=on?r[s]:[sg.kg,sg.reps];
       if(cur&&cur.id===ex.id&&cur.s===s){
-        h+=`<div class="editor" id="editor"><div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ сделай максимум":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · сделай больше, запас 1–2":""}</div>
+        h+=`<div class="editor" id="editor">${jd?`<div class="setfeedback" role="status">${jd.isNew?"Подход записан":"Изменения сохранены"}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew?" · отдых пошёл":""}</div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ сделай максимум":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · сделай больше, запас 1–2":""}</div>
           <div class="steps">${stepper(0,v[0],"кг","decimal")}${stepper(1,v[1],"повторений","numeric")}</div>
           <div class="erow"><button type="button" class="cta" data-done="${s}">${on?"Сохранить":"Готово"}</button>${on?`<button type="button" class="btn" data-clear="${s}">Сбросить</button>`:""}</div></div>`;
       }else h+=`<button type="button" class="srow${on?" on":""}${justDone&&justDone.id===ex.id&&justDone.s===s?" new":""}" data-edit="${s}" aria-label="Подход ${s+1}${on?", выполнен":""}"><span class="n">${s+1}</span><span class="val">${v[0]!==""?`<b>${esc(v[0])}</b> кг × <b>${esc(v[1])}</b>`:"— кг × "+esc(v[1])}</span><span class="ck">${on?CK:""}</span></button>`;
@@ -839,7 +853,7 @@ function startTimer(sec,label){
 }
 function tick(){
   const left=tEnd-Date.now();
-  if(left<=0){clearInterval(tInt);$("tclock").textContent="Погнали";$("timerin").style.setProperty("--p","100%");$("timer").classList.add("end");
+  if(left<=0){clearInterval(tInt);$("tlbl").textContent="Отдых закончен";$("tclock").textContent="Погнали";$("timerin").style.setProperty("--p","100%");$("timer").classList.add("end");
     beep();try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
     setTimeout(()=>{if(Date.now()>=tEnd)$("timer").hidden=true},6000);return}
   const s=Math.ceil(left/1000);$("tclock").textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
@@ -998,7 +1012,8 @@ document.addEventListener("click",e=>{
     const was=complete(w,d),isNew=!full(rows(w,ex.id)[s]);
     if(ALTS[ex.id]){S.altAt=S.altAt||{};const ak=w+"-"+ex.id;if(S.altAt[ak]===undefined)S.altAt[ak]=altOf(w,ex.id)}
     S.lvAt=S.lvAt||{};if(!S.lvAt[w])S.lvAt[w]=lvl(w);S.verAt=S.verAt||{};if(!S.verAt[w+"-"+d])S.verAt[w+"-"+d]=dayVer(w,d);
-    setRow(ex.id,s,[fk(kn),String(Math.max(1,Math.round(num(reps))))]);edit=null;justDone={id:ex.id,s};stamp();save();renderChrome(false);renderTrain();
+    const savedReps=String(Math.max(1,Math.round(num(reps))));
+    setRow(ex.id,s,[fk(kn),savedReps]);edit=null;justDone={id:ex.id,s,kg:fk(kn),reps:savedReps,isNew};stamp();save();renderChrome(false);renderTrain();
     if(complete(w,d)){stopTimer();if(!was)party()}
     else{if(isNew)startTimer(ex.sec,eff(ex,w).short);toEditor()}
   }
