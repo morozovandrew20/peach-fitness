@@ -1,4 +1,4 @@
-const CACHE = "peach-v16";
+const CACHE = "peach-v17";
 const CORE = [
   "./",
   "./index.html",
