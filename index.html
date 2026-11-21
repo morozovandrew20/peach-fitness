@@ -4,10 +4,10 @@
 /* Layout: iOS-style phone app. Blurred large-title header with a "wave" week strip, inset grouped cards,
    round tap-to-check sets, floating rest capsule, translucent tab bar, bottom sheet when a workout closes. */
 :root{
-  --bg:#FFEFE9; --surface:#ffffff; --raised:#f2e7e3; --line:rgba(26,74,72,.14);
-  --fg:#1A4A48; --muted:#5b6f6d; --a1:#E85A3C; --a2:#E87A3C; --on-accent:#ffffff; --accent-text:#b74330;
+  --bg:#f2f2f7; --surface:#ffffff; --raised:#e9e9ef; --line:rgba(60,60,67,.14);
+  --fg:#0b0b0f; --muted:#6e6e78; --a1:#f04a36; --a2:#ff8a5c; --on-accent:#ffffff; --accent-text:#f04a36;
   --good:#1fa85a; --good-bg:#e3f6ea; --warn:#b26a00; --bad:#d93025;
-  --input:#f8e9e3; --bar:rgba(255,239,233,.92); --scrim:rgba(26,36,35,.38);
+  --input:#eeeef3; --bar:rgba(246,246,250,.92); --scrim:rgba(0,0,0,.32);
   --shadow:0 12px 32px -14px rgba(20,20,40,.28);
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --display:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
@@ -17,21 +17,21 @@
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#000000; --surface:#1c1c1e; --raised:#2c2c2e; --line:rgba(120,120,128,.3);
-  --fg:#ffffff; --muted:#a6a6ad; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff; --accent-text:#ff8a73;
+  --fg:#ffffff; --muted:#98989f; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff; --accent-text:#ff6f5a;
   --good:#32d074; --good-bg:#12301f; --warn:#ffcc55; --bad:#ff6961;
   --input:#2c2c2e; --bar:rgba(18,18,20,.9); --scrim:rgba(0,0,0,.55);
   --shadow:0 14px 36px -14px rgba(0,0,0,.9); color-scheme:dark } }
 :root[data-theme="dark"],:root[data-look="dark"]{
   --bg:#000000; --surface:#1c1c1e; --raised:#2c2c2e; --line:rgba(120,120,128,.3);
-  --fg:#ffffff; --muted:#a6a6ad; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff; --accent-text:#ff8a73;
+  --fg:#ffffff; --muted:#98989f; --a1:#ff6f5a; --a2:#ff9d73; --on-accent:#ffffff; --accent-text:#ff6f5a;
   --good:#32d074; --good-bg:#12301f; --warn:#ffcc55; --bad:#ff6961;
   --input:#2c2c2e; --bar:rgba(18,18,20,.9); --scrim:rgba(0,0,0,.55);
   --shadow:0 14px 36px -14px rgba(0,0,0,.9); color-scheme:dark }
 
-:root[data-look="light"]{  --bg:#FFEFE9; --surface:#ffffff; --raised:#f2e7e3; --line:rgba(26,74,72,.14);
-  --fg:#1A4A48; --muted:#5b6f6d; --a1:#E85A3C; --a2:#E87A3C; --on-accent:#ffffff; --accent-text:#b74330;
+:root[data-look="light"]{  --bg:#f2f2f7; --surface:#ffffff; --raised:#e9e9ef; --line:rgba(60,60,67,.14);
+  --fg:#0b0b0f; --muted:#6e6e78; --a1:#f04a36; --a2:#ff8a5c; --on-accent:#ffffff; --accent-text:#f04a36;
   --good:#1fa85a; --good-bg:#e3f6ea; --warn:#b26a00; --bad:#d93025;
-  --input:#f8e9e3; --bar:rgba(255,239,233,.92); --scrim:rgba(26,36,35,.38);
+  --input:#eeeef3; --bar:rgba(246,246,250,.92); --scrim:rgba(0,0,0,.32);
   --shadow:0 12px 32px -14px rgba(20,20,40,.28); color-scheme:light }
 :root[data-accent="ocean"]{--a1:#0a84ff;--a2:#2ec4d6;--accent-text:var(--a1)}
 :root[data-accent="mint"]{--a1:#10b981;--a2:#8bd43a;--accent-text:var(--a1)}
