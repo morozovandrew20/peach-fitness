@@ -443,7 +443,7 @@ const asBeg=(ex,w)=>ex.wave&&(isBeg(w)||ex.alt)?Object.assign({},ex,{wave:false,
 const setsAt=(ex,w)=>{const L=lvl(w);if(L==="beg"&&ex.bs!==undefined)return ex.bs;if(ex.wave)return ex.sets[ph(w)];const n=L==="adv"&&ex.as?ex.as:ex.sets;return ph(w)===3?Math.min(2,n):n};
 const liftDay=id=>LIFTS.find(l=>l.id===id).day;
 const rows=(w,id)=>S.log[w+"-"+id]||[];
-const full=r=>{if(!r)return false;const k=String(r[0]??"").trim(),n=parseFloat(k.replace(",","."));return k!==""&&isFinite(n)&&n>=0&&num(r[1])>0};
+const full=r=>!!r&&cleanNumString(r[0],0,1000)!==""&&cleanReps(r[1])!=="";
 function e1(w,id){let m=0;for(const r of rows(w,id))if(full(r))m=Math.max(m,num(r[0])*(1+num(r[1])/30));return m}
 function testE1(w,id){const r=rows(w,id)[0];return full(r)?num(r[0])*(1+num(r[1])/30):0} /* only the prescribed first ★ set drives the next wave */
 /* beginner calibration: the start of a lift comes from the first week it was trained,
@@ -532,9 +532,11 @@ const isExercise=id=>EX[1].concat(EX[2]).some(ex=>ex.id===id);
 const isLogKey=k=>{const m=/^([1-9]|1[0-2])-([a-z]+)$/.exec(k);return !!(m&&isExercise(m[2]))};
 function cleanNumString(v,min,max){
   const s=String(v??"").trim().slice(0,24);if(!s)return"";
-  const n=parseFloat(s.replace(",","."));return isFinite(n)&&n>=min&&n<=max?s:""
+  const normalized=s.replace(",",".");
+  if(!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(normalized))return"";
+  const n=Number(normalized);return Number.isFinite(n)&&n>=min&&n<=max?s:""
 }
-const cleanReps=v=>{const s=cleanNumString(v,1,200),n=parseFloat(s.replace(",","."));return s&&n===Math.round(n)?s:""};
+const cleanReps=v=>{const s=cleanNumString(v,1,200),n=Number(s.replace(",","."));return s&&Number.isInteger(n)?s:""};
 const cleanRows=r=>(Array.isArray(r)?r:[]).slice(0,20).map(x=>Array.isArray(x)?[cleanNumString(x[0],0,1000),cleanReps(x[1])]:["",""]);
 function normalize(o){                      /* never trust stored, synced or pasted data */
   const D=def();if(!isObj(o))return D;
@@ -572,16 +574,17 @@ function normalize(o){                      /* never trust stored, synced or pas
 function loadLocal(){let t=null;try{t=localStorage.getItem(LS)}catch(e){}
   if(!t)return;
   try{const o=JSON.parse(t);if(o&&o.v===1)S=normalize(o)}catch(e){try{localStorage.setItem(LS+"-broken",t)}catch(e2){}}}
-let wt=null,writing=false,dirty=false,storageErr=false;
+let wt=null,writing=false,dirty=false,storageErr=false,externalNote="",externalTimer=null;
 function save(soft){
-  if(!soft)S.updatedAt=Date.now();
+  if(!soft)S.updatedAt=Math.max(Date.now(),(S.updatedAt||0)+1);
   S=normalize(S); /* keep in-memory maths as safe as restored data */
   try{localStorage.setItem(LS,JSON.stringify(S));storageErr=false}catch(e){storageErr=true}
   setSync();
-  if(soft)return;
+  if(soft)return !storageErr;
   if(!save.asked){save.asked=true;try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}}
-  if(!docRef){setSync();return}
+  if(!docRef){setSync();return !storageErr}
   dirty=true;cloud="saving";setSync();clearTimeout(wt);wt=setTimeout(push,900);
+  return !storageErr
 }
 async function push(){
   if(!docRef||writing||!dirty)return;
@@ -590,7 +593,23 @@ async function push(){
   writing=false;setSync();if(dirty)wt=setTimeout(push,900);
 }
 const SYNC={wait:"Подключаюсь…",ok:"Записи сохранены в облаке",saving:"Сохраняю…",err:"Не удалось сохранить в облако — записи остались на этом устройстве",local:"Записи хранятся только на этом устройстве. Резервная копия — в «Настройках»."};
-function setSync(){const el=document.getElementById("sync");if(el)el.textContent=storageErr?"Не удалось сохранить на устройстве. Не закрывай страницу и скопируй резервную копию в настройках.":SYNC[cloud]}
+function storageCard(){
+  return storageErr?`<div class="note" data-storage-alert role="alert"><b>Изменения пока только в этой вкладке.</b> Не закрывай её: скачай резервную копию, пока дневник доступен. <span class="nacts"><button type="button" class="ghostbtn" data-gobackup>Сохранить копию</button></span></div>`:""
+}
+function syncStorageAlert(){const v=$("view");if(!v)return;const old=v.querySelector("[data-storage-alert]");if(storageErr){if(!old)v.insertAdjacentHTML("afterbegin",storageCard())}else if(old)old.remove()}
+function setSync(){syncStorageAlert();const el=document.getElementById("sync");if(el)el.textContent=(storageErr?"Не удалось сохранить на устройстве. Не закрывай страницу и скопируй резервную копию в настройках.":SYNC[cloud])+(externalNote?" "+externalNote:"")}
+function applyExternalState(raw){
+  let incoming;try{incoming=normalize(JSON.parse(raw))}catch(e){return}
+  if((incoming.updatedAt||0)<=(S.updatedAt||0))return;
+  const destructive=incoming.block!==S.block||(!incoming.startSet&&S.startSet),view={w:S.cur.w,d:S.cur.d},scroll={x:window.scrollX,y:window.scrollY};
+  const draft=edit?{id:edit.id,s:edit.s,kg:$("ed-0")?$("ed-0").value:"",reps:$("ed-1")?$("ed-1").value:""}:null;
+  const a=document.activeElement,active=a&&a.id&&/^(INPUT|TEXTAREA)$/.test(a.tagName)?{id:a.id,value:a.value,start:a.selectionStart,end:a.selectionEnd}:null;
+  const dialog=visibleDialog();if(dialog)closeDialog(dialog.id);
+  S=incoming;S.cur=view;edit=!destructive&&draft?{id:draft.id,s:draft.s}:null;undoSet=null;justDone=null;syncWarm();render();
+  if(!destructive&&edit&&$("editor")){if($("ed-0"))$("ed-0").value=draft.kg;if($("ed-1"))$("ed-1").value=draft.reps}
+  if(!destructive&&active){const el=$(active.id);if(el&&/^(INPUT|TEXTAREA)$/.test(el.tagName)){el.value=active.value;el.focus({preventScroll:true});try{el.setSelectionRange(active.start,active.end)}catch(e){}}}
+  window.scrollTo(scroll.x,scroll.y);externalNote="Дневник обновлён из другой вкладки.";clearTimeout(externalTimer);externalTimer=setTimeout(()=>{externalNote="";setSync()},6000);setSync()
+}
 async function connect(){
   try{
     if(!window.claude||!window.claude.use){cloud="local";setSync();return}
@@ -693,7 +712,7 @@ function renderTrain(fresh){
       const on=full(r[s]), sg=suggest(ex,w,d,s), v=on?r[s]:[sg.kg,sg.reps];
       if(cur&&cur.id===ex.id&&cur.s===s){
         const pr=lt&&lt.r[Math.min(s,lt.r.length-1)];
-        h+=`<div class="editor" id="editor">${jd?`<div class="setfeedback" role="status"><span>${jd.isNew?"Подход записан":"Изменения сохранены"}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew?" · отдых пошёл":""}</span><button type="button" data-undo>Отменить</button></div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ сделай максимум":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · сделай больше, запас 1–2":""}</div>
+        h+=`<div class="editor" id="editor">${jd?`<div class="setfeedback" role="status"><span>${jd.failed?"Только в этой вкладке":jd.isNew?"Подход записан":"Изменения сохранены"}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew&&!jd.failed?" · отдых пошёл":""}</span><button type="button" data-undo>Отменить</button></div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ сделай максимум":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · сделай больше, запас 1–2":""}</div>
           ${pr?`<div class="prevset">Было: ${fk(num(pr[0]))} кг × ${num(pr[1])}${lt.w?" · неделя "+lt.w:" · прошлый блок"}</div>`:""}
           <div class="steps">${stepper(0,v[0],"кг","decimal")}${stepper(1,v[1],"повторений","numeric")}</div><p class="fielderror" id="editorerror" role="alert"></p>
           <div class="erow"><button type="button" class="cta" data-done="${s}">${on?"Сохранить":"Готово"}</button>${on?`<button type="button" class="btn" data-clear="${s}">Сбросить</button>`:""}</div></div>`;
@@ -995,10 +1014,10 @@ function party(){
   $("sh-diff").textContent=prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—";
   $("sh-n").textContent=doneWorkouts()+" из 24";
   const rec=ph(w)===2&&!isBeg(w)&&!easy(w,d)?LIFTS.filter(l=>l.day===d&&!altOf(w,l.id)&&testE1(w,l.id)>base(l.id,wave(w))*1.001):[]; /* only the first ★ set drives the next wave */
-  $("sh-h").textContent=doneWorkouts()>=24?"Блок пройден: 24 из 24":rec.length?"Новый максимум":"Тренировка закрыта";
-  $("sh-sub").textContent=doneWorkouts()>=24?"12 недель позади. Следующий блок с перенесёнными весами запускается в «Настройках»":rec.length?rec.map(l=>l.name+" · "+fmt(testE1(w,l.id))+" кг").join(", ")+" — база следующей волны вырастет":"Неделя "+w+" · день "+d;
+  $("sh-h").textContent=storageErr?"Сохрани дневник":doneWorkouts()>=24?"Блок пройден: 24 из 24":rec.length?"Новый максимум":"Тренировка закрыта";
+  $("sh-sub").textContent=storageErr?"Тренировка закрыта только в этой вкладке. Скачай копию, не закрывая страницу.":doneWorkouts()>=24?"12 недель позади. Следующий блок с перенесёнными весами запускается в «Настройках»":rec.length?rec.map(l=>l.name+" · "+fmt(testE1(w,l.id))+" кг").join(", ")+" — база следующей волны вырастет":"Неделя "+w+" · день "+d;
   $("sh-ok").style.display=rec.length?"none":"";$("sh-peach").hidden=!rec.length;
-  const sc=$("sheetcopy");sc.hidden=cloud==="ok";sc.textContent=doneWorkouts()-(S.backupAt||0)>=4?"Давно не было копии — сохранить дневник":"Сохранить копию дневника";
+  const sc=$("sheetcopy");sc.hidden=cloud==="ok"&&!storageErr;sc.textContent=doneWorkouts()-(S.backupAt||0)>=4?"Давно не было копии — сохранить дневник":"Сохранить копию дневника";
   const n=nextPos();$("sheetnext").hidden=!n;if(n)$("sheetnext").textContent="Дальше: неделя "+n.w+" · день "+n.d;
   $("sheetok").textContent=n?"Остаться здесь":"Готово";$("sheetok").className=n?"ghostbtn":"cta";
   openDialog("sheet");
@@ -1102,7 +1121,7 @@ function safetyCard(){
     return `<div class="safetyitem"><div><b>${esc(q.reason)}</b><span>${esc(date)} · ${sets} подходов</span></div><button type="button" class="btn" data-safety="${esc(q.id)}">Вернуть эту копию</button></div>`}).join("")}</div><span class="e1" id="safetymsg" role="status"></span></section>`
 }
 function backupCard(){
-  return `<section class="card"><h3>Резервная копия</h3>
+  return `<section class="card" id="backup"><h3>Резервная копия</h3>
     <p class="meta">Скачанный файл — самый удобный перенос на другой телефон. Отчёт — читаемый текст для тренера, CSV — таблица для анализа. Код — запасной вариант для сообщения.</p>
     <div class="btns"><button type="button" class="btn" data-download>Скачать копию</button><button type="button" class="btn" data-copy="report">Скопировать отчёт</button><button type="button" class="btn" data-copy="code">Скопировать код</button><button type="button" class="btn" data-export>Скачать CSV</button></div>
     <span class="e1" id="copymsg" role="status"></span>
@@ -1169,6 +1188,7 @@ document.addEventListener("click",e=>{
   if(b.dataset.w){S.cur.w=+b.dataset.w;edit=null;save(true);render(true);window.scrollTo(0,0)}
   else if(b.dataset.day){S.cur.d=+b.dataset.day;edit=null;save(true);render(true);window.scrollTo(0,0)}
   else if(b.dataset.tab){tab=b.dataset.tab;render(true);window.scrollTo(0,0)}
+  else if(b.dataset.gobackup!==undefined){tab="setup";render(true);const el=$("backup");if(el)el.scrollIntoView({block:"start",behavior:"smooth"});const download=el&&el.querySelector("[data-download]");if(download)download.focus({preventScroll:true})}
   else if(b.dataset.edit!==undefined&&ex){edit={id:ex.id,s:+b.dataset.edit};renderTrain();toEditor()}
   else if(b.dataset.step){
     const f=+b.dataset.f,inp=$("ed-"+f),dir=+b.dataset.step,cex=EX[d].find(x=>x.id===b.closest("[data-ex]").dataset.ex);
@@ -1176,14 +1196,14 @@ document.addEventListener("click",e=>{
     inp.value=f===1?String(v):fk(v);
   }
   else if(b.dataset.done!==undefined&&ex){
-    const s=+b.dataset.done,ki=$("ed-0"),ri=$("ed-1"),kg=ki.value.trim(),reps=ri.value.trim(),kn=parseFloat(kg.replace(",","."));
-    if(kg===""||!isFinite(kn)||kn<0||kn>1000){bad(ki);return}
-    if(!num(reps)||num(reps)>200){bad(ri);return}
+    const s=+b.dataset.done,ki=$("ed-0"),ri=$("ed-1"),kg=ki.value.trim(),reps=ri.value.trim(),cleanKg=cleanNumString(kg,0,1000),cleanRep=cleanReps(reps),kn=Number(cleanKg.replace(",","."));
+    if(!cleanKg){bad(ki);return}
+    if(!cleanRep){bad(ri);return}
     const was=complete(w,d),isNew=!full(rows(w,ex.id)[s]),prev=rows(w,ex.id)[s]?rows(w,ex.id)[s].slice():null;
     if(ALTS[ex.id]){S.altAt=S.altAt||{};const ak=w+"-"+ex.id;if(S.altAt[ak]===undefined)S.altAt[ak]=altOf(w,ex.id)}
     S.lvAt=S.lvAt||{};if(!S.lvAt[w])S.lvAt[w]=lvl(w);S.verAt=S.verAt||{};if(!S.verAt[w+"-"+d])S.verAt[w+"-"+d]=dayVer(w,d);
     const savedReps=String(Math.max(1,Math.round(num(reps))));
-    setRow(ex.id,s,[fk(kn),savedReps]);edit=null;undoSet={w,d,id:ex.id,s,prev};justDone={id:ex.id,s,kg:fk(kn),reps:savedReps,isNew};stamp();save();renderChrome(false);renderTrain();
+    setRow(ex.id,s,[fk(kn),savedReps]);edit=null;undoSet={w,d,id:ex.id,s,prev};justDone={id:ex.id,s,kg:fk(kn),reps:savedReps,isNew};stamp();justDone.failed=!save();renderChrome(false);renderTrain();
     if(complete(w,d)){if(!was){const key=w+"-"+d;S.sessions[key].end=Date.now();save()}stopTimer();if(!was)party()}
     else{if(isNew)startTimer(ex.sec,eff(ex,w).short);toEditor()}
   }
@@ -1316,6 +1336,7 @@ document.addEventListener("keydown",e=>{
 });
 
 loadLocal();syncWarm();
+window.addEventListener("storage",e=>{if(e.key===LS&&e.newValue)applyExternalState(e.newValue)});
 try{render(true);restoreTimer()}catch(e){try{localStorage.setItem(LS+"-broken",JSON.stringify(S))}catch(e2){}S=def();syncWarm();edit=null;tab="train";render(true)}
 {const L=$("launch");if(L){if(getComputedStyle(L).display==="none")L.remove();else{requestAnimationFrame(()=>setTimeout(()=>{L.classList.add("out");applyTheme()},260));setTimeout(()=>L.remove(),1000)}}}
 connect();
