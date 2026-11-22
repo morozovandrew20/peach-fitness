@@ -1,9 +1,14 @@
-const CACHE = "peach-v28";
+const CACHE = "peach-v29";
 const NAV_TIMEOUT = 3500;
 const CORE = [
   "./",
   "./index.html",
   "./technique-motion.js",
+  "./technique-3d.js",
+  "./assets/peach-rdl.glb",
+  "./assets/three.module.js",
+  "./assets/GLTFLoader.js",
+  "./assets/BufferGeometryUtils.js",
   "./manifest.webmanifest",
   "./manifest-dark.webmanifest",
   "./apple-touch-icon.png",
