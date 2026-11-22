@@ -24,12 +24,13 @@ function bench(seg,y,z,len=.9,width=.55){const x=width/2,a=z-len/2,b=z+len/2;for
 function seated(){return {p:v(0,.92,0),c:v(0,1.58,-.05),n:v(0,1.84,-.05),h:v(0,2.10,-.05),sl:v(-.34,1.70,-.05),sr:v(.34,1.70,-.05),hl:v(-.2,.92,0),hr:v(.2,.92,0),kl:v(-.25,.78,.58),kr:v(.25,.78,.58),al:v(-.25,.17,.63),ar:v(.25,.17,.63),tl:v(-.25,.09,.88),tr:v(.25,.09,.88),el:v(-.43,1.25,.08),er:v(.43,1.25,.08),wl:v(-.39,.93,.26),wr:v(.39,.93,.26)}}
 function standingSquat(s){const j=base();shiftUpper(j,-.52*s,-.10*s);lean(j,.22*s);j.kl=v(-.25,.91-.12*s,.05+.39*s);j.kr=v(.25,.91-.12*s,.05+.39*s);for(const side of ["l","r"]){const q=side==="l"?-1:1,sh=j["s"+side];j["e"+side]=add(sh,v(q*.17,-.27,.13));j["w"+side]=add(sh,v(q*.15,-.02,-.06))}return j}
 function standingRdl(s,single=false){const j=base(),a=1.18*s;j.p[2]-=.10*s;j.hl[2]=j.hr[2]=j.p[2];lean(j,a);j.kl[2]+=.13;j.kr[2]+=.13;armsHang(j,.80);if(single){const hip=j.hr;for(const k of ["kr","ar","tr"])j[k]=rotate(j[k],hip,a);j.wl=add(j.sl,v(-.08,-.79,.05));j.el=mix(j.sl,j.wl,.52);j.wr=add(j.sr,v(.34,-.16,.02));j.er=mix(j.sr,j.wr,.52)}return j}
-const STAND={center:v(0,1.53,.03),height:3.15,breadth:2.02,yaw:-.48}, LOW={center:v(0,.83,-.10),height:1.58,breadth:2.78,yaw:-1.02}, SEAT={center:v(0,1.13,.18),height:2.34,breadth:1.48,yaw:-.72};
+function standingRdlFocus(s){const j=base();lean(j,1.08*s);shiftUpper(j,-.06*s,-.38*s);j.kl[2]+=.13+.04*s;j.kr[2]+=.13+.04*s;for(const side of ["l","r"]){const q=side==="l"?-1:1,sh=j["s"+side];j["w"+side]=add(sh,v(q*.10,-.82,.05-.10*s));j["e"+side]=mix(sh,j["w"+side],.52)}return j}
+const STAND={center:v(0,1.53,.03),height:3.15,breadth:2.02,yaw:-.48}, RDL={center:v(0,1.51,.02),height:3.12,breadth:2.04,yaw:-.92}, LOW={center:v(0,.83,-.10),height:1.58,breadth:2.78,yaw:-1.02}, SEAT={center:v(0,1.13,.18),height:2.34,breadth:1.48,yaw:-.72};
 function pack(j,view=STAND,props=[],duration=3.6){return {j,view,props,duration}}
 const POSES={
   ht(s,one=false){const y=.72+.40*s,j={p:v(0,y,0),c:v(0,1.12,-.72),n:v(0,1.15,-.94),h:v(0,1.18,-1.18),sl:v(-.34,1.12,-.72),sr:v(.34,1.12,-.72),hl:v(-.2,y,0),hr:v(.2,y,0),kl:v(-.22,.88,.57),kr:v(.22,.88,.57),al:v(-.22,.16,.72),ar:v(.22,.16,.72),tl:v(-.22,.08,.98),tr:v(.22,.08,.98)};for(const side of ["l","r"]){const q=side==="l"?-1:1;j["w"+side]=v(q*.48,y+.10,0);j["e"+side]=v(q*.52,.93,-.34)}if(one){j.kr=v(.20,1.19,.38);j.ar=v(.20,1.47,.22);j.tr=v(.20,1.49,.46)}const p=[];bench(p,1.00,-.75,.68,.66);barbell(p,y+.13,0,.72);return pack(j,LOW,p,3.4)},
   ht1(s){return POSES.ht(s,true)},
-  rdl(s){const j=standingRdl(s),p=[];barbell(p,(j.wl[1]+j.wr[1])/2,(j.wl[2]+j.wr[2])/2,.72);return pack(j,STAND,p,3.8)},
+  rdl(s){const j=standingRdlFocus(s),p=[];barbell(p,(j.wl[1]+j.wr[1])/2,(j.wl[2]+j.wr[2])/2,.72);return pack(j,RDL,p,3.8)},
   rdl1(s){const j=standingRdl(s,true),p=[];line(p,add(j.wl,v(-.10,0,0)),add(j.wl,v(.10,0,0)));circle(p,j.wl,v(0,1,0),v(0,0,1),.11,.11,6,"prop");return pack(j,STAND,p,4)},
   sq(s){const j=standingSquat(s),p=[],sh=mix(j.sl,j.sr,.5);barbell(p,sh[1]+.06,sh[2]-.13,.72);line(p,v(-.48,.05,-.34),v(-.48,2.75,-.34));line(p,v(.48,.05,-.34),v(.48,2.75,-.34));return pack(j,STAND,p,3.8)},
   bulg(s){const j=base();shiftUpper(j,-.48*s,-.08*s);lean(j,.38);j.al=v(-.22,.16,.48);j.tl=v(-.22,.08,.75);j.kl=v(-.22,.88,.48+.20*s);j.ar=v(.22,.56,-.58);j.tr=v(.22,.53,-.35);j.kr=v(.22,1.00-.43*s,-.52);armsHang(j,.70);const p=[];bench(p,.48,-.60,.52,.55);for(const side of ["l","r"]){const w=j["w"+side];line(p,add(w,v(-.09,0,0)),add(w,v(.09,0,0)))}return pack(j,STAND,p,4)},
@@ -92,7 +93,7 @@ function create(canvas,kind){
   function startLoop(){if(!raf&&playing&&visible&&!document.hidden&&!disposed){last=0;raf=requestAnimationFrame(frame)}}
   function frame(now){raf=0;if(disposed||!playing||!visible||document.hidden)return;if(!last)last=now;const dt=Math.min(100,now-last);last=now;time+=dt/1000;if(now-lastDraw>=FRAME-1){draw();lastDraw=now}raf=requestAnimationFrame(frame)}
   function toggle(){playing=!playing;updatePlay();if(playing)startLoop();else stopLoop()}
-  function turn(delta){yaw+=delta;requestDraw()}
+  function turn(delta){const next=yaw+delta,base=initial.view.yaw,turns=Math.round((next-base)/TAU),aligned=next-turns*TAU;yaw=Math.abs(aligned-base)<1e-8?base:next;requestDraw()}
   on(play,"click",toggle);on(root.querySelector("[data-motion-left]"),"click",()=>turn(-Math.PI/4));on(root.querySelector("[data-motion-right]"),"click",()=>turn(Math.PI/4));
   on(canvas,"pointerdown",e=>{if(e.button!==undefined&&e.button!==0)return;drag={id:e.pointerId,x:e.clientX};if(canvas.setPointerCapture)try{canvas.setPointerCapture(e.pointerId)}catch(_){}canvas.focus({preventScroll:true});canvas.classList.add("dragging")});
   on(canvas,"pointermove",e=>{if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x;drag.x=e.clientX;turn(dx*.012)});
