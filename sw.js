@@ -1,4 +1,5 @@
-const CACHE = "peach-v17";
+const CACHE = "peach-v18";
+const NAV_TIMEOUT = 3500;
 const CORE = [
   "./",
   "./index.html",
@@ -12,6 +13,47 @@ const CORE = [
   "./logo-512.png",
   "./peach-logo.svg"
 ];
+
+function store(key, response) {
+  const copy = response.clone();
+  caches.open(CACHE).then(cache => cache.put(key, copy)).catch(() => {});
+}
+
+function networkNavigation(request) {
+  return fetch(request).then(response => {
+    if (!response.ok) throw new Error("Navigation unavailable");
+    store("./index.html", response);
+    return response;
+  });
+}
+
+async function navigation(request) {
+  const cached = await caches.match("./index.html");
+  const network = networkNavigation(request);
+
+  if (!cached) {
+    try {
+      return await network;
+    } catch (error) {
+      const root = await caches.match("./");
+      if (root) return root;
+      throw error;
+    }
+  }
+
+  let timer;
+  const fallback = new Promise(resolve => {
+    timer = setTimeout(() => resolve(cached), NAV_TIMEOUT);
+  });
+
+  try {
+    return await Promise.race([network, fallback]);
+  } catch (error) {
+    return cached;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
@@ -32,24 +74,21 @@ self.addEventListener("fetch", event => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then(response => {
-          if (response.ok) caches.open(CACHE).then(cache => cache.put("./index.html", response.clone()));
-          return response;
-        })
-        .catch(() => caches.match("./index.html"))
-    );
+    event.respondWith(navigation(request));
     return;
   }
 
   event.respondWith(
     caches.match(request).then(cached => {
       const fresh = fetch(request).then(response => {
-        if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
+        if (response.ok) store(request, response);
         return response;
       });
-      return cached || fresh;
+      if (cached) {
+        fresh.catch(() => {});
+        return cached;
+      }
+      return fresh;
     })
   );
 });

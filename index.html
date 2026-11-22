@@ -445,6 +445,7 @@ const liftDay=id=>LIFTS.find(l=>l.id===id).day;
 const rows=(w,id)=>S.log[w+"-"+id]||[];
 const full=r=>{if(!r)return false;const k=String(r[0]??"").trim(),n=parseFloat(k.replace(",","."));return k!==""&&isFinite(n)&&n>=0&&num(r[1])>0};
 function e1(w,id){let m=0;for(const r of rows(w,id))if(full(r))m=Math.max(m,num(r[0])*(1+num(r[1])/30));return m}
+function testE1(w,id){const r=rows(w,id)[0];return full(r)?num(r[0])*(1+num(r[1])/30):0} /* only the prescribed first ★ set drives the next wave */
 /* beginner calibration: the start of a lift comes from the first week it was trained,
    sets picked "with 2–3 reps in reserve", so 2 reps are added to the estimate (practice, corrected at the first ★) */
 const calibOn=id=>!!(S.calib&&S.calib[id]);
@@ -455,7 +456,7 @@ function calibE1(id){const c=calibWeek(id);if(!c)return 0;let m=0;for(const r of
 function base(id,wv){
   const s=S.start[id], g=growth();
   if(wv===1) return calibOn(id)?calibE1(id):num(s.w)*(1+num(s.r)/30);
-  const prev=base(id,wv-1), tw=(wv-1)*4-1, test=e1(tw,id);
+  const prev=base(id,wv-1), tw=(wv-1)*4-1, test=testE1(tw,id);
   if(isBeg(tw)||altOf(tw,id)) return prev;                                     /* that wave was trained as a beginner: the start already holds it */
   if(easy(tw,liftDay(id))) return prev;                          /* ★ day taken easy: keep the weights */
   if(!test) return prev*(1+g);                                   /* no ★ recorded: default growth */
@@ -464,6 +465,19 @@ function base(id,wv){
                             : Math.max(prev*0.95,test);                    /* plan missed: step back, at most 5% */
 }
 function planKg(id,w){const st=num(S.start[id].step)||2.5;return Math.round(base(id,wave(w))*SC(w)[liftDay(id)].pct[ph(w)]/st)*st}
+function weightBasis(id,w){
+  const wv=wave(w),d=liftDay(id),pct=SC(w)[d].pct[ph(w)]*100,st=num(S.start[id].step)||2.5;let lead="";
+  if(wv===1){
+    if(calibOn(id)){const cw=calibWeek(id);if(!cw)return"";lead=`Подбор на неделе ${cw}: расчётный максимум ${fmt(calibE1(id))} кг`}
+    else{const s=S.start[id];if(!num(s.w)||!num(s.r))return"";lead=`Старт ${fk(num(s.w))} × ${num(s.r)}: расчётный максимум ${fmt(base(id,1))} кг`}
+  }else{
+    const tw=(wv-1)*4-1,prev=base(id,wv-1),now=base(id,wv);
+    if(isBeg(tw)||altOf(tw,id))lead=`Веса перенесены с прошлой волны: база ${fmt(prev)} кг`;
+    else if(easy(tw,d))lead=`На неделе ${tw} был лёгкий день: база оставлена ${fmt(prev)} кг`;
+    else{const r=rows(tw,id)[0];lead=full(r)?`Неделя ${tw}, 1-й подход ★: ${fk(num(r[0]))} × ${num(r[1])} → расчётный максимум ${fmt(testE1(tw,id))} кг. База ${fmt(prev)} → ${fmt(now)} кг`:`Первый подход ★ на неделе ${tw} не записан: база ${fmt(prev)} → ${fmt(now)} кг по запасному правилу +${fk(growth()*100)}%`}
+  }
+  return `${lead}. Сегодня ${fk(pct)}% базы${easy(w,d)?", затем −10% для лёгкого дня":""}; округление до ${fk(st)} кг. Формула Эпли — ориентир`
+}
 function keepAlt(id){S.altAt=S.altAt||{};const cur=(S.alt||{})[id]||0;   /* weeks already trained keep the exercise they were done with */
   for(let x=1;x<=12;x++)if(S.altAt[x+"-"+id]===undefined&&rows(x,id).some(full))S.altAt[x+"-"+id]=cur}
 function newBlock(){               /* carry working weights into a fresh 12 weeks */
@@ -474,7 +488,7 @@ function newBlock(){               /* carry working weights into a fresh 12 week
   for(const l of LIFTS){
     let e=0;
     if(S.level==="beg"){const q=seed[l.id];if(q)for(const r of q.r)e=Math.max(e,num(r[0])*(1+(num(r[1])+2)/30))}
-    else e=e1(11,l.id)&&!easy(11,l.day)&&!isBeg(11)?base(l.id,4):base(l.id,3);
+    else e=testE1(11,l.id)&&!easy(11,l.day)&&!isBeg(11)?base(l.id,4):base(l.id,3);
     if(e>0){const st=num(S.start[l.id].step)||2.5;S.start[l.id].w=fk(Math.round(e/(1+8/30)/st)*st);S.start[l.id].r="8";if(S.calib)delete S.calib[l.id]}
   }
   S.log={};S.notes={};S.dates={};S.easy={};S.noRest={};S.photo={};S.altAt={};S.lvAt={};S.verAt={};S.sessions={};S.warm=[];S.seed=seed;S.cur={w:1,d:1};S.backupAt=0;S.block=(S.block||1)+1;S.startSet=true;
@@ -635,7 +649,7 @@ function renderTrain(fresh){
   const {w,d}=S.cur, beg=isBeg(w), p=beg?0:ph(w), date=S.dates[w+"-"+d], c=counts(w,d), cur=current(w,d), t=tonnage(w,d), ez=easy(w,d), jd=justDone;
   let h=`<section class="hero"><div class="hring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="35"/><circle class="pr" id="hbar" cx="42" cy="42" r="35" stroke-dasharray="219.9" stroke-dashoffset="${lastOff}"/></svg><b>${c.done}/${c.total}</b></div>
     <div class="htxt"><span class="cap">${d===1?"День 1 · сила":"День 2 · объём"}${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка закрыта":(n=>{const a=n%10,b=n%100;return a===1&&b!==11?"Ещё "+n+" подход":a>=2&&a<=4&&(b<12||b>14)?"Ещё "+n+" подхода":"Ещё "+n+" подходов"})(c.total-c.done)}</strong>
-    <p>${ez?"Лёгкий день: веса на 10% меньше и на подход меньше. Тренировка засчитывается."+(p===2?" Подход ★ сегодня не считается — веса следующей волны останутся прежними.":""):beg?"Дошла до верхней цифры во всех подходах — в следующий раз вес больше. После подхода нажми «Готово» — пойдёт таймер отдыха.":p===2?"Тяжёлая неделя: в упражнениях со ★ первый подход — на максимум повторений.":p===3?"Неделя отдыха: вдвое меньше подходов, в главных упражнениях вес ниже.":"Проверь вес и повторения, нажми «Готово» — пойдёт таймер отдыха."}</p>${p===3?"":`<button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть неделю отдыха</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Сил хватает — без отдыха</button>`):""}</div></section>`;
+    <p>${ez?"Лёгкий день: веса на 10% меньше и на подход меньше. Тренировка засчитывается."+(p===2?" Подход ★ сегодня не считается — веса следующей волны останутся прежними.":""):beg?"Дошла до верхней цифры во всех подходах — в следующий раз вес больше. После подхода нажми «Готово» — пойдёт таймер отдыха.":p===2?"Тяжёлая неделя: в упражнениях со ★ первый подход — на максимум повторений. Только он задаёт веса следующей волны.":p===3?"Неделя отдыха: вдвое меньше подходов, в главных упражнениях вес ниже.":"Проверь вес и повторения, нажми «Готово» — пойдёт таймер отдыха."}</p>${p===3?"":`<button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть неделю отдыха</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Сил хватает — без отдыха</button>`):""}</div></section>`;
   if(!beg&&(w-1)%4===3&&!wkHas(w))h+=`<div class="note">${S.noRest&&S.noRest[w]?"Вместо отдыха — ещё одна средняя неделя. Следующую неделю отдыха пропустить будет нельзя.":S.noRest&&S.noRest[w-4]?"Прошлую неделю отдыха ты пропустила — эту делаем обязательно.":"Неделя отдыха для роста мышц не обязательна. Сон в порядке, веса идут, ничего не болит — можно заменить её на ещё одну среднюю. Два раза подряд пропускать нельзя."}</div>`;
   if(c.done===0||c.done>=c.total){
     const bd=bodyDue(), sl=bd?null:LIFTS.map(l=>[l,l.day===d?stalled(l.id):""]).find(x=>x[1]&&!(S.seen||{})["st-"+x[0].id+"-"+x[1]]);
@@ -653,6 +667,8 @@ function renderTrain(fresh){
     else if(ex.wave){h+=`<div class="plan"><button type="button" class="pw" data-plates="${ex.id}" aria-label="Какие блины вешать"><b>${fk(dayKg(ex.id,w))} кг</b><small>блины ›</small></button><span>${plan} × ${SC(w)[d].reps[p]} повторений</span></div>`;
       const wu=fin?[]:warmup(ex,w);
       if(wu.length)h+=`<div class="warm"><span>Разминка</span>${wu.map((x,k)=>`<button type="button" class="wchip" data-warm="${w}-${ex.id}-${k}" aria-pressed="${warmDone.has(w+"-"+ex.id+"-"+k)}">${fk(x.kg)} × ${x.reps}</button>`).join("")}</div>`;
+      const basis=weightBasis(ex.id,w);
+      if(basis)h+=`<details class="why"><summary>Как посчитан вес</summary><p class="meta">${esc(basis)}</p></details>`;
       }
     else{h+=`<div class="plan"><b>${plan} × ${esc(ex.range)}</b><span>повторений${esc(ex.per)}</span></div>
       <p class="hint">${ez?"Лёгкий день: возьми вес чуть меньше обычного":p===3?"Неделя отдыха: тот же вес, но остановись с запасом 3–4 повторения":(beg||ex.main)&&!lt&&!fin?"Подбери вес: запас 2–3 повторения, первый подход — лёгкий":"Верхняя цифра во всех подходах — в следующий раз вес больше"}</p>`;
@@ -661,7 +677,7 @@ function renderTrain(fresh){
     let coach="";
     {const adv=lvl(w)==="adv", pk=ex.wave&&pick(ex.id,w);
      const ef=pk?"":ez?"все подходы легко, с запасом 3–4 повторения. До отказа не доводи"
-      :ex.wave?(p===3?"вес лёгкий, все подходы спокойно. До отказа не доводи":p===2?"1-й подход ★ — до отказа: сколько получится с чистой техникой. Остальные подходы — ровно по плану"
+      :ex.wave?(p===3?"вес лёгкий, все подходы спокойно. До отказа не доводи":p===2?"1-й подход ★ — до отказа: сколько получится с чистой техникой. По нему пересчитается следующая волна. Остальные подходы — ровно по плану"
         :"все подходы — ровно по плану, это не до отказа. Только в последнем делай больше повторений: остановись, когда в запасе останется 1–2")
       :p===3||(!lt&&(beg||ex.main))?""
       :beg?"заканчивай подход, когда могла бы сделать ещё 2–3 повторения. До отказа не доводи"
@@ -684,8 +700,9 @@ function renderTrain(fresh){
       }else h+=`<button type="button" class="srow${on?" on":""}${justDone&&justDone.id===ex.id&&justDone.s===s?" new":""}" data-edit="${s}" aria-label="Подход ${s+1}${on?", выполнен":""}"><span class="n">${s+1}</span><span class="val">${v[0]!==""?`<b>${esc(v[0])}</b> кг × <b>${esc(v[1])}</b>`:"— кг × "+esc(v[1])}</span><span class="ck">${on?CK:""}</span></button>`;
     }
     h+=`</div>`;
-    if(ex.wave&&!pick(ex.id,w)){const v=e1(w,ex.id);let best=base(ex.id,1);for(let x=1;x<w;x++)best=Math.max(best,e1(x,ex.id));
-      if(v)h+=`<div class="e1">Расчётный максимум: <b>${fmt(v)} кг</b>${v>best+0.05?'<span class="tag">рекорд</span>':""}</div>`}
+    if(ex.wave&&!pick(ex.id,w)){const v=e1(w,ex.id),tv=p===2&&!ez?testE1(w,ex.id):0;let best=base(ex.id,1);for(let x=1;x<w;x++)best=Math.max(best,e1(x,ex.id));
+      if(v)h+=`<div class="e1">Расчётный максимум дня: <b>${fmt(v)} кг</b>${v>best+0.05?'<span class="tag">рекорд</span>':""}</div>`;
+      if(tv)h+=`<p class="meta">Для следующей волны — только 1-й подход ★: <b>${fmt(tv)} кг</b>.</p>`}
     h+=`</section>`;
   });
   const prev=w>1?tonnage(w-1,d):0, diff=prev?t-prev:0;
@@ -702,7 +719,7 @@ function renderTrain(fresh){
 }
 let justDone=null;
 function status(id){
-  const g=growth(), st=base(id,1), tests=[3,7,11].map(w=>easy(w,liftDay(id))||isBeg(w)||altOf(w,id)?0:e1(w,id));
+  const g=growth(), st=base(id,1), tests=[3,7,11].map(w=>easy(w,liftDay(id))||isBeg(w)||altOf(w,id)?0:testE1(w,id));
   let last=0,n=0; tests.forEach((v,i)=>{if(v){last=v;n=i+1}});
   if(!n)return {cls:"wait",txt:"ждём первую ★",last:0,st,tests};
   const target=st*Math.pow(1+g,n);
@@ -850,12 +867,12 @@ function renderProgress(){
       <div class="big">${fmt(s.last||s.st)} <small>кг${s.last?` · ${diff>=0?"+":"−"}${fmt(Math.abs(diff))} кг к старту`:" · старт"}</small></div>
       ${chart(vals,tg)}</section>`;
   }
-  h+=`<p class="meta">Линия — факт по подходам ★, пунктир — ориентир.</p>
+  h+=`<p class="meta">Линия — факт по первым подходам ★, пунктир — ориентир.</p>
     <section class="card"><h3>План весов на 12 недель</h3><div class="tbl"><table><thead><tr><th>Нед.</th><th>Мост</th><th>Тяга</th><th>Гакк</th></tr></thead><tbody>`;
   for(let w=1;w<=12;w++){const p=ph(w);
     h+=`<tr class="${p===3?"rest":""}${w===S.cur.w?" cur":""}"><td>${w} · ${LABEL[p]}</td>`+
       LIFTS.map(l=>`<td>${isBeg(w)?"новичок":(pick(l.id,w)||!base(l.id,1)?"подбор":fk(planKg(l.id,w)))+" × "+SC(w)[l.day].reps[p]}</td>`).join("")+`</tr>`}
-  h+=`</tbody></table></div><p class="meta">Вес, кг × повторения. Недели 5–12 пересчитаются после подходов ★.</p></section>
+  h+=`</tbody></table></div><p class="meta">Вес, кг × повторения. Недели 5–12 пересчитаются после первых подходов ★.</p></section>
 `+achCard()+bodyCard()+`<section class="card"><h3>Если прогресс встал</h3><ul>
     <li>Недобор на одной тренировке — норма, идём дальше по плану.</li>
     <li>Недобор две тренировки подряд в одном упражнении — отдых на неделю раньше.</li>
@@ -977,9 +994,9 @@ function party(){
   $("sh-ton").textContent=kgf(t)+" кг";
   $("sh-diff").textContent=prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—";
   $("sh-n").textContent=doneWorkouts()+" из 24";
-  const rec=ph(w)===2&&!isBeg(w)&&!easy(w,d)?LIFTS.filter(l=>l.day===d&&!altOf(w,l.id)&&e1(w,l.id)>base(l.id,wave(w))*1.001):[]; /* ★ set beat the current calculated max */
+  const rec=ph(w)===2&&!isBeg(w)&&!easy(w,d)?LIFTS.filter(l=>l.day===d&&!altOf(w,l.id)&&testE1(w,l.id)>base(l.id,wave(w))*1.001):[]; /* only the first ★ set drives the next wave */
   $("sh-h").textContent=doneWorkouts()>=24?"Блок пройден: 24 из 24":rec.length?"Новый максимум":"Тренировка закрыта";
-  $("sh-sub").textContent=doneWorkouts()>=24?"12 недель позади. Следующий блок с перенесёнными весами запускается в «Настройках»":rec.length?rec.map(l=>l.name+" · "+fmt(e1(w,l.id))+" кг").join(", ")+" — веса вырастут":"Неделя "+w+" · день "+d;
+  $("sh-sub").textContent=doneWorkouts()>=24?"12 недель позади. Следующий блок с перенесёнными весами запускается в «Настройках»":rec.length?rec.map(l=>l.name+" · "+fmt(testE1(w,l.id))+" кг").join(", ")+" — база следующей волны вырастет":"Неделя "+w+" · день "+d;
   $("sh-ok").style.display=rec.length?"none":"";$("sh-peach").hidden=!rec.length;
   const sc=$("sheetcopy");sc.hidden=cloud==="ok";sc.textContent=doneWorkouts()-(S.backupAt||0)>=4?"Давно не было копии — сохранить дневник":"Сохранить копию дневника";
   const n=nextPos();$("sheetnext").hidden=!n;if(n)$("sheetnext").textContent="Дальше: неделя "+n.w+" · день "+n.d;
