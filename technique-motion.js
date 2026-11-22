@@ -64,6 +64,22 @@ function bodySegments(j){
   }
   return seg
 }
+function smoothPath(seg,pts,type="soft",closed=false){seg.push({path:pts,closed,type})}
+function sculptedLoft(seg,rings,yaw,flow=true){
+  const sx=v(Math.cos(yaw),0,Math.sin(yaw)),near=v(-Math.sin(yaw),0,Math.cos(yaw)),edges=[[],[]],flows=[[],[]];
+  for(const r of rings){const point=a=>add(r.c,add(mul(r.u,Math.cos(a)*r.rx),mul(r.w,Math.sin(a)*(Math.sin(a)>=0?r.front:r.back)))),rz=(r.front+r.back)*.5,edge=Math.atan2(rz*dot(r.w,sx),r.rx*dot(r.u,sx)),facing=Math.atan2(rz*dot(r.w,near),r.rx*dot(r.u,near));edges[0].push(point(edge));edges[1].push(point(edge+Math.PI));if(flow){flows[0].push(point(facing-.48));flows[1].push(point(facing+.48))}if(r.arc){const pts=[];for(let k=-2;k<=2;k++)pts.push(point(facing+k*.34));smoothPath(seg,pts,"soft")}}
+  smoothPath(seg,edges[0],"contour");smoothPath(seg,edges[1],"contour");if(flow){smoothPath(seg,flows[0],"soft");smoothPath(seg,flows[1],"soft")}
+}
+function organicLimb(seg,a,b,radii,yaw,flow=true,offset=0){const axis=sub(b,a),[u,w]=basis(axis,Math.abs(norm(axis)[0])>.85?v(0,0,1):v(1,0,0)),ts=[0,.18,.42,.72,1];sculptedLoft(seg,ts.map((t,i)=>({c:add(mix(a,b,t),mul(w,Math.sin(Math.PI*t)*offset)),u,w,rx:radii[i],front:radii[i],back:radii[i],arc:i===2&&flow})),yaw,flow)}
+function sculptRdl(j,yaw,phase){
+  const seg=[],top=mix(j.c,j.n,.44),axis=sub(top,j.p),[right,front]=basis(axis),profile=[[0,.28,.17,.22,0],[.10,.33,.18,.28,1],[.24,.31,.16,.23,0],[.40,.225,.13,.14,1],[.55,.23,.15,.15,0],[.72,.285,.19,.16,0],[.88,.32,.19,.15,1],[1,.30,.11,.11,0]];
+  sculptedLoft(seg,profile.map(([t,rx,f,b,arc])=>({c:mix(j.p,top,t),u:right,w:front,rx,front:f,back:b,arc:!!arc})),yaw);
+  const haxis=sub(j.h,j.n),[hr,hf,hu]=basis(haxis),neckEnd=mix(j.n,j.h,.36);sculptedLoft(seg,[0,.5,1].map((t,i)=>({c:mix(j.n,neckEnd,t),u:hr,w:hf,rx:[.09,.078,.085][i],front:.078,back:.078})),yaw,false);
+  const hp=[[-.19,.055,.06,.065,0],[-.10,.12,.11,.115,1],[.04,.142,.125,.125,0],[.15,.12,.105,.105,0],[.21,.05,.05,.055,0]];sculptedLoft(seg,hp.map(([o,rx,f,b,arc])=>({c:add(j.h,mul(hu,o)),u:hr,w:hf,rx,front:f,back:b,arc:!!arc})),yaw,false);
+  const sway=Math.sin(TAU*phase)*.045,hairRoot=add(j.h,add(mul(hu,.08),mul(hf,-.12))),hairMid=add(hairRoot,v(0,-.23,-.10+sway*.5)),hairEnd=add(hairRoot,v(0,-.43,-.08+sway));smoothPath(seg,[hairRoot,add(hairRoot,v(0,-.08,-.10)),hairMid,hairEnd],"hair");smoothPath(seg,[add(hairRoot,mul(hr,.04)),add(hairMid,mul(hr,.035)),add(hairEnd,mul(hr,.015))],"hair");
+  for(const side of ["l","r"]){const q=side==="l"?-1:1,s=j["s"+side],e=j["e"+side],w=j["w"+side],h=j["h"+side],k=j["k"+side],a=j["a"+side],t=j["t"+side];organicLimb(seg,s,e,[.09,.098,.087,.066,.052],yaw,false);organicLimb(seg,e,w,[.055,.064,.060,.047,.035],yaw,false);organicLimb(seg,h,k,[.14,.155,.145,.112,.082],yaw);organicLimb(seg,k,a,[.082,.092,.09,.063,.043],yaw,true,-.018);organicLimb(seg,a,t,[.052,.063,.064,.052,.035],yaw,false);smoothPath(seg,[add(w,v(q*.025,0,0)),add(w,v(q*.035,-.065,.025)),add(w,v(q*.018,-.11,.03))],"body")}
+  return seg
+}
 function groundSegments(){const seg=[],u=v(1,0,0),w=v(0,0,1);circle(seg,v(0,.015,0),u,w,.76,.76,24,"ground");line(seg,v(-.92,.015,0),v(.92,.015,0),"ground");line(seg,v(0,.015,-.92),v(0,.015,.92),"ground");return seg}
 const GROUND=groundSegments();
 let active=null;
@@ -82,9 +98,9 @@ function create(canvas,kind){
   function draw(){
     if(disposed)return;const started=performance.now(),phase=((time%duration)+duration)%duration/duration,s=(1-Math.cos(TAU*phase))/2,current=poseDef(s),j=current.j,center=current.view.center;
     ctx.clearRect(0,0,width,height);ctx.lineCap="round";ctx.lineJoin="round";
-    const seg=GROUND.concat(current.props||[],bodySegments(j));
-    const projected=seg.map(q=>{if(q.path){const path=q.path.map(p=>project(p,center)),d=path.reduce((n,p)=>n+p[2],0)/path.length;return {path,d,type:q.type}}const a=project(q.a,center),b=project(q.b,center);return {a,b,d:(a[2]+b[2])*.5,type:q.type}}).sort((a,b)=>a.d-b.d),depths=projected.map(q=>q.d),minD=Math.min(...depths),maxD=Math.max(...depths),rangeD=maxD-minD||1;
-    for(const q of projected){const near=(q.d-minD)/rangeD;ctx.globalAlpha=q.type==="ground"?.12:q.type==="prop"?.12+.25*near:.10+.76*near;ctx.strokeStyle=q.type==="body"?gradient:q.type==="ground"?groundColor:propColor;ctx.lineWidth=q.type==="body"?1.05+.40*near:1;ctx.beginPath();if(q.path){const p=q.path,n=p.length,last=p[n-1];ctx.moveTo((last[0]+p[0][0])/2,(last[1]+p[0][1])/2);for(let i=0;i<n;i++){const cur=p[i],next=p[(i+1)%n];ctx.quadraticCurveTo(cur[0],cur[1],(cur[0]+next[0])/2,(cur[1]+next[1])/2)}}else{ctx.moveTo(q.a[0],q.a[1]);ctx.lineTo(q.b[0],q.b[1])}ctx.stroke()}
+    const seg=GROUND.concat(current.props||[],kind==="rdl"?sculptRdl(j,yaw,phase):bodySegments(j));
+    const projected=seg.map(q=>{if(q.path){const path=q.path.map(p=>project(p,center)),d=path.reduce((n,p)=>n+p[2],0)/path.length;return {path,d,type:q.type,closed:q.closed}}const a=project(q.a,center),b=project(q.b,center);return {a,b,d:(a[2]+b[2])*.5,type:q.type}}).sort((a,b)=>a.d-b.d),depths=projected.map(q=>q.d),minD=Math.min(...depths),maxD=Math.max(...depths),rangeD=maxD-minD||1;
+    for(const q of projected){const near=(q.d-minD)/rangeD,body=["body","contour","soft","hair"].includes(q.type);ctx.globalAlpha=q.type==="ground"?.12:q.type==="prop"?.12+.25*near:q.type==="soft"?.10+.27*near:q.type==="hair"?.16+.52*near:q.type==="contour"?.42+.53*near:.10+.76*near;ctx.strokeStyle=body?gradient:q.type==="ground"?groundColor:propColor;ctx.lineWidth=q.type==="contour"?1.40+.45*near:q.type==="soft"?.82+.22*near:body?1.05+.40*near:1;ctx.beginPath();if(q.path){const p=q.path,n=p.length;if(q.closed){const last=p[n-1];ctx.moveTo((last[0]+p[0][0])/2,(last[1]+p[0][1])/2);for(let i=0;i<n;i++){const cur=p[i],next=p[(i+1)%n];ctx.quadraticCurveTo(cur[0],cur[1],(cur[0]+next[0])/2,(cur[1]+next[1])/2)}}else{ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<n-1;i++){const cur=p[i],next=p[i+1];ctx.quadraticCurveTo(cur[0],cur[1],(cur[0]+next[0])/2,(cur[1]+next[1])/2)}if(n>1)ctx.lineTo(p[n-1][0],p[n-1][1])}}else{ctx.moveTo(q.a[0],q.a[1]);ctx.lineTo(q.b[0],q.b[1])}ctx.stroke()}
     ctx.globalAlpha=1;stats.draws++;stats.segments=seg.length;const elapsed=performance.now()-started;stats.totalMs+=elapsed;stats.maxMs=Math.max(stats.maxMs,elapsed);window.__SCENE_READY__=true
   }
   function requestDraw(){if(!pending&&!disposed)pending=requestAnimationFrame(()=>{pending=0;draw()})}
