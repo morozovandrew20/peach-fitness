@@ -1,4 +1,4 @@
-const CACHE = "peach-v19";
+const CACHE = "peach-v20";
 const NAV_TIMEOUT = 3500;
 const CORE = [
   "./",

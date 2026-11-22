@@ -355,6 +355,10 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
 .safetyitem span{font-size:12px;color:var(--muted)}
 .safetyitem .btn{flex:0 0 auto;font-size:13px;padding-inline:12px}
 @media(max-width:389px){.safetyitem{align-items:stretch;flex-direction:column}.safetyitem .btn{width:100%}}
+/* v20: keyboard and touch access only — approved palette stays unchanged */
+.step input{min-height:44px}
+.meta .ghostbtn{min-height:44px;display:inline-flex;align-items:center;vertical-align:middle}
+.nacts{flex-wrap:wrap;gap:0 18px}
 
 </style>
 
@@ -386,15 +390,15 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
   <button type="button" data-tab="progress"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2.6" y="15.4" width="6.2" height="8.6" rx="2.4"/><rect x="10.9" y="10" width="6.2" height="14" rx="2.4"/><rect x="19.2" y="4.2" width="6.2" height="19.8" rx="2.4"/></svg>Прогресс</button>
   <button type="button" data-tab="setup"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2.8" y="7.6" width="8.3" height="2.8" rx="1.4"/><circle cx="16" cy="9" r="3.6"/><rect x="20.9" y="7.6" width="4.3" height="2.8" rx="1.4"/><rect x="2.8" y="17.6" width="4.3" height="2.8" rx="1.4"/><circle cx="12" cy="19" r="3.6"/><rect x="16.9" y="17.6" width="8.3" height="2.8" rx="1.4"/></svg>Настройки</button>
 </div></div></nav>
-<div id="sheet" hidden><button type="button" id="sheetx" aria-label="Закрыть"></button>
+<div id="sheet" hidden><button type="button" id="sheetx" tabindex="-1" aria-label="Закрыть"></button>
 <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-h" tabindex="-1"><button type="button" class="panelx" id="sheetclose" aria-label="Закрыть">×</button><div class="wrap"><span class="grab"></span>
   <svg class="okmark" id="sh-ok" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="42"/><path d="M25 43.5l11.5 11.5L60 31"/></svg><span class="peachmark" id="sh-peach" hidden aria-hidden="true"><svg><use href="#peach"/></svg></span>
   <h3 id="sh-h">Тренировка закрыта</h3><p id="sh-sub"></p>
   <div class="stats"><div class="stat"><b id="sh-ton"></b><span>тоннаж</span></div><div class="stat"><b id="sh-diff"></b><span>к прошлой неделе</span></div><div class="stat"><b id="sh-n"></b><span>тренировок</span></div></div>
-  <button type="button" class="cta" id="sheetnext"></button><button type="button" class="ghostbtn" id="sheetok">Остаться здесь</button><button type="button" class="ghostbtn" id="sheetcopy" hidden></button>
+  <button type="button" class="cta" id="sheetnext"></button><button type="button" class="ghostbtn" id="sheetcal" hidden>Добавить следующую в календарь</button><button type="button" class="ghostbtn" id="sheetok">Остаться здесь</button><button type="button" class="ghostbtn" id="sheetcopy" hidden></button>
 </div></div></div>
 
-<div id="info" hidden><button type="button" id="infox" aria-label="Закрыть"></button>
+<div id="info" hidden><button type="button" id="infox" tabindex="-1" aria-label="Закрыть"></button>
 <div class="panel" role="dialog" aria-modal="true" aria-label="Информация" tabindex="-1"><button type="button" class="panelx" id="infoclose" aria-label="Закрыть">×</button><div class="wrap"><span class="grab"></span><div id="infobody" style="display:flex;flex-direction:column;gap:16px"></div>
   <button type="button" class="cta" id="infook">Понятно</button>
 </div></div></div>
@@ -459,7 +463,7 @@ function base(id,wv){
   const prev=base(id,wv-1), tw=(wv-1)*4-1, test=testE1(tw,id);
   if(isBeg(tw)||altOf(tw,id)) return prev;                                     /* that wave was trained as a beginner: the start already holds it */
   if(easy(tw,liftDay(id))) return prev;                          /* ★ day taken easy: keep the weights */
-  if(!test) return prev*(1+g);                                   /* no ★ recorded: default growth */
+  if(!test) return prev;                                        /* no ★ recorded: missing evidence is not progress */
   const planE1=planKg(id,tw)*(1+SC(tw)[liftDay(id)].reps[2]/30); /* what "exactly the plan" is worth */
   return test>=planE1*0.999 ? Math.max(prev,Math.min(test,prev*(1+2*g)))   /* plan done: never go down, grow up to the cap */
                             : Math.max(prev*0.95,test);                    /* plan missed: step back, at most 5% */
@@ -474,7 +478,7 @@ function weightBasis(id,w){
     const tw=(wv-1)*4-1,prev=base(id,wv-1),now=base(id,wv);
     if(isBeg(tw)||altOf(tw,id))lead=`Веса перенесены с прошлой волны: база ${fmt(prev)} кг`;
     else if(easy(tw,d))lead=`На неделе ${tw} был лёгкий день: база оставлена ${fmt(prev)} кг`;
-    else{const r=rows(tw,id)[0];lead=full(r)?`Неделя ${tw}, 1-й подход ★: ${fk(num(r[0]))} × ${num(r[1])} → расчётный максимум ${fmt(testE1(tw,id))} кг. База ${fmt(prev)} → ${fmt(now)} кг`:`Первый подход ★ на неделе ${tw} не записан: база ${fmt(prev)} → ${fmt(now)} кг по запасному правилу +${fk(growth()*100)}%`}
+    else{const r=rows(tw,id)[0];lead=full(r)?`Неделя ${tw}, 1-й подход ★: ${fk(num(r[0]))} × ${num(r[1])} → расчётный максимум ${fmt(testE1(tw,id))} кг. База ${fmt(prev)} → ${fmt(now)} кг`:`Первый подход ★ на неделе ${tw} не записан: база оставлена ${fmt(prev)} кг. Пропуск теста — не основание прибавлять вес`}
   }
   return `${lead}. Сегодня ${fk(pct)}% базы${easy(w,d)?", затем −10% для лёгкого дня":""}; округление до ${fk(st)} кг. Формула Эпли — ориентир`
 }
@@ -602,7 +606,7 @@ function applyExternalState(raw){
   let incoming;try{incoming=normalize(JSON.parse(raw))}catch(e){return}
   if((incoming.updatedAt||0)<=(S.updatedAt||0))return;
   const destructive=incoming.block!==S.block||(!incoming.startSet&&S.startSet),view={w:S.cur.w,d:S.cur.d},scroll={x:window.scrollX,y:window.scrollY};
-  const draft=edit?{id:edit.id,s:edit.s,kg:$("ed-0")?$("ed-0").value:"",reps:$("ed-1")?$("ed-1").value:""}:null;
+  const draftState=edit||current(S.cur.w,S.cur.d),draft=$("editor")&&draftState?{id:draftState.id,s:draftState.s,kg:$("ed-0")?$("ed-0").value:"",reps:$("ed-1")?$("ed-1").value:""}:null;
   const a=document.activeElement,active=a&&a.id&&/^(INPUT|TEXTAREA)$/.test(a.tagName)?{id:a.id,value:a.value,start:a.selectionStart,end:a.selectionEnd}:null;
   const dialog=visibleDialog();if(dialog)closeDialog(dialog.id);
   S=incoming;S.cur=view;edit=!destructive&&draft?{id:draft.id,s:draft.s}:null;undoSet=null;justDone=null;syncWarm();render();
@@ -663,12 +667,25 @@ function current(w,d){
   for(const ex of EXD(w,d)){const r=rows(w,ex.id),n=nSets(ex,w);for(let s=0;s<n;s++)if(!full(r[s]))return {id:ex.id,s}}
   return null;
 }
-const stepper=(f,v,unit,mode)=>`<div class="step"><button type="button" data-step="-1" data-f="${f}" aria-label="Меньше">−</button><label><input id="ed-${f}" inputmode="${mode}" autocomplete="off" value="${esc(v)}" placeholder="0" aria-label="${unit}"><span>${unit}</span></label><button type="button" data-step="1" data-f="${f}" aria-label="Больше">+</button></div>`;
+const stepper=(f,v,unit,mode)=>`<div class="step"><button type="button" data-step="-1" data-f="${f}" aria-label="Меньше">−</button><label><input id="ed-${f}" inputmode="${mode}" autocomplete="off" value="${esc(v)}" placeholder="0" aria-label="${unit}" aria-describedby="editorerror"><span>${unit}</span></label><button type="button" data-step="1" data-f="${f}" aria-label="Больше">+</button></div>`;
+const daysWord=n=>{const a=n%10,b=n%100;return a===1&&b!==11?"день":a>=2&&a<=4&&(b<12||b>14)?"дня":"дней"};
+function returnBreak(w,d,c){
+  if(c.done||c.done>=c.total)return null; /* never interrupt a workout that is already underway */
+  const now=Date.now(),curKey=w+"-"+d;let last=null;
+  for(const [key,q] of Object.entries(S.sessions||{})){
+    if(key===curKey||!isDayKey(key)||!(q.end>0&&q.end<=now)||(last&&q.end<=last.end))continue;
+    const [lw,ld]=key.split("-").map(Number);last={end:q.end,w:lw,d:ld}
+  }
+  if(!last||w*2+d<last.w*2+last.d)return null;
+  const days=Math.floor((now-last.end)/DAY),seen="return-"+last.end+"-"+w+"-"+d;
+  return days>=14&&!(S.seen||{})[seen]?{days,seen}:null
+}
 function renderTrain(fresh){
-  const {w,d}=S.cur, beg=isBeg(w), p=beg?0:ph(w), date=S.dates[w+"-"+d], c=counts(w,d), cur=current(w,d), t=tonnage(w,d), ez=easy(w,d), jd=justDone;
+  const {w,d}=S.cur, beg=isBeg(w), p=beg?0:ph(w), date=S.dates[w+"-"+d], c=counts(w,d), cur=current(w,d), t=tonnage(w,d), ez=easy(w,d), jd=justDone, rb=returnBreak(w,d,c);
   let h=`<section class="hero"><div class="hring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="35"/><circle class="pr" id="hbar" cx="42" cy="42" r="35" stroke-dasharray="219.9" stroke-dashoffset="${lastOff}"/></svg><b>${c.done}/${c.total}</b></div>
     <div class="htxt"><span class="cap">${d===1?"День 1 · сила":"День 2 · объём"}${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка закрыта":(n=>{const a=n%10,b=n%100;return a===1&&b!==11?"Ещё "+n+" подход":a>=2&&a<=4&&(b<12||b>14)?"Ещё "+n+" подхода":"Ещё "+n+" подходов"})(c.total-c.done)}</strong>
     <p>${ez?"Лёгкий день: веса на 10% меньше и на подход меньше. Тренировка засчитывается."+(p===2?" Подход ★ сегодня не считается — веса следующей волны останутся прежними.":""):beg?"Дошла до верхней цифры во всех подходах — в следующий раз вес больше. После подхода нажми «Готово» — пойдёт таймер отдыха.":p===2?"Тяжёлая неделя: в упражнениях со ★ первый подход — на максимум повторений. Только он задаёт веса следующей волны.":p===3?"Неделя отдыха: вдвое меньше подходов, в главных упражнениях вес ниже.":"Проверь вес и повторения, нажми «Готово» — пойдёт таймер отдыха."}</p>${p===3?"":`<button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть неделю отдыха</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Сил хватает — без отдыха</button>`):""}</div></section>`;
+  if(rb)h+=`<div class="note" data-return-note><b>Пауза — не повод догонять.</b> Последняя закрытая тренировка была ${rb.days} ${daysWord(rb.days)} назад. Продолжай с недели ${w}, дня ${d}: пропущенные тренировки не нужно добавлять к текущим. ${ez?"Лёгкий день уже включён: веса на 10% ниже и на один подход меньше.":"Для спокойного возвращения можно включить лёгкий день: веса будут на 10% ниже и на один подход меньше."} <span class="nacts">${ez?"":`<button type="button" class="ghostbtn" data-returneasy="${rb.seen}">Продолжить полегче</button>`}<button type="button" class="ghostbtn dim" data-seen="${rb.seen}">${ez?"Понятно":"Обычный план"}</button></span></div>`;
   if(!beg&&(w-1)%4===3&&!wkHas(w))h+=`<div class="note">${S.noRest&&S.noRest[w]?"Вместо отдыха — ещё одна средняя неделя. Следующую неделю отдыха пропустить будет нельзя.":S.noRest&&S.noRest[w-4]?"Прошлую неделю отдыха ты пропустила — эту делаем обязательно.":"Неделя отдыха для роста мышц не обязательна. Сон в порядке, веса идут, ничего не болит — можно заменить её на ещё одну среднюю. Два раза подряд пропускать нельзя."}</div>`;
   if(c.done===0||c.done>=c.total){
     const bd=bodyDue(), sl=bd?null:LIFTS.map(l=>[l,l.day===d?stalled(l.id):""]).find(x=>x[1]&&!(S.seen||{})["st-"+x[0].id+"-"+x[1]]);
@@ -727,7 +744,7 @@ function renderTrain(fresh){
   const prev=w>1?tonnage(w-1,d):0, diff=prev?t-prev:0;
   if(c.done>=c.total)h+=`<section class="summary"><h3>Тренировка закрыта</h3><div class="stats">
       <div class="stat"><b>${kgf(t)} кг</b><span>тоннаж</span></div>
-      <div class="stat"><b>${prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—"}</b><span>к прошлой неделе</span></div></div>${nextPos()?`<button type="button" class="cta nextwork" data-nextwork>Дальше: неделя ${nextPos().w} · день ${nextPos().d}</button>`:`<button type="button" class="cta nextwork" data-tab="progress">Смотреть прогресс</button>`}</section>`;
+      <div class="stat"><b>${prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—"}</b><span>к прошлой неделе</span></div></div>${nextPos()?`<button type="button" class="cta nextwork" data-nextwork>Дальше: неделя ${nextPos().w} · день ${nextPos().d}</button><button type="button" class="ghostbtn nextwork" data-calendar>Добавить следующую в календарь</button>`:`<button type="button" class="cta nextwork" data-tab="progress">Смотреть прогресс</button>`}</section>`;
   else if(t)h+=`<div class="row e1"><span>Тоннаж пока</span><b>${kgf(t)} кг</b></div>`;
   h+=`<div class="card"><label class="lbl" for="note-${w}-${d}">Сон · самочувствие · день цикла</label>
       <textarea id="note-${w}-${d}" maxlength="2000" placeholder="По желанию">${esc(S.notes[w+"-"+d]||"")}</textarea></div>
@@ -947,12 +964,12 @@ function renderSetup(){
       <li>Через несколько месяцев, когда вес начнёт расти медленнее, переходи на уровень «Средний» — там волны.</li></ol></section>`;
   else h+=`<section class="card"><h3>Рост за волну</h3>
       <div class="field" style="max-width:160px"><input id="growth" inputmode="decimal" value="${esc(S.growth)}" aria-label="Рост за волну, процентов"><span>%</span></div>
-      <p class="meta">Используется, если подход ★ не записан. 2,5% — ориентир из практики, не точная норма.</p></section>
+      <p class="meta">Ориентир и верхняя граница прибавки после удачного ★. Если ★ не записан, база не растёт. 2,5% — ориентир из практики, не точная норма.</p></section>
     <section class="card"><h3>Как это работает</h3><ol>
       <li>12 недель — три волны по четыре: лёгкая, средняя, тяжёлая ★, отдых. Высота столбиков вверху — это нагрузка недели.</li>
       <li>Отказ — когда следующее повторение уже не выходит с чистой техникой. «Запас 2» значит: остановилась, хотя могла бы ещё два раза. У каждого упражнения в строке «Усилие» написано, как близко к отказу работать.</li>
       <li>Мост, тяга и гакк идут по плану: приложение само пишет вес и повторения. В лёгкую и среднюю неделю в последнем подходе делай больше повторений, чем в плане, с запасом 1–2.</li>
-      <li>В тяжёлую неделю 1-й подход — на максимум повторений. По нему пересчитываются веса следующей волны: получилось больше плана — веса растут, ровно план — остаются, меньше плана — снижаются, но не больше чем на 5%.</li>
+      <li>В тяжёлую неделю 1-й подход — на максимум повторений. По нему пересчитываются веса следующей волны: получилось больше плана — веса растут, ровно план — остаются, меньше плана — снижаются, но не больше чем на 5%. Без записанного ★ база остаётся прежней.</li>
       <li>Остальные упражнения: верхняя цифра диапазона во всех подходах — в следующий раз вес больше.</li>
       <li>Неделя отдыха снимает накопленную усталость: веса и подходов меньше. Для роста мышц она не обязательна; по опыту тренеров после неё легче идут тяжёлые недели. Если сил хватает, её можно заменить на ещё одну среднюю — но не два раза подряд.</li>
       <li>Нет сил — нажми «Сегодня полегче»: веса и подходы снизятся, тренировка засчитается. Любое упражнение можно заменить на равноценное кнопкой «заменить».</li></ol></section>`;
@@ -1018,9 +1035,41 @@ function party(){
   $("sh-sub").textContent=storageErr?"Тренировка закрыта только в этой вкладке. Скачай копию, не закрывая страницу.":doneWorkouts()>=24?"12 недель позади. Следующий блок с перенесёнными весами запускается в «Настройках»":rec.length?rec.map(l=>l.name+" · "+fmt(testE1(w,l.id))+" кг").join(", ")+" — база следующей волны вырастет":"Неделя "+w+" · день "+d;
   $("sh-ok").style.display=rec.length?"none":"";$("sh-peach").hidden=!rec.length;
   const sc=$("sheetcopy");sc.hidden=cloud==="ok"&&!storageErr;sc.textContent=doneWorkouts()-(S.backupAt||0)>=4?"Давно не было копии — сохранить дневник":"Сохранить копию дневника";
-  const n=nextPos();$("sheetnext").hidden=!n;if(n)$("sheetnext").textContent="Дальше: неделя "+n.w+" · день "+n.d;
+  const n=nextPos();$("sheetnext").hidden=!n;$("sheetcal").hidden=!n;if(n)$("sheetnext").textContent="Дальше: неделя "+n.w+" · день "+n.d;
   $("sheetok").textContent=n?"Остаться здесь":"Готово";$("sheetok").className=n?"ghostbtn":"cta";
   openDialog("sheet");
+}
+
+/* ---------- local calendar: an explicit .ics download, no account or calendar access ---------- */
+let calendarTarget=null;
+const localDateValue=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}T${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+function parseCalendarDate(v){
+  const m=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(String(v||""));if(!m)return null;
+  const a=m.slice(1).map(Number),d=new Date(a[0],a[1]-1,a[2],a[3],a[4],0,0);
+  return a[0]>=2000&&isFinite(d)&&d.getFullYear()===a[0]&&d.getMonth()===a[1]-1&&d.getDate()===a[2]&&d.getHours()===a[3]&&d.getMinutes()===a[4]?d:null
+}
+function showCalendar(n){
+  if(!n)return;calendarTarget={w:n.w,d:n.d};const start=new Date();start.setDate(start.getDate()+1);start.setHours(18,0,0,0);
+  $("infobody").innerHTML=`<h3>Следующая тренировка</h3><p>Неделя ${n.w} · день ${n.d}. Выбери удобные дату и время — ничего не добавляется автоматически.</p><label class="lbl" for="cal-at">Дата и время</label><input class="txt" id="cal-at" type="datetime-local" value="${localDateValue(start)}" min="${localDateValue(new Date())}" aria-describedby="cal-help calmsg"><p class="meta" id="cal-help">Скачается файл .ics с событием на 75 минут. Открой его: календарь предложит добавить тренировку. Длительность можно изменить уже в календаре.</p><span class="e1" id="calmsg" role="status"></span><button type="button" class="cta" id="cal-download">Скачать событие</button>`;
+  openDialog("info")
+}
+const icsEscape=s=>String(s).replace(/\\/g,"\\\\").replace(/\r\n|\r|\n/g,"\\n").replace(/([;,])/g,"\\$1");
+const icsUTC=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
+function foldICS(line){
+  const enc=new TextEncoder(),parts=[];let part="";
+  for(const ch of line){if(part&&enc.encode(part+ch).length>70){parts.push(part);part=ch}else part+=ch}
+  parts.push(part);return parts.join("\r\n ")
+}
+function downloadCalendar(){
+  const input=$("cal-at"),msg=$("calmsg"),start=parseCalendarDate(input&&input.value);
+  if(!start){if(msg)msg.textContent="Проверь дату и время.";if(input){input.setAttribute("aria-invalid","true");input.focus()}return}
+  if(start<=new Date()){if(msg)msg.textContent="Выбери дату и время в будущем.";if(input){input.setAttribute("aria-invalid","true");input.focus()}return}
+  if(!calendarTarget)return;input.removeAttribute("aria-invalid");
+  const end=new Date(start.getTime()+75*60000),now=new Date(),target=calendarTarget;
+  const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//PEACH//Workout//RU","CALSCALE:GREGORIAN","METHOD:PUBLISH","BEGIN:VEVENT",`UID:peach-${target.w}-${target.d}-${now.getTime()}@local`,`DTSTAMP:${icsUTC(now)}`,`DTSTART:${icsUTC(start)}`,`DTEND:${icsUTC(end)}`,`SUMMARY:${icsEscape(`PEACH: неделя ${target.w}, день ${target.d}`)}`,`DESCRIPTION:${icsEscape("Тренировка PEACH. Открой приложение, чтобы посмотреть план и записать подходы.")}`,"STATUS:CONFIRMED","END:VEVENT","END:VCALENDAR"];
+  const blob=new Blob([lines.map(foldICS).join("\r\n")+"\r\n"],{type:"text/calendar;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=`PEACH-неделя-${target.w}-день-${target.d}.ics`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  if(msg)msg.textContent="Файл скачан. Открой его и подтверди добавление в календарь."
 }
 
 /* ---------- gym helpers: plates, warm-up, keep screen awake, backup ---------- */
@@ -1154,7 +1203,7 @@ function modalBackground(on){document.querySelectorAll("header,main,nav,#timer")
 function openDialog(id){
   const el=$(id);if(!el)return;
   dialogReturn=document.activeElement;el.hidden=false;modalBackground(true);
-  const panel=el.querySelector(".panel");if(panel)panel.focus();
+  const panel=el.querySelector(".panel");if(panel){if(id==="info"){const title=el.querySelector("#infobody h3");if(title){title.id="info-title";panel.setAttribute("aria-labelledby","info-title");panel.removeAttribute("aria-label")}}panel.focus()}
 }
 function closeDialog(id){
   const el=$(id);if(!el||el.hidden)return;
@@ -1177,8 +1226,9 @@ function toEditor(){
 }
 function bad(el,msg){el.setAttribute("aria-invalid","true");el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake");el.focus();const er=$("editorerror");if(er&&el.closest("#editor")){er.textContent=msg||"Проверь значение: вес 0–1000 кг, повторения 1–200";er.classList.add("show")}}
 function settingValid(el,ok,msg){
-  const card=el.closest(".card"),er=card&&card.querySelector(".fielderror");if(ok){if(er)er.classList.remove("show");return true}
-  bad(el);if(card){const p=er||document.createElement("p");if(!er){p.className="fielderror";card.appendChild(p)}p.setAttribute("role","alert");p.textContent=msg;p.classList.add("show")}return false
+  const card=el.closest(".card"),er=card&&card.querySelector(".fielderror"),id=el.id?el.id+"-error":"";
+  if(ok){if(er&&er.id===id){er.classList.remove("show");const ids=(el.getAttribute("aria-describedby")||"").split(/\s+/).filter(x=>x&&x!==id);if(ids.length)el.setAttribute("aria-describedby",ids.join(" "));else el.removeAttribute("aria-describedby")}return true}
+  bad(el);if(card){const p=er||document.createElement("p");if(!er){p.className="fielderror";card.appendChild(p)}p.setAttribute("role","alert");if(id){p.id=id;const ids=new Set((el.getAttribute("aria-describedby")||"").split(/\s+/).filter(Boolean));ids.add(id);el.setAttribute("aria-describedby",Array.from(ids).join(" "))}p.textContent=msg;p.classList.add("show")}return false
 }
 function nextPos(){const {w,d}=S.cur;return d===1?{w,d:2}:w<12?{w:w+1,d:1}:null}
 document.addEventListener("click",e=>{
@@ -1229,6 +1279,7 @@ document.addEventListener("click",e=>{
   else if(b.dataset.norest!==undefined){S.noRest=S.noRest||{};if(S.noRest[w])delete S.noRest[w];else if(!S.noRest[w-4])S.noRest[w]=true;edit=null;save();renderChrome(false);renderTrain()}
   else if(b.dataset.bodyadd!==undefined){const ok=v=>{const n=num(v);return n>=20&&n<=250};if(!["g","h","w"].some(k=>ok(BD[k])))return;S.body=S.body||[];S.body.push({t:Date.now(),d:new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit",year:"2-digit"}),g:ok(BD.g)?String(num(BD.g)):"",h:ok(BD.h)?String(num(BD.h)):"",w:ok(BD.w)?String(num(BD.w)):""});BD.g=BD.h=BD.w="";save();renderProgress()}
   else if(b.dataset.bodydel!==undefined){if(!b.dataset.armed){b.dataset.armed="1";b.textContent="Точно удалить?";return}(S.body||[]).pop();save();renderProgress()}
+  else if(b.dataset.returneasy){S.easy=S.easy||{};S.easy[w+"-"+d]=true;S.seen=S.seen||{};S.seen[b.dataset.returneasy]=Date.now();edit=null;save();renderChrome(false);renderTrain()}
   else if(b.dataset.easy!==undefined){S.easy=S.easy||{};const k=w+"-"+d;if(S.easy[k])delete S.easy[k];else S.easy[k]=true;edit=null;save();renderChrome(false);renderTrain()}
   else if(b.dataset.swap&&ex){
     const cur=altOf(w,ex.id),locked=rows(w,ex.id).some(full),opts=[{name:ex.name,range:ex.range||(isBeg(w)?ex.br:"по плану"),per:ex.per||""}].concat(altsOf(ex.id).map(a=>Object.assign({range:ex.range||ex.br,per:ex.per||""},a)));
@@ -1289,6 +1340,8 @@ document.addEventListener("click",e=>{
     (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(code):Promise.reject()).then(()=>{S.backupAt=doneWorkouts();save();b.textContent="Копия скопирована — вставь её в заметки"})
       .catch(()=>{closeDialog("sheet");tab="setup";render(true);const el=$("restore");if(el)el.scrollIntoView({block:"center"})});
   }
+  else if(b.id==="sheetcal"||b.dataset.calendar!==undefined){const n=nextPos();if(n){if(b.id==="sheetcal")closeDialog("sheet");showCalendar(n)}}
+  else if(b.id==="cal-download"){downloadCalendar()}
   else if(b.id==="sheetnext"||b.dataset.nextwork!==undefined){goNext()}
   else if(b.id==="sheetok"||b.id==="sheetx"||b.id==="sheetclose"){closeDialog("sheet")}
   else if(b.id==="tplus"){if(tPaused){tPaused+=30000;tLen+=30000;$("tclock").textContent=clockText(tPaused)}else if(Date.now()<tEnd){tEnd+=30000;tLen+=30000;tick()}persistRest()}
@@ -1325,11 +1378,12 @@ document.addEventListener("keydown",e=>{
   const dialog=visibleDialog();
   if(e.key==="Escape"&&dialog){e.preventDefault();closeDialog(dialog.id);return}
   if(e.key==="Tab"&&dialog){
-    const items=Array.from(dialog.querySelectorAll('button:not([hidden]),input:not([hidden]),[tabindex="0"]')).filter(el=>!el.disabled&&el.getClientRects().length);
+    const items=Array.from(dialog.querySelectorAll('button:not([hidden]),input:not([hidden]),textarea:not([hidden]),select:not([hidden]),summary,a[href],[tabindex]:not([tabindex="-1"])')).filter(el=>!el.disabled&&el.tabIndex>=0&&el.getClientRects().length);
     if(!items.length){e.preventDefault();return}
-    const first=items[0],last=items[items.length-1];
-    if(e.shiftKey&&(document.activeElement===first||!dialog.contains(document.activeElement))){e.preventDefault();last.focus()}
-    else if(!e.shiftKey&&(document.activeElement===last||!dialog.contains(document.activeElement))){e.preventDefault();first.focus()}
+    const first=items[0],last=items[items.length-1],active=document.activeElement,panel=dialog.querySelector(".panel");
+    if(active===panel||!dialog.contains(active)){e.preventDefault();(e.shiftKey?last:first).focus()}
+    else if(e.shiftKey&&active===first){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&active===last){e.preventDefault();first.focus()}
     return
   }
   if(e.key==="Enter"&&e.target.id&&e.target.id.startsWith("ed-")){const b=document.querySelector("[data-done]");if(b)b.click()}
