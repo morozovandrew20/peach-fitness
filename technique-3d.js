@@ -42,7 +42,7 @@ function create(canvas,kind){
   const root=canvas.closest('.motion-card');
   if(kind!=='rdl3d'||!root)return null;
   let renderer;
-  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'high-performance'});}
+  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:false,powerPreference:'high-performance'});}
   catch(error){root.classList.add('unavailable');return null;}
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.03;
@@ -90,7 +90,7 @@ function create(canvas,kind){
   function frame(now){
     raf=0;if(disposed||!loaded||!playing||!visible||document.hidden)return;
     if(!last)last=now;const dt=Math.min(100,now-last);last=now;time+=dt/1000;
-    const elapsed=now-lastDraw;if(elapsed>=FRAME-1){draw();lastDraw=lastDraw?now-(elapsed%FRAME):now;}raf=requestAnimationFrame(frame);
+    const elapsed=now-lastDraw;if(elapsed>=FRAME){draw();lastDraw=lastDraw?now-(elapsed%FRAME):now;}raf=requestAnimationFrame(frame);
   }
   function toggle(){playing=!playing;updatePlay();if(playing)startLoop();else stopLoop();}
   function turn(delta){const next=yaw+delta,base=-.34,turns=Math.round((next-base)/TAU),aligned=next-turns*TAU;yaw=Math.abs(aligned-base)<1e-8?base:next;requestDraw();}
