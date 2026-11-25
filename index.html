@@ -833,7 +833,7 @@ function beginnerGuide(ex,w){
   else if(ex.id==="sq"&&!ex.alt)steps=["Начни с минимального веса на тренажёре. Если вес платформы пока не учитываешь, оставь <b>0 кг</b> в записи.",`Сделай ${top} повторений без рывка и с хорошей техникой.`,`Если после подхода остаётся больше 3 повторений, немного прибавь. Если не получается минимум — убавь.`];
   else if(kg==="0")steps=[`Начни без дополнительного веса — в поле уже стоит <b>0 кг</b>.`,`Сделай ${top} повторений${esc(ex.per||"")} с хорошей техникой.`,`Закончи, когда сможешь сделать ещё только 2–3 повторения без потери техники.`];
   else steps=[`Начни с самого лёгкого рабочего веса и сделай ${top} повторений${esc(ex.per||"")}.`,`Если после подхода остаётся больше 3 повторений — немного прибавь. Если не получается минимум — убавь.`,`Запас 2–3 повторения важнее большого веса: техника должна оставаться такой же.`];
-  return `<div class="novice-guide"><b>Как подобрать вес на первом подходе</b><ol>${steps.map(x=>`<li>${x}</li>`).join("")}</ol><p><b>Запас 2–3 повторения</b> — после остановки ты могла бы сделать ещё 2–3 повторения с той же техникой, но не больше.</p></div>`
+  return `<details class="why novice-guide"><summary>Как подобрать вес на первом подходе</summary><div class="novice-guide-body"><ol>${steps.map(x=>`<li>${x}</li>`).join("")}</ol><p><b>Запас 2–3 повторения</b> — после остановки ты могла бы сделать ещё 2–3 повторения с той же техникой, но не больше.</p></div></details>`
 }
 function exerciseWhy(ex){
   const y=ex.alt?(WHYA[ex.name]||["Практика","Замена подобрана по тому же движению и той же мышце. Прямых сравнений с основным упражнением по росту мышц нет"]):WHY[ex.id];if(!y)return"";
@@ -844,7 +844,7 @@ function renderTrain(fresh){
   const focusId=edit&&EXD(w,d).some(x=>x.id===edit.id)?edit.id:inspect&&EXD(w,d).some(x=>x.id===inspect)?inspect:cur?cur.id:null;
   let h=`<section class="hero${firstDay?" first-hero":""}"><div class="hring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="35"/><circle class="pr" id="hbar" cx="42" cy="42" r="35" stroke-dasharray="219.9" stroke-dashoffset="${lastOff}"/></svg><b>${c.done}/${c.total}</b></div>
     <div class="htxt"><span class="cap">${d===1?"День 1":"День 2"} · ${esc(LEVELS[lvl(w)].n)} уровень${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка готова":firstDay?"Начнём с первого подхода":c.done===0?todaySets(c.total):"Осталось "+(c.total-c.done)+" "+setsWord(c.total-c.done)}</strong>
-    <p>${firstDay?`Всего ${c.total} ${setsWord(c.total)}. Сначала разминка, затем подскажем, с какого веса начать и когда его менять.`:c.done===0?"Сначала разминка — она не входит в этот счёт. ":""}${firstDay?"":ez?"Лёгкий день: вес на 10% ниже и на один подход меньше. Тренировка засчитана."+(p===2?" Контрольный подход сегодня не учитывается: веса не изменятся.":""):beg?"После каждого подхода нажми «Готово». Заканчивай с запасом 2–3 повторения и хорошей техникой.":p===2?"Неделя проверки. В первом подходе ★ сделай максимум повторений без потери техники. По нему обновим веса на следующие 4 недели.":p===3?"Неделя отдыха: меньше вес и подходов. Работай спокойно, без отказа.":"После каждого подхода нажми «Готово». Между подходами отдых начнётся сам."}</p>${firstDay?`<button type="button" class="cta first-start" data-firstset>К первому подходу</button>`:p===3?"":`<button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть лёгкую неделю</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Пропустить лёгкую неделю</button>`):""}</div></section>`;
+    <p>${firstDay?`Всего ${c.total} ${setsWord(c.total)}. Сначала разминка, затем подскажем, с какого веса начать и когда его менять.`:c.done===0?"Сначала разминка — она не входит в этот счёт. ":""}${firstDay?"":ez?"Лёгкий день: вес на 10% ниже и на один подход меньше. Тренировка засчитана."+(p===2?" Контрольный подход сегодня не учитывается: веса не изменятся.":""):beg?"После каждого подхода нажми «Готово». Заканчивай с запасом 2–3 повторения и хорошей техникой.":p===2?"Неделя проверки. В первом подходе ★ сделай максимум повторений без потери техники. По нему обновим веса на следующие 4 недели.":p===3?"Неделя отдыха: меньше вес и подходов. Работай спокойно, без отказа.":"После каждого подхода нажми «Готово». Между подходами отдых начнётся сам."}</p>${firstDay?`<button type="button" class="cta first-start" data-firstset>К первому подходу</button>`:`${cur&&c.done<c.total?`<button type="button" class="cta resume-set" data-quickset>Продолжить · подход ${cur.s+1}</button>`:""}${p===3?"":`<button type="button" class="easy hero-easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть лёгкую неделю</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Пропустить лёгкую неделю</button>`):""}</div></section>`;
   if(firstDay)h+=`<details class="why workout-options"><summary>Сегодня нужно полегче?</summary><p>Можно уменьшить вес на 10% и сделать на один подход меньше. Такая тренировка тоже засчитывается.</p><button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Включить лёгкий день"}</button></details>`;
   if(rb)h+=`<div class="note" data-return-note><b>Перерыв ${rb.days} ${daysWord(rb.days)}.</b> Не догоняй пропущенное — продолжи с недели ${w}, дня ${d}. ${ez?"Лёгкий день уже включён: вес ниже и на один подход меньше.":"Если сил мало, включи лёгкий день: вес будет на 10% ниже и на один подход меньше."} <span class="nacts">${ez?"":`<button type="button" class="ghostbtn" data-returneasy="${rb.seen}">Включить лёгкий день</button>`}<button type="button" class="ghostbtn dim" data-seen="${rb.seen}">${ez?"Понятно":"Обычный план"}</button></span></div>`;
   if(!beg&&(w-1)%4===3&&!wkHas(w))h+=`<div class="note">${S.noRest&&S.noRest[w]?"Вместо отдыха будет средняя неделя. Следующую лёгкую неделю пропустить нельзя.":S.noRest&&S.noRest[w-4]?"Прошлую неделю отдыха ты уже пропустила. Сейчас делаем лёгкую.":"Если сил достаточно, неделю отдыха можно заменить средней. Но не два раза подряд."}</div>`;
@@ -1141,10 +1141,10 @@ window.addEventListener("appinstalled",()=>{installPrompt=null;installConfirmed=
 try{matchMedia("(display-mode: standalone)").addEventListener("change",e=>{if(e.matches){installConfirmed=true;refreshInstallUI()}})}catch(e){}
 function renderSetup(){
   const B=S.level==="beg";
-  let h=B?"":`<p class="meta"><b>Обычный рабочий подход.</b> Впиши вес и повторения, которые делаешь уверенно и с хорошей техникой. Не максимум на один раз. По ним рассчитаем план.</p>`;
+  let h=`<div class="settings-nav" role="navigation" aria-label="Разделы настроек"><button type="button" data-settingsjump="program">Программа</button><button type="button" data-settingsjump="gym">В зале</button><button type="button" data-settingsjump="data">Данные</button></div>`+(B?"":`<p class="meta"><b>Обычный рабочий подход.</b> Впиши вес и повторения, которые делаешь уверенно и с хорошей техникой. Не максимум на один раз. По ним рассчитаем план.</p>`);
   if(!S.startSet&&!B)h+=`<div class="note">Сейчас указаны примеры. Замени их на свои веса и повторения.</div>`;
   {const L=LEVELS[S.level]?S.level:"mid",logged=Object.keys(S.lvAt||{}).length;
-  h+=`<section class="card"><h3>Уровень</h3><div class="seg seg3" role="group" aria-label="Уровень">${["beg","mid","adv"].map(k=>`<button type="button" data-level="${k}" aria-pressed="${L===k}">${LEVELS[k].n}</button>`).join("")}</div>
+  h+=`<section class="card" id="settings-program"><h3>Уровень</h3><div class="seg seg3" role="group" aria-label="Уровень">${["beg","mid","adv"].map(k=>`<button type="button" data-level="${k}" aria-pressed="${L===k}">${LEVELS[k].n}</button>`).join("")}</div>
     <p class="meta"><b>${LEVELS[L].who}.</b> ${LEVELS[L].text}${logged?" Новый уровень применится только к неделям без записей. Прошлые тренировки не изменятся.":""}</p></section>`;}
   h+=themeCard()+installCard();
   if(!B)for(const l of LIFTS){const s=S.start[l.id];
@@ -1183,7 +1183,7 @@ function renderSetup(){
     <p class="sync" id="sync"></p>`;
   $("view").innerHTML=h; setSync();
 }
-function render(fresh){applyTheme();awake();renderChrome(true);({train:isFirst()?renderWelcome:renderTrain,progress:renderProgress,setup:renderSetup})[tab]();const v=$("view");if(fresh){v.classList.remove("in");void v.offsetWidth;v.classList.add("in");clearTimeout(render.t);render.t=setTimeout(()=>v.classList.remove("in"),900)}}
+function render(fresh){document.body.classList.toggle("welcome-mode",tab==="train"&&isFirst());document.body.classList.toggle("settings-mode",tab==="setup");applyTheme();awake();renderChrome(true);({train:isFirst()?renderWelcome:renderTrain,progress:renderProgress,setup:renderSetup})[tab]();const v=$("view");if(fresh){v.classList.remove("in");void v.offsetWidth;v.classList.add("in");clearTimeout(render.t);render.t=setTimeout(()=>v.classList.remove("in"),900)}}
 
 /* ---------- flagship active-set focus: presentation over the existing editor ---------- */
 let focusSet=null,focusResume=null;
@@ -1450,7 +1450,7 @@ async function awake(){
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")awake()});
 function gymCard(){
   const can="wakeLock" in navigator;
-  return `<section class="card"><h3>В зале</h3>
+  return `<section class="card" id="settings-gym"><h3>В зале</h3>
     <div class="line"><div><b>Не гасить экран</b><span class="meta">${can?"Пока открыта тренировка, телефон не блокируется сам":"Этот браузер не умеет держать экран включённым"}</span></div>
       <button type="button" class="tgl" role="switch" data-awake aria-checked="${!!S.awake}" aria-label="Не гасить экран"></button></div>
     <div class="grid3">${[["ht","Гриф: мост"],["rdl","Гриф: тяга"],["sq","Гакк"]].map(([id,n])=>`<div><label class="lbl" for="bar-${id}">${n}</label><div class="field"><input id="bar-${id}" inputmode="decimal" data-bar="${id}" value="${esc(fk(barOf(id)))}"><span>кг</span></div></div>`).join("")}</div>
@@ -1575,6 +1575,7 @@ document.addEventListener("click",e=>{
   const {w,d}=S.cur, card=b.closest("[data-ex]"), ex=card?EX[d].find(x=>x.id===card.dataset.ex):null;
   if(b.dataset.w){S.cur.w=+b.dataset.w;edit=null;inspect=null;transition=null;justUndone=null;save(true);render(true);window.scrollTo(0,0)}
   else if(b.dataset.day){S.cur.d=+b.dataset.day;edit=null;inspect=null;transition=null;justUndone=null;save(true);render(true);window.scrollTo(0,0)}
+  else if(b.dataset.settingsjump){const id=b.dataset.settingsjump==="program"?"settings-program":b.dataset.settingsjump==="gym"?"settings-gym":"backup",el=$(id);if(el){el.setAttribute("tabindex","-1");el.focus({preventScroll:true});el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"})}}
   else if(b.dataset.tab){tab=b.dataset.tab;inspect=null;transition=null;justUndone=null;render(true);window.scrollTo(0,0)}
   else if(b.dataset.gobackup!==undefined){tab="setup";inspect=null;render(true);const el=$("backup");if(el)el.scrollIntoView({block:"start",behavior:"smooth"});const download=el&&el.querySelector("[data-download]");if(download)download.focus({preventScroll:true})}
   else if(b.dataset.inspect&&ex){inspect=ex.id;edit=null;transition=null;justUndone=null;renderTrain();requestAnimationFrame(()=>{const el=$("ex-"+ex.id);if(el){el.focus({preventScroll:true});el.scrollIntoView({block:"start",behavior:"smooth"})}})}
@@ -1650,7 +1651,7 @@ document.addEventListener("click",e=>{
   else if(b.dataset.plates&&ex){const ed=card.querySelector("#ed-0"),v=ed?num(ed.value):0;showPlates(ex,v||dayKg(ex.id,w))}
   else if(b.dataset.warm){const k=b.dataset.warm;warmDone.has(k)?warmDone.delete(k):warmDone.add(k);b.setAttribute("aria-pressed",String(warmDone.has(k)));S.warm=Array.from(warmDone);save(true)}
   else if(b.dataset.nw!==undefined){OB.nw=!OB.nw;renderWelcome()}
-  else if(b.dataset.firstset!==undefined){openSetFocus()}
+  else if(b.dataset.firstset!==undefined||b.dataset.quickset!==undefined){openSetFocus()}
   else if(b.dataset.lvpick){OB.lv=b.dataset.lvpick;renderWelcome()}
   else if(b.dataset.level){const L=b.dataset.level;if(L!==S.level){S.lvAt=S.lvAt||{};for(let x=1;x<=12;x++)if(!S.lvAt[x]&&Object.keys(S.log).some(k=>k.startsWith(x+"-")&&S.log[k].some(full)))S.lvAt[x]=lvl(x); /* weeks already trained keep their level */
     if(String(S.growth)===LEVELS[S.level].growth)S.growth=LEVELS[L].growth;S.level=L;edit=null;save();render()}}

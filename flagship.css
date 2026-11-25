@@ -457,3 +457,64 @@ nav button[aria-pressed="true"]{border-radius:17px}
 .card.act .ex-head{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px 12px;align-items:center}
 .card.act .ex-head h2{min-width:0;overflow-wrap:normal;word-break:normal}
 .card.act .ex-head .swap{grid-column:2;justify-self:start;min-height:38px;margin-top:-2px}
+
+
+/* v6 — release flow: less interface before the actual workout */
+body.welcome-mode header .top{display:none}
+body.welcome-mode header .wrap{padding-bottom:2px}
+body.welcome-mode main .wrap{padding-top:6px;gap:14px}
+body.welcome-mode .welcome-hero{min-height:0;padding:20px;grid-template-columns:minmax(0,1fr) 94px;gap:14px;border-radius:24px}
+body.welcome-mode .welcome-copy{gap:9px}
+body.welcome-mode .welcome-copy h2{font-size:31px;line-height:1.02}
+body.welcome-mode .welcome-copy p{font-size:12px;line-height:1.45}
+body.welcome-mode .welcome-plan{gap:9px;padding-left:13px}
+body.welcome-mode .welcome-plan b{font-size:24px}
+body.welcome-mode .welcome-plan small{font-size:9px}
+body.welcome-mode .welcome-line i{height:20px}
+body.welcome-mode .welcome-line i:nth-child(2),body.welcome-mode .welcome-line i:nth-child(5){height:28px}
+body.welcome-mode .level-card{padding:18px;gap:10px}
+body.welcome-mode .level-card .section-heading{gap:2px}
+body.welcome-mode .level-card .section-heading h3{font-size:20px}
+body.welcome-mode .level-card>.meta{font-size:13px;line-height:1.45}
+body.welcome-mode .opt.lv{min-height:62px;padding:11px 13px;gap:10px;border-radius:15px}
+body.welcome-mode .opt.lv b{font-size:15px}
+body.welcome-mode .opt.lv i{font-size:12px;line-height:1.35}
+body.welcome-mode .onboarding-intro{font-size:12px}
+
+.hero .resume-set{width:100%;margin-top:4px}
+.hero .hero-easy{align-self:flex-start;min-height:44px;padding:8px 0;border:0;background:transparent;color:color-mix(in srgb,var(--surface) 64%,transparent);font-size:12px;font-weight:650}
+.hero .hero-easy:hover{background:transparent;color:var(--surface)}
+
+/* Full beginner guidance remains available without pushing the workout down */
+.novice-guide{margin:0;padding:0;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent}
+.novice-guide summary{min-height:48px;color:var(--fg);font-size:13px;font-weight:700}
+.novice-guide-body{display:flex;flex-direction:column;gap:9px;padding:2px 0 14px}
+.novice-guide-body ol{margin:0;padding-left:19px;font-size:14px}
+.novice-guide-body p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.novice-guide[open]{padding:0 14px 14px;border:1px solid var(--line);border-radius:16px;background:var(--input)}
+.novice-guide[open] summary{margin-inline:-14px;padding-inline:14px}
+
+/* Long settings become a navigable product area */
+.settings-nav{position:sticky;top:8px;z-index:12;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:5px;border:1px solid var(--line);border-radius:17px;background:var(--bar);box-shadow:0 10px 28px -22px rgba(29,22,16,.45);backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%)}
+.settings-nav button{min-height:44px;padding:9px 8px;border:0;border-radius:12px;background:transparent;color:var(--muted);font-size:12px;font-weight:700}
+.settings-nav button:hover,.settings-nav button:focus-visible{background:var(--raised);color:var(--fg)}
+#settings-program,#settings-gym,#backup{scroll-margin-top:16px}
+#settings-program:focus,#settings-gym:focus,#backup:focus{outline:none}
+
+@media(min-width:700px){
+  body.welcome-mode .welcome-hero{padding:24px;grid-template-columns:1.5fr 150px}
+  body.welcome-mode .welcome-copy h2{font-size:37px}
+  body.welcome-mode .welcome-copy p{font-size:13px}
+  body.welcome-mode .level-card{padding:22px}
+  body.welcome-mode .opt.lv{padding:13px 16px}
+  .settings-nav{top:12px}
+}
+@media(max-width:350px){
+  body.welcome-mode .welcome-hero{padding:18px;grid-template-columns:minmax(0,1fr) 82px;gap:10px}
+  body.welcome-mode .welcome-copy h2{font-size:28px}
+  body.welcome-mode .welcome-copy p{font-size:11px}
+  body.welcome-mode .welcome-plan{padding-left:10px}
+  body.welcome-mode .level-card{padding:15px}
+  body.welcome-mode .opt.lv{padding:10px 11px}
+}
+@media(prefers-reduced-motion:reduce){.settings-nav{scroll-behavior:auto}}
