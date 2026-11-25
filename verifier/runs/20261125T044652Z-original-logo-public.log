@@ -1,0 +1,9 @@
+timestamp=20261125T044652Z
+command=playwright-cli run-code --filename=/tmp/peach-original-public.js
+public_commit=4cd760d06baac94d92dc4ecf1fbd836fb654d7eb
+### Error
+TimeoutError: page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://morozovandrew20.github.io/peach-fitness/", waiting until "networkidle"
+
+exit_code=1
