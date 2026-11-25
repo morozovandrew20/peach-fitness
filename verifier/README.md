@@ -50,3 +50,9 @@
 - Public resilience final: `v10-public-resilience-20261125T174215Z.log` — анимация, offline 3D reload, responsive, localOnly, zeroErrors.
 - Public full final: `v10-public-full-*.log` — весь v9/v8/v7 регресс на GitHub Pages, кэш `peach-flagship-13`, offline repeat reload, ноль console/request errors.
 - Release tag: `release-1.0.0`.
+
+### v10 финализация (2026-11-26)
+- Найден и исправлен дефект публикации: первый коммит `fd3c8029` терял концевой `\n` у текстовых файлов (побочный эффект `.strip()` в скрипте публикации). Продуктовый коммит принудительно перепубликован как `e874dd48e4742307cefbba8c022e9b85f1af0b52`; `git diff-tree` против локального дерева — 0 отличий, анимация и весь контент байт-в-байт идентичны локальному `1859a87`.
+- Протокольный коммит опубликован как `1227b6776749add87af9e77a0868ec0da97663b0` (local `aa4287f`); master = `1227b67`.
+- Финальная публичная проверка на окончательном деплее, все четыре набора exit 0: `v10-public-release-final-*.log`, `v10-public-full-final-*.log`, `v10-public-live-final-*.log`, `v10-public-resilience-final-*.log`.
+- Release tag: `release-1.0.0` → `e874dd48` (продуктовый коммит, аналогично схеме `flagship-ui-v9`). Точка восстановления подтверждена.
