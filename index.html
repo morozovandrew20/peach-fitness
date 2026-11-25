@@ -1072,7 +1072,7 @@ const isFirst=()=>!S.startSet&&!Object.keys(S.log||{}).length;
 const OB={};
 function levelCard(){
   const L=OB.lv;
-  let h=`<section class="card"><h3>Какой у тебя опыт?</h3><p class="meta">Программа одна. Меняется количество подходов и способ подбора веса.</p>`;
+  let h=`<section class="card"><h3>Выбери уровень</h3><p class="meta">Программа одна. Меняется количество подходов и способ подбора веса.</p>`;
   for(const k of Object.keys(LEVELS))h+=`<button type="button" class="opt lv" data-lvpick="${k}" aria-pressed="${L===k}"><span><b>${LEVELS[k].n}</b><i>${LEVELS[k].who}</i></span></button>`;
   if(L)h+=`<div class="note"><b>Твой уровень: «${LEVELS[L].n}».</b> ${LEVELS[L].text}</div>`;
   return h+`</section>`;
