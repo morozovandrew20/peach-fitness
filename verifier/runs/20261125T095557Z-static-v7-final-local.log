@@ -1,0 +1,27 @@
+timestamp=20261125T095557Z
+command=python3 verifier/v7/static_check.py
+{
+  "values": {
+    "flagship.css_bytes": 48022,
+    "technique.js_bytes": 6045,
+    "peach-logo.svg_bytes": 6588,
+    "sw.js_bytes": 2421,
+    "manrope-cyrillic.woff2_bytes": 14352,
+    "manrope-latin.woff2_bytes": 24532,
+    "manifest.webmanifest_bytes": 734,
+    "manifest-dark.webmanifest_bytes": 734,
+    "apple-touch-icon.png_bytes": 8278,
+    "icon-192.png_bytes": 9156,
+    "icon-512.png_bytes": 17195,
+    "icon-maskable-192.png_bytes": 4312,
+    "icon-maskable-512.png_bytes": 15108,
+    "logo-512.png_bytes": 33576,
+    "manifest_icons": 4,
+    "reduced_motion_rules": 9,
+    "has_dark_theme": true,
+    "static_ids": 73,
+    "core_assets_kb": 431.4
+  },
+  "errors": []
+}
+exit_code=0

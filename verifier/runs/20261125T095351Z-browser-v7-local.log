@@ -1,0 +1,8 @@
+timestamp=20261125T095351Z
+command=playwright-cli -s=v7full run-code --filename=verifier/v7/browser_full.js
+### Error
+TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('.workout-options summary')
+
+exit_code=1

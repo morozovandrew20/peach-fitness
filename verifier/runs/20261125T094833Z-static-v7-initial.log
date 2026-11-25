@@ -1,0 +1,4 @@
+timestamp=20261125T094833Z
+command=python3 verifier/v7/static_check.py
+result=failed: inline JavaScript unexpectedly truncated at service-worker registration
+exit_code=1

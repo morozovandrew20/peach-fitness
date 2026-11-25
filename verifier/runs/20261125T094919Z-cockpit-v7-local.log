@@ -1,0 +1,6 @@
+timestamp=20261125T094919Z
+command=playwright-cli -s=v7cockpit run-code --filename=verifier/v7/workout_cockpit.js
+The browser 'v7cockpit' is not open, please run open first
+
+  playwright-cli -s=v7cockpit open [params]
+exit_code=1

@@ -1,0 +1,5 @@
+timestamp=20261125T095351Z
+command=playwright-cli -s=v7cockpitfinal run-code --filename=verifier/v7/workout_cockpit.js
+### Error
+Error: first-viewport failure save: {"action":{"top":253.96875,"bottom":307.96875,"height":54,"width":300},"exercise":{"top":434.40625,"bottom":468.40625,"height":34,"width":298},"plan":{"top":478.40625,"bottom":518,"height":39.59375,"width":298},"kg":{"top":595,"bottom":639,"height":44,"width":71},"reps":{"top":595,"bottom":639,"height":44,"width":71},"save":{"top":664.046875,"bottom":718.84375,"height":54.796875,"width":298},"nav":{"top":717.953125,"bottom":788,"height":70.046875,"width":336},"viewport":800,"overflow":false,"bodyClass":"workout-mode"}
+exit_code=1
