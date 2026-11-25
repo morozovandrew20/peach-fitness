@@ -1,0 +1,8 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_technique.js
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-how="rdl"]').first()
+
+    at eval (<anonymous>:12:53)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1

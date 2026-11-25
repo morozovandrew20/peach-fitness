@@ -1,0 +1,58 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v7/release_flow_legacy.js
+{
+  "base": "http://127.0.0.1:4173/",
+  "checks": {
+    "welcome": {
+      "topHidden": true,
+      "options": [
+        {
+          "level": "beg",
+          "top": 404.7391662597656,
+          "bottom": 485.1398010253906,
+          "height": 80.400634765625
+        },
+        {
+          "level": "mid",
+          "top": 494.98980712890625,
+          "bottom": 575.3904418945312,
+          "height": 80.400634765625
+        },
+        {
+          "level": "adv",
+          "top": 585.2404174804688,
+          "bottom": 665.6410522460938,
+          "height": 80.400634765625
+        }
+      ],
+      "viewport": 800
+    },
+    "continueAction": {
+      "text": "Продолжить · подход 2Ягодичный мост",
+      "rect": {
+        "x": 30,
+        "y": 247.96875,
+        "width": 300,
+        "height": 54
+      }
+    },
+    "gymJump": {
+      "scrollY": 1016,
+      "top": 16.421875
+    },
+    "dataJump": {
+      "scrollY": 1922,
+      "top": 16.15625
+    },
+    "stateUnchanged": true
+  },
+  "screens": [
+    "welcome-360",
+    "first-day-360",
+    "rest-360",
+    "continued-360",
+    "quick-focus-360",
+    "settings-360"
+  ],
+  "consoleErrors": []
+}
+EXIT_CODE: 0

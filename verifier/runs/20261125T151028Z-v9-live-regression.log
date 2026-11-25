@@ -1,0 +1,19 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_live.js
+{
+  "checks": {
+    "start": true,
+    "reload": {
+      "before": "00:00",
+      "after": "00:01"
+    },
+    "effort": true,
+    "effortReload": true,
+    "voice": true,
+    "techniquePause": true,
+    "reducedMotion": true,
+    "fourWeek": true,
+    "zeroErrors": true
+  },
+  "errors": []
+}
+EXIT_CODE: 0

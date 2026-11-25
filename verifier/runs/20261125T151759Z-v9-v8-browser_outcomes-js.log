@@ -1,0 +1,6 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v8/browser_outcomes.js
+{
+  "outcomes": "Личные рекордыНовый ориентир записанВ программе1 из 24 · неделя 1Время тренировки45 мин",
+  "next": "Следующий шагНеделя 1 · день 2. Продолжай по плану, ничего не догоняя."
+}
+EXIT_CODE: 0

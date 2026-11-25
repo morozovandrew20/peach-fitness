@@ -1,0 +1,9 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_technique.js
+locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('[data-tech3d="rdl"][data-ready="1"]') to be visible
+    36 × locator resolved to hidden <figure data-ready="1" data-mounted="1" data-tech3d="rdl" class="tech-visual tech3d-shell is-ready" aria-label="Интерактивная 3D-техника: Румынская тяга">…</figure>
+
+    at eval (<anonymous>:12:64)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1

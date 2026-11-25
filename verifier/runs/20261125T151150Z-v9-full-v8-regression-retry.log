@@ -1,0 +1,7 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v8/browser_full.js
+Error: 320 train horizontal overflow {"width":320,"scroll":305}
+    at assert (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:15), <anonymous>:5:40)
+    at noOverflow (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:15), <anonymous>:13:132)
+    at async eval (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:15), <anonymous>:139:114)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1

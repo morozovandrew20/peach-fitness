@@ -1,0 +1,5 @@
+COMMAND: playwright-cli run-code verifier/v9/browser_technique.js
+The browser 'default' is not open, please run open first
+
+  playwright-cli open [params]
+EXIT_CODE: 1

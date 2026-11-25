@@ -1,0 +1,77 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v8/workout_cockpit.js
+{
+  "base": "http://127.0.0.1:4173/",
+  "checks": {
+    "firstViewport": {
+      "action": {
+        "top": 34.96875,
+        "bottom": 88.96875,
+        "height": 54,
+        "width": 300
+      },
+      "exercise": {
+        "top": 213.40625,
+        "bottom": 247.40625,
+        "height": 34,
+        "width": 298
+      },
+      "plan": {
+        "top": 257.40625,
+        "bottom": 297,
+        "height": 39.59375,
+        "width": 298
+      },
+      "kg": {
+        "top": 374,
+        "bottom": 418,
+        "height": 44,
+        "width": 71
+      },
+      "reps": {
+        "top": 374,
+        "bottom": 418,
+        "height": 44,
+        "width": 71
+      },
+      "save": {
+        "top": 443.046875,
+        "bottom": 497.84375,
+        "height": 54.796875,
+        "width": 298
+      },
+      "nav": {
+        "top": 717.953125,
+        "bottom": 788,
+        "height": 70.046875,
+        "width": 336
+      },
+      "viewport": 800,
+      "overflow": false,
+      "bodyClass": "workout-mode"
+    },
+    "nextAction": "Продолжить · подход 2Ягодичный мост",
+    "smallFocus": {
+      "ctaTop": 491.65625,
+      "ctaBottom": 550,
+      "viewport": 568,
+      "scrollWidth": 320,
+      "innerWidth": 320
+    },
+    "darkWorkout": {
+      "hero": "rgb(29, 22, 16)",
+      "text": "rgb(255, 250, 247)",
+      "button": "rgb(255, 250, 247)"
+    }
+  },
+  "screens": [
+    "first-workout-360",
+    "first-workout-full-360",
+    "set-focus-360",
+    "rest-360",
+    "continued-360",
+    "set-focus-320x568",
+    "workout-dark-360"
+  ],
+  "consoleErrors": []
+}
+EXIT_CODE: 0

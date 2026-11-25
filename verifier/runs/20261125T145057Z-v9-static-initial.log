@@ -1,0 +1,18 @@
+COMMAND: python3 verifier/v9/static_check.py
+{
+  "values": {
+    "technique.js_bytes": 7531,
+    "technique3d.js_bytes": 599424,
+    "flagship.css_bytes": 55838,
+    "assets/technique/peach-mannequin.glb_bytes": 617844,
+    "assets/technique/LICENSE-desk-break.txt_bytes": 1089,
+    "assets/technique/LICENSE-three.txt_bytes": 1081,
+    "glb_meshes": 1,
+    "glb_skins": 1,
+    "glb_external_uris": [],
+    "local_3d_bundle_kb": 585.4,
+    "model_kb": 603.4
+  },
+  "errors": []
+}
+EXIT_CODE: 0

@@ -1,0 +1,8 @@
+COMMAND: node verifier/v9/run_browser.cjs verifier/v9/browser_technique.js
+locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('[data-tech3d="ht"][data-ready="1"]') to be visible
+
+    at eval (<anonymous>:13:64)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:7:73
+EXIT_CODE: 1

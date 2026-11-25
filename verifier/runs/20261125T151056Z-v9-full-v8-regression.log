@@ -1,0 +1,11 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v8/browser_full.js
+locator.waitFor: Error: strict mode violation: locator('#info:not([hidden]) .tech-visual') resolved to 2 elements:
+    1) <figure data-tech3d="ht" class="tech-visual tech3d-shell" aria-label="Интерактивная 3D-техника: Ягодичный мост со штангой">…</figure> aka getByRole('figure', { name: 'Интерактивная 3D' })
+    2) <figure class="tech-visual tech-animated" aria-label="Анимированная схема техники: Таз вверх · линия плечи—колени">…</figure> aka getByLabel('Анимированная схема техники: Таз вверх · линия плечи—колени')
+
+Call log:
+  - waiting for locator('#info:not([hidden]) .tech-visual') to be visible
+
+    at eval (<anonymous>:58:174)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1

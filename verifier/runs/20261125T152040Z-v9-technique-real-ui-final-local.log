@@ -1,0 +1,22 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_technique.js
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-how="ht"]').first()
+    - locator resolved to <button id="sfhow" type="button" data-how="ht" class="set-tech">Техника ›</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+      - waiting 100ms
+    55 × waiting for element to be visible, enabled and stable
+       - element is not visible
+     - retrying click action
+       - waiting 500ms
+
+    at eval (<anonymous>:25:98)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1

@@ -25,3 +25,10 @@
 - Local: static, live/effort/voice/technique, full regression, cockpit and outcomes passed. Public: same suites passed on GitHub Pages; real SW offline repeat reload passed with `peach-flagship-11`.
 - Public run evidence: `verifier/runs/20261125T111521Z-v8-public-summary.log`; transient CDN/network and verifier-fixture failures are retained in local/public run logs.
 - Release tag: `flagship-ui-v8`.
+
+## v9 — фирменная интерактивная 3D-техника (2026-11-25)
+- Acceptance: `verifier/v9/acceptance.md`.
+- Scope: восемь точных 3D-движений с оборудованием, единая студийная эстетика, pause/speed/views/rotate, reduced-motion и SVG fallback.
+- Compatibility gates: локальные runtime/model, offline core, mobile/desktop visual review, весь v8/v7 регресс и публичная проверка GitHub Pages.
+- Отличие от v8: проверяется реальный интерактивный WebGL и соответствие каждого из восьми движений, а не только локальная SMIL-анимация.
+- Local final: все восемь сцен открыты через реальные product controls; реальные WebGL-кадры, pause/scrub/speed/views/keyboard, reduced-motion, hidden-render stop, WebGL→SVG fallback, внешние запросы отсутствуют. Полный v9/v8/v7 regression, cockpit, outcomes, responsive 320–1440 и настоящий offline reload прошли с zero console/request errors. Итоговые кадры: `verifier/v9/shots/`; запуски, включая ошибки тестовой среды и исправления селекторов, сохранены в `verifier/runs/`.

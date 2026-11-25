@@ -1,0 +1,6 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_full.js
+Error: offline cache v7 missing
+    at assert (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:15), <anonymous>:5:40)
+    at eval (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:15), <anonymous>:146:64)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1

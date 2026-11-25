@@ -1,0 +1,43 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v7/product_finish_legacy.js
+{
+  "base": "http://127.0.0.1:4173/",
+  "checks": {
+    "hierarchy": {
+      "techBg": "rgba(0, 0, 0, 0)",
+      "doneBg": "rgb(29, 22, 16)",
+      "heroHeight": 191.96875
+    },
+    "rest": {
+      "bg": "rgb(23, 18, 15)",
+      "color": "rgb(255, 250, 247)",
+      "clock": "lining-nums tabular-nums",
+      "controls": [
+        54,
+        54,
+        54
+      ]
+    },
+    "responsive": [
+      320,
+      360,
+      390,
+      1440
+    ],
+    "reducedMotion": {
+      "html": "auto",
+      "rest": "none"
+    }
+  },
+  "screens": [
+    "welcome-360-light",
+    "first-day-360-light",
+    "set-360",
+    "rest-360",
+    "settings-360-dark",
+    "workout-360-dark",
+    "completion-360",
+    "progress-filled-360"
+  ],
+  "consoleErrors": []
+}
+EXIT_CODE: 0

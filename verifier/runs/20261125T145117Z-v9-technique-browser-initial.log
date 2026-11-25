@@ -1,0 +1,7 @@
+COMMAND: playwright-cli run-code verifier/v9/browser_technique.js
+### Error
+TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('[data-tech3d="ht"][data-ready="1"]') to be visible
+
+EXIT_CODE: 1

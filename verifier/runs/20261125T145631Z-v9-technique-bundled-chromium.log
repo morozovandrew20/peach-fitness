@@ -1,0 +1,12 @@
+COMMAND: DEBUG_BROWSER=1 node verifier/v9/run_browser.cjs verifier/v9/browser_technique.js
+BROWSER error THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x0000, ErrorMessage = BindToCurrentSequence failed: .
+BROWSER error THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x0000, ErrorMessage = BindToCurrentSequence failed: .
+BROWSER error THREE.WebGLRenderer: Error creating WebGL context.
+BROWSER warning PEACH technique fallback: WebGL недоступен
+locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('[data-tech3d="ht"][data-ready="1"]') to be visible
+
+    at eval (<anonymous>:13:64)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1

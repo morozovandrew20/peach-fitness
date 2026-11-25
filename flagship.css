@@ -713,3 +713,42 @@ body.workout-mode .seg button{font-size:11px;padding-inline:5px}
 .review-grid span{display:block;margin-bottom:4px;color:var(--a1);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.review-grid b{font-size:13px;line-height:1.5}
 @media(min-width:700px){.review-grid{grid-template-columns:repeat(3,1fr);gap:18px}.review-grid>div{border-top:0;border-left:1px solid var(--line);padding:0 0 0 18px}.review-grid>div:first-child{border-left:0;padding-left:0}}
 .tech-animated{position:relative}.tech-animated svg{width:100%;max-height:280px}.tech-motion{position:absolute;right:12px;top:12px;min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--fg);font:700 11px Manrope,sans-serif}.tech-animated figcaption{display:flex;flex-direction:column;gap:4px;text-align:center}.tech-animated figcaption span{font-size:11px;color:var(--muted)}
+
+/* v9: local interactive 3D technique studio */
+.tech3d-shell{border:0;background:transparent;overflow:visible}
+.tech3d-stage{position:relative;height:318px;overflow:hidden;border:1px solid rgba(255,255,255,.07);border-radius:26px;background:radial-gradient(ellipse at 50% 28%,#4a383e 0,#2b2227 48%,#1e191d 100%);box-shadow:0 20px 45px rgba(31,18,24,.18),inset 0 1px rgba(255,255,255,.06);isolation:isolate}
+.tech3d-stage::after{content:"";position:absolute;inset:auto 12% 0;height:34%;pointer-events:none;background:radial-gradient(ellipse,rgba(232,146,127,.11),transparent 67%);z-index:0}
+.tech3d-canvas{position:absolute;inset:0;z-index:1;cursor:grab;touch-action:none;outline:none}
+.tech3d-canvas.is-dragging{cursor:grabbing}
+.tech3d-canvas:focus-visible{box-shadow:inset 0 0 0 3px var(--a1);border-radius:26px}
+.tech3d-canvas canvas{display:block;width:100%;height:100%}
+.tech3d-topline{position:absolute;z-index:3;left:14px;right:14px;top:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;pointer-events:none}
+.tech3d-badge,.tech3d-phase{display:inline-flex;align-items:center;min-height:26px;padding:0 10px;border:1px solid rgba(255,244,239,.12);border-radius:999px;background:rgba(27,21,25,.52);backdrop-filter:blur(10px);color:#f4dcd4;font:750 9px Manrope,sans-serif;letter-spacing:.065em;text-transform:uppercase}
+.tech3d-phase{color:#efa893;font-size:8px}
+.tech3d-hint{position:absolute;z-index:3;bottom:12px;left:50%;transform:translateX(-50%);white-space:nowrap;color:rgba(255,240,234,.54);font:600 9px Manrope,sans-serif;letter-spacing:.03em;pointer-events:none;transition:opacity .2s}
+.tech3d-shell.is-ready .tech3d-hint{opacity:.8}
+.tech3d-loading{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;background:#251e22;color:#f4dcd4;font-size:11px;letter-spacing:.02em}
+.tech3d-loading[hidden]{display:none}
+.tech3d-loading span{width:30px;height:30px;border:2px solid rgba(255,255,255,.12);border-top-color:#e8927f;border-radius:50%;animation:tech3dspin .8s linear infinite}
+@keyframes tech3dspin{to{transform:rotate(360deg)}}
+.tech3d-controls{display:grid;grid-template-columns:auto 1fr 46px;align-items:center;gap:10px;margin-top:11px}
+.tech3d-shell button{font-family:Manrope,sans-serif;cursor:pointer}
+.tech3d-play{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 13px;border:0;border-radius:13px;background:var(--fg);color:var(--bg);font-size:11px;font-weight:750}
+.tech3d-shell .tech3d-play svg{width:15px;height:15px}
+.tech3d-speed{min-height:44px;border:1px solid var(--line);border-radius:13px;background:var(--surface);color:var(--fg);font-size:12px;font-weight:800}
+.tech3d-scrub{display:flex;align-items:center;min-height:44px}
+.tech3d-scrub input{width:100%;height:28px;margin:0;accent-color:var(--a1);cursor:pointer}
+.tech3d-views{display:grid;grid-template-columns:1fr 1fr 1fr 44px;gap:6px;margin-top:6px}
+.tech3d-views button{display:flex;align-items:center;justify-content:center;gap:5px;min-height:44px;padding:0 8px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--muted);font-size:10px;font-weight:700}
+.tech3d-shell .tech3d-views svg{width:14px;height:14px}
+.tech3d-views button[aria-pressed="true"]{border-color:var(--line);background:var(--soft);color:var(--fg)}
+.tech3d-shell button:hover{filter:brightness(1.04)}
+.tech3d-shell button:focus-visible,.tech3d-scrub input:focus-visible{outline:2px solid var(--a1);outline-offset:2px}
+.tech3d-shell figcaption{display:flex;flex-direction:column;gap:4px;padding:12px 4px 0;border:0;text-align:left;text-transform:none;letter-spacing:0}
+.tech3d-shell figcaption strong{color:var(--fg);font-size:13px;text-align:left}
+.tech3d-shell figcaption span{color:var(--muted);font-size:11px;line-height:1.45;white-space:normal;text-transform:none;letter-spacing:0}
+.tech3d-fallback[hidden]{display:none}.tech3d-fallback .tech-animated{margin:0;border:1px solid var(--line);border-radius:22px;background:var(--input);overflow:hidden}
+@media(max-width:380px){.tech3d-stage{height:290px}.tech3d-badge{max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tech3d-play{padding:0 11px}.tech3d-views button{font-size:9px;padding:0 4px}}
+@media(min-width:700px){.tech3d-stage{height:360px}}
+@media(prefers-reduced-motion:reduce){.tech3d-loading span{animation:none;border-color:#e8927f}.tech3d-hint{transition:none}}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}

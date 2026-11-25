@@ -1,0 +1,10 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_fallback.js
+{
+  "checks": {
+    "webglFallback": true,
+    "fallbackControls": true,
+    "instructions": true
+  },
+  "expectedWebGLErrors": []
+}
+EXIT_CODE: 0

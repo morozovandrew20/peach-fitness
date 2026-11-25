@@ -1,0 +1,42 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_resilience.js
+{
+  "checks": {
+    "realAnimation": {
+      "before": 0.00456250000007761,
+      "after": 0.01150000000007765
+    },
+    "pause": true,
+    "scrub": true,
+    "viewPixels": true,
+    "keyboard": true,
+    "hiddenStops": true,
+    "offline3D": true,
+    "localOnly": true,
+    "zeroErrors": true
+  },
+  "metrics": {
+    "width360": {
+      "vw": 360,
+      "scroll": 360,
+      "stage": 311
+    },
+    "width390": {
+      "vw": 390,
+      "scroll": 390,
+      "stage": 333
+    },
+    "width768": {
+      "vw": 768,
+      "scroll": 768,
+      "stage": 640
+    },
+    "width1440": {
+      "vw": 1440,
+      "scroll": 1440,
+      "stage": 640
+    }
+  },
+  "errors": [],
+  "external": []
+}
+EXIT_CODE: 0
