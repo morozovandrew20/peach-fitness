@@ -1,0 +1,4 @@
+Error: request failures: https://morozovandrew20.github.io/peach-fitness/manrope-latin.woff2: net::ERR_ABORTED | https://morozovandrew20.github.io/peach-fitness/manrope-cyrillic.woff2: net::ERR_ABORTED
+    at assert (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v11/run_browser.cjs:8:15), <anonymous>:6:40)
+    at eval (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v11/run_browser.cjs:8:15), <anonymous>:149:86)
+    at async /mnt/agents/output/peach-fitness/verifier/v11/run_browser.cjs:8:73

@@ -56,3 +56,12 @@
 - Протокольный коммит опубликован как `1227b6776749add87af9e77a0868ec0da97663b0` (local `aa4287f`); master = `1227b67`.
 - Финальная публичная проверка на окончательном деплее, все четыре набора exit 0: `v10-public-release-final-*.log`, `v10-public-full-final-*.log`, `v10-public-live-final-*.log`, `v10-public-resilience-final-*.log`.
 - Release tag: `release-1.0.0` → `e874dd48` (продуктовый коммит, аналогично схеме `flagship-ui-v9`). Точка восстановления подтверждена.
+
+## v11 — Релиз 1.1 «Спокойный интерфейс» (2026-11-26)
+- Acceptance: `verifier/v11/acceptance.md`. Отличие от v10: проверяется не упаковка, а упрощение UX и два конкретных бага (текст за кругом таймера, нестабильная нижняя панель).
+- Scope: welcome без промо, единый disclosure подсказок у упражнения, сворачиваемые достижения/советы в прогрессе, компактное «О приложении» внизу настроек, сдерживание текста таймера, стабильная геометрия nav.
+- Анимация и логика неизменны: SHA-256 файлов техники = v9; кэш `peach-flagship-14`.
+- Local: static `v11-static-*.log`; calm `v11-local-calm-*.log` (таймер 320/360/390, nav 320–1440, folds, install, 3D 22 930 triangles/21 calls, zero errors); full `v11-local-full-*.log`.
+- Public product commit: `faf2cff09fbf628ababdf6dfe579e9f316966b57` (local `11d52d8`).
+- Public: calm/full/live/resilience зелёные (`v11-public-*`). В full зафиксирован безвредный ERR_ABORTED preload-шрифтов, фильтр добавлен как в v10 release; неуспешный запуск сохранён append-only.
+- Release tag: `release-1.1.0` → `faf2cff`.
