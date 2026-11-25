@@ -518,3 +518,174 @@ body.welcome-mode .onboarding-intro{font-size:12px}
   body.welcome-mode .opt.lv{padding:10px 11px}
 }
 @media(prefers-reduced-motion:reduce){.settings-nav{scroll-behavior:auto}}
+
+
+/* v7 — workout cockpit: the session, not the decoration, leads */
+body.workout-mode header .wrap{gap:9px;padding-top:max(10px,env(safe-area-inset-top,0px))}
+body.workout-mode .brandline{min-height:28px}
+body.workout-mode .brand-logo{width:22px;height:22px;flex-basis:22px}
+body.workout-mode .brandnote{font-size:9px;letter-spacing:.07em}
+body.workout-mode .top{min-height:50px}
+body.workout-mode h1{font-size:34px;line-height:1;font-weight:650}
+body.workout-mode .sub{font-size:10px;letter-spacing:.06em}
+body.workout-mode .ring,body.workout-mode .ring svg{width:48px;height:48px;flex-basis:48px}
+body.workout-mode .weeks{padding:3px;border-radius:15px;gap:2px}
+body.workout-mode .wk{flex-basis:38px;min-height:42px;border-radius:11px}
+body.workout-mode .wk span{width:31px;height:31px;border-radius:10px}
+body.workout-mode .wk i{height:2px!important;min-height:2px}
+body.workout-mode .seg{padding:3px;border-radius:14px}
+body.workout-mode .seg button{min-height:40px;padding:7px 10px}
+body.workout-mode main .wrap{padding-top:8px;gap:12px}
+
+.hero{display:block;padding:16px;border-radius:22px;box-shadow:0 14px 34px -28px rgba(29,22,16,.6)}
+.hero-status{display:grid;grid-template-columns:54px minmax(0,1fr);gap:14px;align-items:center}
+.hero .hring,.hero .hring svg{width:54px;height:54px;flex-basis:54px}
+.hero .hring{position:relative;display:grid;place-items:center}
+.hero .hring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.hero .hring b{position:relative;font-size:12px;font-variant-numeric:tabular-nums lining-nums}
+.hero .hring circle{stroke-width:7}
+.hero .htxt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.hero .htxt .cap{font-size:9px;letter-spacing:.1em}
+.hero strong{font-size:21px;line-height:1.15;font-weight:700}
+.hero-context{color:color-mix(in srgb,var(--surface) 62%,transparent);font-size:12px;line-height:1.35}
+.hero-actions{display:flex;flex-direction:column;align-items:stretch;margin-top:13px}
+.hero .cta{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-height:54px;padding:10px 15px;text-align:left}
+.hero .cta span{font-size:15px;font-weight:800;line-height:1.25}
+.hero .cta small{color:color-mix(in srgb,var(--fg) 62%,transparent);font-size:11px;font-weight:600;line-height:1.25}
+.hero .hero-easy{min-height:34px;padding:5px 0 0;align-self:flex-start;font-size:11px}
+.session-guide{margin-top:10px;border-top:1px solid color-mix(in srgb,var(--surface) 10%,transparent)}
+.session-guide summary{min-height:36px;display:flex;align-items:center;cursor:pointer;color:color-mix(in srgb,var(--surface) 62%,transparent);font-size:11px;font-weight:650;list-style:none}
+.session-guide summary::-webkit-details-marker{display:none}
+.session-guide summary::after{content:"＋";margin-left:auto;font-size:15px}
+.session-guide[open] summary::after{content:"−"}
+.session-guide p{margin:0 0 4px;color:color-mix(in srgb,var(--surface) 70%,transparent);font-size:12px;line-height:1.55}
+
+.workout-list-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:8px 3px 0}
+.workout-list-head>div{display:flex;flex-direction:column;gap:1px}
+.workout-list-head .cap{font-size:9px}
+.workout-list-head h3{margin:0;font-size:20px}
+.workout-list-head>span{padding-bottom:2px;color:var(--muted);font-size:11px;text-align:right}
+
+.card.act{position:relative;padding:16px;gap:10px;border-color:color-mix(in srgb,var(--a1) 30%,var(--line));border-radius:20px;background:var(--surface);box-shadow:0 16px 38px -34px color-mix(in srgb,var(--a1) 55%,transparent)}
+.card.act .ex-head{order:0;grid-template-columns:25px minmax(0,1fr) auto;gap:8px 10px}
+.card.act .ex-head .num{width:25px;height:25px;font-size:11px}
+.card.act .ex-head h2{font-size:18px;line-height:1.25}
+.card.act .ex-head .swap{grid-column:auto;min-height:36px;margin:0;padding:6px 9px;font-size:10px}
+.card.act .plan{order:1;padding:2px 0 5px;align-items:baseline}
+.card.act .plan b{font-size:34px;line-height:1}
+.card.act .plan span{font-size:12px}
+.card.act .plan .pw{padding:0;border:0;background:transparent}
+.card.act .warm{order:2}
+.card.act .sets{order:3;gap:7px;padding-top:4px;border-top:1px solid var(--line)}
+.card.act>*:not(.ex-head):not(.plan):not(.warm):not(.sets){order:4}
+.card.act .editor{padding:10px 0 0;border:0;border-radius:0;background:transparent}
+.card.act .ecap{font-size:11px;color:var(--fg);letter-spacing:.01em}
+.card.act .focus-open{min-height:34px;padding:0;justify-content:flex-end;gap:6px}
+.card.act .focus-open span{font-size:11px}
+.card.act .focus-open b{width:22px;height:22px;font-size:13px}
+.card.act .prevset{font-size:12px}
+.card.act .steps{gap:8px}
+.card.act .step{min-height:62px;background:var(--input)}
+.card.act .step input{font-size:24px;font-variant-numeric:tabular-nums lining-nums}
+.card.act .erow .cta{min-height:50px}
+.card.act .technique-link{margin-top:3px}
+.card.act .srow{min-height:46px;padding-block:8px}
+
+.excompact{border:0;border-top:1px solid var(--line);border-radius:0;background:transparent}
+.excompact:last-of-type{border-bottom:1px solid var(--line)}
+.excompact-btn{min-height:66px;padding:11px 3px}
+.excompact-main{gap:2px}
+.excompact-main b{font-size:14px;font-weight:650}
+.excompact-main small{font-size:11px;color:var(--muted)}
+.excompact .num{width:25px;height:25px;background:transparent;border:1px solid var(--line);font-size:10px}
+.excompact.fin .num{background:color-mix(in srgb,var(--good) 12%,transparent);border-color:transparent;color:var(--good)}
+.excompact-state{font-size:20px;color:var(--muted)}
+.excompact.fin .excompact-state svg{width:20px;color:var(--good)}
+
+/* More deliberate gym workstation */
+.set-screen{background:radial-gradient(ellipse 90% 38% at 100% 0%,rgba(245,105,85,.13),transparent 70%),#17120f}
+.set-stage>.cap{font-size:9px}
+.set-stepper{border-radius:19px;background:rgba(255,250,247,.045)}
+.set-stepper button{border-radius:16px;background:rgba(255,250,247,.065)}
+.set-stepper input{font-variant-numeric:tabular-nums lining-nums}
+.set-actions{margin-top:auto}
+.set-actions .cta{background:#f56955;box-shadow:0 14px 30px -22px rgba(245,105,85,.8)}
+.set-actions .cta:hover{background:#ff7966}
+.set-position .pill{border:1px solid rgba(255,250,247,.08)}
+
+@media(min-width:700px){
+  body.workout-mode header .wrap{display:grid;grid-template-columns:1fr auto;align-items:end}
+  body.workout-mode .brandline{grid-column:1/-1}
+  body.workout-mode .top{grid-column:1}
+  body.workout-mode .weeks{grid-column:2;grid-row:2;max-width:330px}
+  body.workout-mode .seg{grid-column:1/-1}
+  body.workout-mode main .wrap{padding-top:14px}
+  .hero{padding:20px}
+  .hero-status{grid-template-columns:62px minmax(0,1fr)}
+  .hero .hring,.hero .hring svg{width:62px;height:62px}
+  .hero-actions{max-width:330px}
+  .card.act{padding:22px}
+}
+@media(max-width:380px){
+  body.workout-mode .wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  body.workout-mode h1{font-size:31px}
+  .hero{padding:14px}
+  .hero strong{font-size:19px}
+  .hero-status{grid-template-columns:50px minmax(0,1fr);gap:12px}
+  .hero .hring,.hero .hring svg{width:50px;height:50px}
+  .card.act{padding:14px}
+  .card.act .ex-head{grid-template-columns:24px minmax(0,1fr)}
+  .card.act .ex-head .swap{grid-column:2;justify-self:start;min-height:32px;padding-block:4px}
+  .card.act .plan b{font-size:31px}
+  .card.act .step input{font-size:22px}
+}
+@media(max-height:650px){
+  .set-screen{gap:6px}
+  .set-stage{gap:7px}
+  .set-stage h2{font-size:26px}
+  .set-position{gap:6px}
+  .set-previous{min-height:28px;font-size:11px}
+  .set-stepper{padding:7px 10px 9px}
+  .set-stepper>div{grid-template-columns:48px minmax(0,1fr) 48px}
+  .set-stepper button{width:48px;height:48px}
+  .set-stepper input{height:48px;font-size:31px}
+  .set-actions .cta{min-height:52px}
+}
+@media(prefers-reduced-motion:reduce){.hero .hring .pr,.set-dots i{transition:none}}
+
+
+/* v7 viewport correction: preserve week/day choice without two extra rows */
+body.workout-mode header .wrap{display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:8px 10px;align-items:center}
+body.workout-mode .brandline,body.workout-mode .top{grid-column:1/-1}
+body.workout-mode .weeks{grid-column:1;grid-row:3;min-width:0;width:100%}
+body.workout-mode .seg{grid-column:2;grid-row:3;width:140px}
+body.workout-mode .seg button{font-size:11px;padding-inline:5px}
+.card.act .editor{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 10px}
+.card.act .editor .ecap{grid-column:1;align-self:center}
+.card.act .editor .focus-open{grid-column:2;grid-row:1}
+.card.act .editor .prevset,.card.act .editor .steps,.card.act .editor .fielderror,.card.act .editor .erow,.card.act .editor .setfeedback{grid-column:1/-1}
+.card.act .editor .setfeedback{margin:0}
+@media(min-width:700px){body.workout-mode header .wrap{grid-template-columns:minmax(0,1fr) 160px}body.workout-mode .brandline,body.workout-mode .top{grid-column:1/-1}body.workout-mode .weeks{grid-column:1;grid-row:3;max-width:none}body.workout-mode .seg{grid-column:2;grid-row:3;width:160px}}
+
+#view>.session-guide{padding:0 3px;border-top:1px solid var(--line)}
+#view>.session-guide summary{min-height:44px;color:var(--muted)}
+#view>.session-guide p{color:var(--muted);font-size:13px;padding-bottom:10px}
+@media(max-width:380px){.card.act .ex-head{grid-template-columns:24px minmax(0,1fr) auto}.card.act .ex-head .swap{grid-column:auto;min-height:34px}.card.act .ex-head h2{font-size:16px}}
+
+/* Keep the inline completion action clear of the floating tab bar */
+.hero-actions{margin-top:10px}
+.hero .hero-easy{min-height:26px;padding-top:3px;font-size:10px}
+.workout-list-head{padding-top:4px}
+.workout-list-head h3{font-size:18px}
+
+.workout-list-head{padding-top:2px}
+
+/* Session status is a constant dark workstation in both color schemes */
+.hero{background:#1d1610;color:#fffaf7}
+.hero::after{border-color:rgba(255,250,247,.13)}
+.hero .hring .tr{stroke:rgba(255,250,247,.16)}
+.hero-context{color:rgba(255,250,247,.66)}
+.hero .cta,.first-hero .first-start{background:#fffaf7;color:#1d1610}
+.hero .cta small{color:rgba(29,22,16,.64)}
+.hero .hero-easy{color:rgba(255,250,247,.7)}
+.hero .hero-easy:hover{color:#fffaf7}

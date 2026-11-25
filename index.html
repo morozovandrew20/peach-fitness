@@ -464,7 +464,7 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
 <div id="launch" aria-hidden="true"><svg><use href="#peach"/></svg></div>
 
 <header><div class="wrap">
-  <div class="brandline"><span class="brand"><img class="brand-logo" src="peach-logo.svg" alt="" width="24" height="24">PEACH</span><span class="brandnote">Сила · техника · прогресс</span></div>
+  <div class="brandline"><span class="brand"><img class="brand-logo" src="peach-logo.svg" alt="" width="24" height="24">PEACH</span><span class="brandnote">12 недель · 24 тренировки</span></div>
   <div class="top">
     <div><h1 id="ttl">Неделя 1</h1><div class="sub" id="sub"></div></div>
     <div class="ring" title="Выполнено тренировок"><svg viewBox="0 0 50 50"><circle class="tr" cx="25" cy="25" r="21"/><circle class="pr" id="ringp" cx="25" cy="25" r="21" stroke-dasharray="131.9" stroke-dashoffset="131.9"/></svg><b id="ringt">0/24</b></div>
@@ -501,7 +501,7 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
   <p class="rest-hint" id="rfhint">Можно свернуть — отсчёт продолжится.</p>
 </div></div>
 <div id="setfocus" hidden><div class="set-screen" role="dialog" aria-modal="true" aria-labelledby="sftitle" tabindex="-1">
-  <div class="set-top"><button type="button" class="set-min" id="sfclose">К списку</button><span class="set-kicker">Фокус подхода</span><button type="button" class="set-tech" id="sfhow" data-how="ht">Техника ›</button></div>
+  <div class="set-top"><button type="button" class="set-min" id="sfclose">К списку</button><span class="set-kicker">Текущий подход</span><button type="button" class="set-tech" id="sfhow" data-how="ht">Техника ›</button></div>
   <div class="set-stage">
     <span class="cap" id="sfweek">Неделя 1 · день 1</span>
     <h2 id="sftitle">Упражнение</h2>
@@ -842,10 +842,12 @@ function exerciseWhy(ex){
 function renderTrain(fresh){
   const {w,d}=S.cur, beg=isBeg(w), p=beg?0:ph(w), date=S.dates[w+"-"+d], c=counts(w,d), cur=current(w,d), t=tonnage(w,d), ez=easy(w,d), jd=justDone, rb=returnBreak(w,d,c), firstDay=beg&&w===1&&d===1&&c.done===0&&!Object.keys(S.log||{}).length;
   const focusId=edit&&EXD(w,d).some(x=>x.id===edit.id)?edit.id:inspect&&EXD(w,d).some(x=>x.id===inspect)?inspect:cur?cur.id:null;
-  let h=`<section class="hero${firstDay?" first-hero":""}"><div class="hring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="35"/><circle class="pr" id="hbar" cx="42" cy="42" r="35" stroke-dasharray="219.9" stroke-dashoffset="${lastOff}"/></svg><b>${c.done}/${c.total}</b></div>
-    <div class="htxt"><span class="cap">${d===1?"День 1":"День 2"} · ${esc(LEVELS[lvl(w)].n)} уровень${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка готова":firstDay?"Начнём с первого подхода":c.done===0?todaySets(c.total):"Осталось "+(c.total-c.done)+" "+setsWord(c.total-c.done)}</strong>
-    <p>${firstDay?`Всего ${c.total} ${setsWord(c.total)}. Сначала разминка, затем подскажем, с какого веса начать и когда его менять.`:c.done===0?"Сначала разминка — она не входит в этот счёт. ":""}${firstDay?"":ez?"Лёгкий день: вес на 10% ниже и на один подход меньше. Тренировка засчитана."+(p===2?" Контрольный подход сегодня не учитывается: веса не изменятся.":""):beg?"После каждого подхода нажми «Готово». Заканчивай с запасом 2–3 повторения и хорошей техникой.":p===2?"Неделя проверки. В первом подходе ★ сделай максимум повторений без потери техники. По нему обновим веса на следующие 4 недели.":p===3?"Неделя отдыха: меньше вес и подходов. Работай спокойно, без отказа.":"После каждого подхода нажми «Готово». Между подходами отдых начнётся сам."}</p>${firstDay?`<button type="button" class="cta first-start" data-firstset>К первому подходу</button>`:`${cur&&c.done<c.total?`<button type="button" class="cta resume-set" data-quickset>Продолжить · подход ${cur.s+1}</button>`:""}${p===3?"":`<button type="button" class="easy hero-easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть лёгкую неделю</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Пропустить лёгкую неделю</button>`):""}</div></section>`;
-  if(firstDay)h+=`<details class="why workout-options"><summary>Сегодня нужно полегче?</summary><p>Можно уменьшить вес на 10% и сделать на один подход меньше. Такая тренировка тоже засчитывается.</p><button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Включить лёгкий день"}</button></details>`;
+  const guidance=firstDay?`Всего ${c.total} ${setsWord(c.total)}. Сначала разминка, затем подскажем, с какого веса начать и когда его менять.`:c.done===0?"Сначала разминка — она не входит в этот счёт. ":ez?"Лёгкий день: вес на 10% ниже и на один подход меньше. Тренировка засчитана.":beg?"После каждого подхода нажми «Готово». Заканчивай с запасом 2–3 повторения и хорошей техникой.":p===2?"Неделя проверки. В первом подходе ★ сделай максимум повторений без потери техники. По нему обновим веса на следующие 4 недели.":p===3?"Неделя отдыха: меньше вес и подходов. Работай спокойно, без отказа.":"После каждого подхода нажми «Готово». Между подходами отдых начнётся сам.";
+  const nextName=cur?esc(SHORT[cur.id]||cur.id):"";
+  let h=`<section class="hero${firstDay?" first-hero":""}"><div class="hero-status"><div class="hring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="35"/><circle class="pr" id="hbar" cx="42" cy="42" r="35" stroke-dasharray="219.9" stroke-dashoffset="${lastOff}"/></svg><b>${c.done}/${c.total}</b></div>
+    <div class="htxt"><span class="cap">${d===1?"День 1":"День 2"} · ${esc(LEVELS[lvl(w)].n)}${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка готова":firstDay?"Всё готово к старту":c.done===0?todaySets(c.total):"Осталось "+(c.total-c.done)+" "+setsWord(c.total-c.done)}</strong><span class="hero-context">${c.done>=c.total?"Результат сохранён":cur?nextName:"План на сегодня"}</span></div></div>
+    <div class="hero-actions">${firstDay?`<button type="button" class="cta first-start" data-firstset><span>Начать · первый подход</span><small>${nextName}</small></button><button type="button" class="easy hero-easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`:`${cur&&c.done<c.total?`<button type="button" class="cta resume-set" data-quickset><span>${c.done?"Продолжить":"Начать"} · подход ${cur.s+1}</span><small>${nextName}</small></button>`:""}${p===3?"":`<button type="button" class="easy hero-easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}`}</div>
+    </section>`;
   if(rb)h+=`<div class="note" data-return-note><b>Перерыв ${rb.days} ${daysWord(rb.days)}.</b> Не догоняй пропущенное — продолжи с недели ${w}, дня ${d}. ${ez?"Лёгкий день уже включён: вес ниже и на один подход меньше.":"Если сил мало, включи лёгкий день: вес будет на 10% ниже и на один подход меньше."} <span class="nacts">${ez?"":`<button type="button" class="ghostbtn" data-returneasy="${rb.seen}">Включить лёгкий день</button>`}<button type="button" class="ghostbtn dim" data-seen="${rb.seen}">${ez?"Понятно":"Обычный план"}</button></span></div>`;
   if(!beg&&(w-1)%4===3&&!wkHas(w))h+=`<div class="note">${S.noRest&&S.noRest[w]?"Вместо отдыха будет средняя неделя. Следующую лёгкую неделю пропустить нельзя.":S.noRest&&S.noRest[w-4]?"Прошлую неделю отдыха ты уже пропустила. Сейчас делаем лёгкую.":"Если сил достаточно, неделю отдыха можно заменить средней. Но не два раза подряд."}</div>`;
   if(c.done===0||c.done>=c.total){
@@ -856,6 +858,7 @@ function renderTrain(fresh){
   if(beg&&!firstDay&&!EXD(w,d).some(x=>lastTime(w,x.id)||rows(w,x.id).some(full)))h+=`<div class="note"><b>Сначала подбери вес.</b> Начни с лёгкого. Если после подхода можешь сделать ещё больше 3 повторений — немного прибавь. Если не выходит минимум из плана — убавь. Цель: закончить с запасом 2–3 повторения.</div>`;
   if(!beg&&LIFTS.some(l=>l.day===d&&pick(l.id,w)))h+=`<div class="note"><b>Подбери вес.</b> Начни с лёгкого. Заканчивай подход, когда с хорошей техникой останется ещё 2–3 повторения. По этим записям приложение рассчитает следующие веса.</div>`;
   if(!beg&&LIFTS.some(l=>l.day===d&&!pick(l.id,w)&&!base(l.id,1)))h+=`<div class="note">Не указаны стартовые вес и повторения. Впиши их в «Настройках», иначе приложение не сможет рассчитать план.</div>`;
+  h+=`<div class="workout-list-head"><div><span class="cap">План на сегодня</span><h3>Упражнения</h3></div><span>${EXD(w,d).length} упражнения · ${c.total} ${setsWord(c.total)}</span></div>`;
   EXD(w,d).forEach((ex0,i)=>{
     const ex=asBeg(eff(ex0,w),w), plan=nSets(ex,w), r=rows(w,ex.id), n=Math.max(plan,r.length), lt=lastTime(w,ex.id);
     let fin=true;for(let s=0;s<plan;s++)if(!full(r[s]))fin=false;
@@ -911,6 +914,7 @@ function renderTrain(fresh){
     h+=`</section>`;
   });
   const prev=w>1?tonnage(w-1,d):0, diff=prev?t-prev:0;
+  h+=`<details class="session-guide"><summary>Как проходит тренировка</summary><p>${guidance}</p></details>`;
   if(c.done>=c.total)h+=`<section class="summary"><div class="summary-mark" aria-hidden="true">${CK}</div><span class="cap">Тренировка завершена</span><h3>Отличная работа</h3>${doneWorkouts()===1?`<p class="meta">Самое трудное уже сделано — ты начала. Дай себе 2–3 дня на восстановление, затем возвращайся на день 2.</p>`:""}<div class="stats">
       <div class="stat"><b>${kgf(t)} кг</b><span>всего поднято</span></div>
       <div class="stat"><b>${prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—"}</b><span>к прошлой неделе</span></div></div>${doneWorkouts()>=24?`<button type="button" class="cta nextwork" data-blocksummary>Итоги и следующий блок</button>`:nextPos()?`<button type="button" class="cta nextwork" data-nextwork>Дальше: неделя ${nextPos().w} · день ${nextPos().d}</button><button type="button" class="ghostbtn nextwork" data-calendar>Добавить следующую тренировку в календарь</button>`:`<button type="button" class="cta nextwork" data-tab="progress">Смотреть прогресс</button>`}</section>`;
@@ -1183,7 +1187,7 @@ function renderSetup(){
     <p class="sync" id="sync"></p>`;
   $("view").innerHTML=h; setSync();
 }
-function render(fresh){document.body.classList.toggle("welcome-mode",tab==="train"&&isFirst());document.body.classList.toggle("settings-mode",tab==="setup");applyTheme();awake();renderChrome(true);({train:isFirst()?renderWelcome:renderTrain,progress:renderProgress,setup:renderSetup})[tab]();const v=$("view");if(fresh){v.classList.remove("in");void v.offsetWidth;v.classList.add("in");clearTimeout(render.t);render.t=setTimeout(()=>v.classList.remove("in"),900)}}
+function render(fresh){document.body.classList.toggle("welcome-mode",tab==="train"&&isFirst());document.body.classList.toggle("workout-mode",tab==="train"&&!isFirst());document.body.classList.toggle("settings-mode",tab==="setup");applyTheme();awake();renderChrome(true);({train:isFirst()?renderWelcome:renderTrain,progress:renderProgress,setup:renderSetup})[tab]();const v=$("view");if(fresh){v.classList.remove("in");void v.offsetWidth;v.classList.add("in");clearTimeout(render.t);render.t=setTimeout(()=>v.classList.remove("in"),900)}}
 
 /* ---------- flagship active-set focus: presentation over the existing editor ---------- */
 let focusSet=null,focusResume=null;
