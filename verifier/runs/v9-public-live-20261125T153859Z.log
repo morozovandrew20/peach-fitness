@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "start": true,
+    "reload": {
+      "before": "00:00",
+      "after": "00:22"
+    },
+    "effort": true,
+    "effortReload": true,
+    "voice": true,
+    "techniquePause": true,
+    "reducedMotion": true,
+    "fourWeek": true,
+    "zeroErrors": true
+  },
+  "errors": []
+}

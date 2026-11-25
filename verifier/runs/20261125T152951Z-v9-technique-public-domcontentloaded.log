@@ -1,0 +1,68 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_technique_public.js
+{
+  "checks": {
+    "ht": true,
+    "rdl": true,
+    "bulg": true,
+    "abd": true,
+    "sq": true,
+    "hyper": true,
+    "kick": true,
+    "curl": true,
+    "reducedMotion": true,
+    "zeroErrors": true
+  },
+  "metrics": {
+    "ht": {
+      "frames": 5,
+      "triangles": 22930,
+      "calls": 21,
+      "paused": true
+    },
+    "rdl": {
+      "frames": 6,
+      "triangles": 22858,
+      "calls": 15,
+      "paused": true
+    },
+    "bulg": {
+      "frames": 6,
+      "triangles": 22710,
+      "calls": 19,
+      "paused": true
+    },
+    "abd": {
+      "frames": 6,
+      "triangles": 22550,
+      "calls": 17,
+      "paused": true
+    },
+    "sq": {
+      "frames": 6,
+      "triangles": 22366,
+      "calls": 13,
+      "paused": true
+    },
+    "hyper": {
+      "frames": 7,
+      "triangles": 22366,
+      "calls": 13,
+      "paused": true
+    },
+    "kick": {
+      "frames": 5,
+      "triangles": 22674,
+      "calls": 14,
+      "paused": true
+    },
+    "curl": {
+      "frames": 6,
+      "triangles": 22298,
+      "calls": 13,
+      "paused": true
+    }
+  },
+  "errors": [],
+  "requests": []
+}
+EXIT_CODE: 0

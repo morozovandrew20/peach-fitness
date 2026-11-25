@@ -1,0 +1,6 @@
+page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://morozovandrew20.github.io/peach-fitness/", waiting until "networkidle"
+
+    at eval (<anonymous>:17:14)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73

@@ -1,0 +1,6 @@
+page.reload: net::ERR_INTERNET_DISCONNECTED
+Call log:
+  - waiting for navigation until "domcontentloaded"
+
+    at eval (<anonymous>:19:51)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73

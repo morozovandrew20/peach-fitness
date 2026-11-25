@@ -1,0 +1,6 @@
+locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('[data-tech3d="ht"][data-ready="1"]') to be visible
+
+    at eval (<anonymous>:9:113)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73

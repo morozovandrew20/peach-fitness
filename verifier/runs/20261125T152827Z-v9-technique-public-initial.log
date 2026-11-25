@@ -1,0 +1,8 @@
+COMMAND: LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node verifier/v9/run_browser.cjs verifier/v9/browser_technique_public.js
+page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://morozovandrew20.github.io/peach-fitness/?v=9", waiting until "networkidle"
+
+    at eval (<anonymous>:7:64)
+    at async /mnt/agents/output/peach-fitness/verifier/v9/run_browser.cjs:8:73
+EXIT_CODE: 1
