@@ -65,3 +65,10 @@
 - Public product commit: `faf2cff09fbf628ababdf6dfe579e9f316966b57` (local `11d52d8`).
 - Public: calm/full/live/resilience зелёные (`v11-public-*`). В full зафиксирован безвредный ERR_ABORTED preload-шрифтов, фильтр добавлен как в v10 release; неуспешный запуск сохранён append-only.
 - Release tag: `release-1.1.0` → `faf2cff`.
+
+## v12 — Релиз 1.2 «Практика вместо доказательной базы» (2026-11-26)
+- Acceptance: `verifier/v12/acceptance.md`. Отличие от v11: проверяется удаление evidence-оценок/исследований из продукта и практичная подача упражнений, объёма и волны.
+- Local: static/calm/full зелёные (`v12-static-*`, `v12-local-calm-*`, `v12-local-full-*`).
+- Public product commit: `17a2dee49feb364a5c30bf47193844d54eb4cb8a` (local `0e02055`).
+- Public: calm/full/live/resilience зелёные (`v12-public-*`); один транзиентный «animation time does not advance» под софтварным GL сохранён append-only, повтор прошёл.
+- Release tag: `release-1.2.0` → `17a2dee`.

@@ -1,0 +1,9 @@
+{
+  "values": {
+    "animation_byte_identical": true,
+    "credits_note": "check sources list manually"
+  },
+  "errors": [
+    "evidence UI remains: <b>Исследования.</b>"
+  ]
+}

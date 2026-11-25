@@ -1,0 +1,4 @@
+Error: animation time does not advance
+    at assert (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v12/run_browser.cjs:8:15), <anonymous>:4:35)
+    at eval (eval at <anonymous> (/mnt/agents/output/peach-fitness/verifier/v12/run_browser.cjs:8:15), <anonymous>:10:141)
+    at async /mnt/agents/output/peach-fitness/verifier/v12/run_browser.cjs:8:73
