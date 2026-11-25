@@ -27,6 +27,7 @@ async page => {
   await page.locator('#obgo').click();
   await page.locator('[data-firstset]').click();
   await page.locator('#setfocus:not([hidden])').waitFor();
+  await page.waitForTimeout(400);
   out.checks.focusFromFirstCta = await page.evaluate(() => ({
     title:document.querySelector('#sftitle').textContent,
     set:document.querySelector('#sfset').textContent,
