@@ -1,0 +1,12 @@
+PEACH v8 public verification — GitHub Pages
+Product commit: 1364c0880ddbe52ca0fefc0d1552f9fc12b3d628
+URL: https://morozovandrew20.github.io/peach-fitness/
+
+FAILED browser_live_public run 1: exit 1. Fresh HTML deployment was not yet returned by the base CDN URL; ?v=8 already contained data-elapsed. Evidence-based retry used Network.setCacheDisabled and Network.setBypassServiceWorker for online assertions.
+PASSED browser_live_public run 2: exit 0. Live start/reload, effort persistence, voice opt-in, technique pause, reduced motion, four-week report, zero browser errors.
+FAILED browser_full_public run 1: exit 1. Verifier setup lacked cdp declaration after adding real-offline re-enable step. Verifier fixed; no product change.
+PASSED browser_full_public run 2: exit 0. Complete v7 regression on public URL, cache peach-flagship-11, Service Worker bypass disabled before offline checks, two offline reloads passed, responsive 320/360/390/768/1440, zero console/request errors.
+FAILED workout_cockpit_public run 1: exit 1. Duplicate cdp declaration in verifier. Duplicate removed; no product change.
+PASSED workout_cockpit_public run 2: exit 0. First viewport controls above nav, small 320x568 focus CTA, dark contrast, zero console errors.
+FAILED browser_outcomes_public run 1: exit 1. Public navigation networkidle timed out at 30 seconds. Preserved as transient public network failure.
+PASSED browser_outcomes_public run 2: exit 0. Personal records block, program position, 45-minute duration, next step and technique screenshot.

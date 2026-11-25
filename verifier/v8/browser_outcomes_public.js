@@ -1,0 +1,10 @@
+async page=>{
+ const base='https://morozovandrew20.github.io/peach-fitness/',out={};const assert=(v,m)=>{if(!v)throw new Error(m)};
+ const cdp=await page.context().newCDPSession(page);await cdp.send('Network.enable');await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});await cdp.send('Network.setBypassServiceWorker',{bypass:true});
+ await page.setViewportSize({width:360,height:800});await page.goto(base,{waitUntil:'networkidle'});
+ await page.evaluate(()=>{localStorage.clear();const s={v:1,startSet:true,level:'mid',growth:2.5,start:{ht:{w:'40',r:'10',step:'2.5'},rdl:{w:'40',r:'10',step:'2.5'},sq:{w:'40',r:'10',step:'2.5'}},cur:{w:1,d:1},log:{},sessions:{},effort:{}};for(const [id,n] of [['ht',4],['rdl',3],['bulg',3]])s.log['1-'+id]=Array.from({length:n},()=>['40','10']);s.log['1-abd']=[['20','15'],['20','15']];localStorage.setItem('volny-v1',JSON.stringify(s))});await page.reload({waitUntil:'networkidle'});
+ await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('volny-v1'));s.sessions['1-1']={start:Date.now()-45*60000,end:0};localStorage.setItem('volny-v1',JSON.stringify(s))});await page.reload({waitUntil:'networkidle'});
+ await page.locator('#ed-0').fill('20');await page.locator('#ed-1').fill('15');await page.locator('[data-done="2"]').click();await page.locator('#sheet').waitFor({state:'visible'});
+ const text=await page.locator('#sh-outcomes').textContent(),next=await page.locator('#sh-next').textContent();assert(text.includes('Личные рекорды')&&text.includes('В программе')&&text.includes('Время тренировки'),'outcomes missing '+text);assert(next.includes('Неделя 1 · день 2'),'next step missing');out.outcomes=text;out.next=next;await page.screenshot({path:'/mnt/agents/peach-v8-public-completion.png'});
+ await page.keyboard.press('Escape');await page.locator('[data-inspect="ht"]').click();await page.locator('.technique-link[data-how="ht"]').click();await page.waitForTimeout(300);await page.screenshot({path:'/mnt/agents/peach-v8-public-technique.png'});return out;
+}

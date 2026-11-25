@@ -1,0 +1,14 @@
+PEACH v8 local verification summary — 2026-11-25 UTC
+
+FAILED browser_live run 1: exit 1. Command: playwright-cli -s=v8live run-code verifier/v8/browser_live.js. Result: [data-elapsed] absent in open set before first render. Fix: live elapsed added to setfocus header.
+FAILED browser_live run 2: exit 1. Same command. Result: strict locator found hero and setfocus elapsed nodes. Test fixed to first visible node; product intentionally exposes live time in both contexts.
+FAILED browser_live run 3: exit 1. Same command. Result: SVG animate node is not visually rendered, waitFor visible timed out. Test corrected to attached; animation is real SMIL.
+PASSED browser_live run 4: exit 0. start, reload elapsed, effort, effort reload, voice opt-in, technique pause, reduced motion, four-week review, zero errors.
+PASSED static_check.py: exit 0. errors []; cache peach-flagship-11; original logo/assets present.
+PASSED browser_full.js: exit 0. All onboarding, navigation/easy/replacement/custom, rest controls, undo/save, validation, notes/plates/warmup/measurements, settings, exports, restore, install/block cancel, completion/calendar/photo, reset/safety, new block, transitions; responsive 320/360/390/768/1440; offline repeat reload; zero console/request errors.
+PASSED workout_cockpit.js: exit 0. First viewport action/exercise/plan/kg/reps/save all above nav; 320x568 CTA visible; dark hero contrast preserved; zero console errors.
+FAILED browser_outcomes run 1: exit 1. Fixture used 3 hip-thrust sets although medium week requires 4. Fixture corrected.
+FAILED browser_outcomes run 2: exit 1. Duration assertion used an instantaneous synthetic session. Fixture corrected to realistic 45-minute session.
+FAILED browser_outcomes run 3: exit 1. Technique locator selected hidden setfocus button. Test corrected to visible exercise technique control.
+FAILED browser_outcomes run 4: exit 1. Completed exercise was collapsed. Test corrected to expand it before technique.
+PASSED browser_outcomes run 5: exit 0. Personal records, program position, 45-minute duration and next step shown. Completion and technique screenshots captured and visually inspected.
