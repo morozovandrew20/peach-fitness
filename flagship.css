@@ -790,3 +790,35 @@ body.doc-page{min-height:100vh;background:radial-gradient(circle at 20% -10%,col
 .doc-note{border-left:4px solid var(--a1)}
 @media(max-width:560px){.doc-nav{grid-template-columns:1fr 1fr}.doc-hero{padding:24px 20px}.doc-top{padding-bottom:16px}}
 @media(prefers-reduced-motion:reduce){.release-link,.doc-home{transition:none}}
+
+/* v11 — спокойный интерфейс: меньше шума, стабильные навигация и таймер */
+/* Нижняя панель: без transform-центрирования и пружинных иконок — кнопки не «улетают» */
+nav{left:12px;right:12px;width:auto;max-width:520px;margin-inline:auto;transform:none}
+nav svg{transition:none;transform:none!important}
+nav button{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+nav .bar{grid-template-columns:repeat(3,minmax(0,1fr))}
+main{padding-bottom:calc(104px + env(safe-area-inset-bottom,0px))}
+/* Таймер: текст всегда внутри круга, на 320–390 тоже */
+.rest-clockbox{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;max-width:74%;text-align:center;pointer-events:none}
+.rest-clock{font-size:clamp(38px,12.5vw,62px);line-height:1;white-space:nowrap}
+.rest-state,.rest-sub{max-width:100%;font-size:11px;line-height:1.25;text-align:center;overflow-wrap:anywhere}
+/* Секции-подсказки: одна строка вместо трёх блоков */
+.ex-help{margin-top:10px}
+.ex-help>.coach-body{margin-top:8px}
+.ex-help details{margin-top:8px}
+details.card.fold{padding:0}
+details.card.fold>summary{list-style:none;cursor:pointer;padding:18px 20px;font-size:17px;font-weight:750;letter-spacing:-.02em;min-height:54px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+details.card.fold>summary::-webkit-details-marker{display:none}
+details.card.fold>summary::after{content:"›";font-size:22px;font-weight:400;color:var(--muted);transform:rotate(90deg);transition:transform .2s var(--ease)}
+details.card.fold[open]>summary::after{transform:rotate(-90deg)}
+details.card.fold>section.card{border:0;border-radius:0;box-shadow:none;background:transparent;padding-top:0}
+details.card.fold>ul{margin:0;padding:0 22px 18px 38px;color:var(--muted);font-size:14px;line-height:1.5}
+/* Спокойная подача */
+.welcome-copy p{max-width:30ch}
+.about-card .release-actions{margin-top:12px}
+.sync{max-width:52ch;margin-inline:auto}
+@media(max-width:360px){
+  .rest-clock{font-size:clamp(34px,12vw,44px)}
+  .rest-ring{width:min(56vw,180px)}
+}
+@media(prefers-reduced-motion:reduce){details.card.fold>summary::after{transition:none}}
