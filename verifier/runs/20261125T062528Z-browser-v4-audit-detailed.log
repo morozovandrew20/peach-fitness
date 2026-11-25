@@ -1,0 +1,8 @@
+timestamp=20261125T062528Z
+command=playwright-cli run-code --filename=verifier/v4/browser_full.js
+### Error
+TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-plates]')
+
+exit_code=1

@@ -1,0 +1,5 @@
+timestamp=20261125T063022Z
+command=playwright-cli run-code --filename=verifier/v4/browser_full.js
+### Error
+Error: offline cache v7 missing
+exit_code=1

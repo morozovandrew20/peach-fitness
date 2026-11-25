@@ -1,0 +1,6 @@
+timestamp=20261125T061912Z
+command=playwright-cli run-code --filename=verifier/v4/browser_full.js
+The browser 'default' is not open, please run open first
+
+  playwright-cli open [params]
+exit_code=1

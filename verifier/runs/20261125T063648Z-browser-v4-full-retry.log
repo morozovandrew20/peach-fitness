@@ -1,0 +1,8 @@
+timestamp=20261125T063648Z
+command=playwright-cli run-code --filename=verifier/v4/browser_full.js
+### Error
+TimeoutError: locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-transitionrest]') to be visible
+
+exit_code=1

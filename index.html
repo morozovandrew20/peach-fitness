@@ -1014,7 +1014,7 @@ function bodyCard(){
     if(talk)h+=`<div class="note">${talk}</div>`}
   else h+=`<p class="meta">Замеры необязательны. Записывай их раз в 4 недели, если хочешь следить за цифрами.</p>`;
   h+=`<div class="grid3">${BODY.map(([k,n])=>`<div><label class="lbl" for="bd-${k}">${n}</label><div class="field"><input id="bd-${k}" inputmode="decimal" data-bd="${k}" value="${esc(BD[k])}"><span>см</span></div></div>`).join("")}</div>
-    <button type="button" class="easy" data-bodyadd>Записать замеры</button>
+    <p class="fielderror" id="bodyerror" role="alert"></p><button type="button" class="easy" data-bodyadd>Записать замеры</button>
     <details class="why"><summary>Как измерять</summary><ul style="padding-left:18px;margin:6px 0 0">
       <li><b>Как мерить.</b> Утром, раз в 4 недели, одной лентой и в одной фазе цикла. Ягодицы — по самой выступающей части, бедро — под ягодичной складкой, талия — на уровне пупка.</li>
       <li><b>Не торопись с выводами.</b> Разница 1–2 см может быть погрешностью или обычными колебаниями.</li>
@@ -1621,7 +1621,12 @@ document.addEventListener("click",e=>{
       <li><b>${B?"Уровень.":"Упражнение."}</b> ${B?"Если вес не растёт больше месяца, а сон и еда в порядке, попробуй уровень «Средний».":"Если две проверки подряд нет роста при хорошем сне и питании, замени упражнение в следующем блоке."}</li></ol>
       <p class="meta">Одна неудачная проверка — норма. Смотри на динамику нескольких недель.</p></div>`;openDialog("info")}
   else if(b.dataset.norest!==undefined){S.noRest=S.noRest||{};if(S.noRest[w])delete S.noRest[w];else if(!S.noRest[w-4])S.noRest[w]=true;edit=null;save();renderChrome(false);renderTrain()}
-  else if(b.dataset.bodyadd!==undefined){const ok=v=>{const n=num(v);return n>=20&&n<=250};if(!["g","h","w"].some(k=>ok(BD[k])))return;S.body=S.body||[];S.body.push({t:Date.now(),d:new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit",year:"2-digit"}),g:ok(BD.g)?String(num(BD.g)):"",h:ok(BD.h)?String(num(BD.h)):"",w:ok(BD.w)?String(num(BD.w)):""});BD.g=BD.h=BD.w="";save();renderProgress()}
+  else if(b.dataset.bodyadd!==undefined){
+    const ok=v=>{const n=num(v);return n>=20&&n<=250},keys=["g","h","w"],badKeys=keys.filter(k=>String(BD[k]).trim()&&!ok(BD[k])),valid=keys.filter(k=>ok(BD[k]));
+    for(const k of keys){const input=$("bd-"+k);if(input){if(badKeys.includes(k))input.setAttribute("aria-invalid","true");else input.removeAttribute("aria-invalid")}}
+    if(badKeys.length||!valid.length){const er=$("bodyerror");if(er)er.textContent=badKeys.length?"Каждый замер должен быть от 20 до 250 см. Исправь выделенное поле или очисти его.":"Укажи хотя бы один замер от 20 до 250 см.";const input=$("bd-"+(badKeys[0]||"g"));if(input)input.focus();return}
+    S.body=S.body||[];S.body.push({t:Date.now(),d:new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit",year:"2-digit"}),g:ok(BD.g)?String(num(BD.g)):"",h:ok(BD.h)?String(num(BD.h)):"",w:ok(BD.w)?String(num(BD.w)):""});BD.g=BD.h=BD.w="";save();renderProgress()
+  }
   else if(b.dataset.bodydel!==undefined){if(!b.dataset.armed){b.dataset.armed="1";b.textContent="Точно удалить?";return}(S.body||[]).pop();save();renderProgress()}
   else if(b.dataset.returneasy){S.easy=S.easy||{};S.easy[w+"-"+d]=true;S.seen=S.seen||{};S.seen[b.dataset.returneasy]=Date.now();edit=null;save();renderChrome(false);renderTrain()}
   else if(b.dataset.easy!==undefined){S.easy=S.easy||{};const k=w+"-"+d;if(S.easy[k])delete S.easy[k];else S.easy[k]=true;edit=null;save();renderChrome(false);renderTrain()}
@@ -1718,7 +1723,7 @@ document.addEventListener("change",async e=>{
 document.addEventListener("input",e=>{
   const t=e.target;
   if(t.getAttribute("aria-invalid")){t.removeAttribute("aria-invalid");const er=$("editorerror");if(er)er.classList.remove("show");if(t.id&&t.id.startsWith("sf-"))$("sferror").textContent=""}
-  if(t.dataset.bd){BD[t.dataset.bd]=t.value}
+  if(t.dataset.bd){BD[t.dataset.bd]=t.value;const er=$("bodyerror");if(er)er.textContent=""}
   else if(t.dataset.obbar){OB["bar-"+t.dataset.obbar]=t.value}
   else if(t.dataset.ob){OB[t.dataset.ob]=t.value}
   else if(t.dataset.st){

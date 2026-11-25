@@ -1,0 +1,5 @@
+timestamp=20261125T062731Z
+command=playwright-cli run-code --filename=verifier/v4/browser_full.js
+### Error
+Error: invalid measurement gives no feedback
+exit_code=1

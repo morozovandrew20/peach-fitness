@@ -1,0 +1,22 @@
+timestamp=20261125T062044Z
+command=playwright-cli run-code --filename=verifier/v4/browser_full.js
+### Error
+TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-easy]').first()
+    - locator resolved to <button class="easy" data-easy="" type="button" aria-pressed="true">Вернуть обычный план</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not stable
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not stable
+    - retrying click action
+      - waiting 100ms
+    58 × waiting for element to be visible, enabled and stable
+       - element is not visible
+     - retrying click action
+       - waiting 500ms
+
+exit_code=1
