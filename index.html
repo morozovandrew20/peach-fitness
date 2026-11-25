@@ -454,39 +454,6 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
 .obbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
 .obbar>div{min-width:0}
 @media (prefers-reduced-motion:reduce){.okmark path{stroke-dashoffset:0}}
-/* v26: review-driven hierarchy, concise guidance and clearer saved states — palette and motion unchanged */
-.ringwrap{display:flex;flex-direction:column;align-items:center;gap:1px;flex:none}.ringnote{font-size:10px;line-height:1.1;color:var(--muted);font-weight:600;white-space:nowrap}
-.ob-question{position:sticky;top:0;z-index:2;background:var(--surface);margin:-16px -16px 2px;padding:16px 16px 10px;border-radius:var(--r) var(--r) 0 0}.ob-question p{margin:4px 0 0}
-.ob-actions{display:flex;align-items:center;gap:10px}.ob-actions .cta{flex:1}.ob-actions .ghostbtn{flex:none;padding-inline:8px}
-.settings-jump{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}.settings-jump::-webkit-scrollbar{display:none}.settings-jump button{flex:none;border:0;border-radius:99px;background:var(--surface);padding:10px 14px;min-height:44px;color:var(--fg);font-size:13px;font-weight:600}
-.settings-group{font-size:20px;margin:14px 2px 0;scroll-margin-top:16px}.settings-group:first-child{margin-top:0}
-.panel .completion-stats{grid-template-columns:1fr 1fr}.sheet-more{text-align:left;border-top:1px solid var(--line);padding-top:4px}.sheet-more summary{min-height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:14px;font-weight:600;list-style:none}.sheet-more summary::-webkit-details-marker{display:none}.sheet-more summary::after{content:"›";margin-left:6px}.sheet-more[open] summary::after{transform:rotate(90deg)}.sheet-more .ghostbtn{width:100%}
-.editor .cta{line-height:1.2;white-space:normal}.novice-guide .why{margin-top:0}.inline-options{margin:0;padding:0 4px}
-@media(max-width:350px){.ob-actions{align-items:stretch;flex-direction:column-reverse}.ob-actions .ghostbtn{width:100%}.ringnote{font-size:9px}}
-/* v27: on-demand programme navigation and compact visual technique */
-.schedule{border:0;border-radius:16px;background:var(--surface);overflow:hidden}
-.schedule>summary{min-height:46px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;font-size:14px}
-.schedule>summary::-webkit-details-marker{display:none}
-.schedule-action{display:flex;align-items:center;color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
-.schedule-action::after{content:"›";margin-left:5px;font-size:20px;line-height:1;transition:transform .2s var(--ease)}
-.schedule[open] .schedule-action::after{transform:rotate(90deg)}
-.schedule-body{padding:2px 12px 12px;display:flex;flex-direction:column;gap:10px;border-top:.5px solid var(--line)}
-.schedule-body .weeks{padding-top:10px}
-.first-hero{padding:14px;gap:12px}
-.first-hero .hring{flex-basis:66px;height:66px}
-.first-hero .hring svg{width:66px;height:66px}
-.first-hero .hring b{font-size:15px}
-.first-hero .first-start{margin-top:7px}
-.tech-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:2px 0 16px}
-.tech-step{min-width:0;margin:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--raised)}
-.tech-step svg{display:block;width:100%;height:auto;aspect-ratio:8/7}
-.tech-step figcaption{padding:7px 6px 9px;text-align:center;font-size:11px;font-weight:650;line-height:1.25;color:var(--fg)}
-.tech-step figcaption b{display:block;color:var(--a1);font-size:10px;margin-bottom:2px}
-.tech-eq{fill:none;stroke:var(--muted);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
-.tech-body{fill:none;stroke:var(--fg);stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
-.tech-head{fill:var(--surface);stroke:var(--fg);stroke-width:4.5}
-.tech-move{fill:none;stroke:var(--a1);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-@media(max-width:350px){.first-hero .hring{display:none}.first-hero .first-start{margin-top:10px}.tech-steps{gap:5px}.tech-step figcaption{font-size:10px;padding-inline:4px}.schedule>summary{padding-inline:12px}}
 
 </style>
 
@@ -499,18 +466,13 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
 <header><div class="wrap">
   <div class="top">
     <div><h1 id="ttl">Неделя 1</h1><div class="sub" id="sub"></div></div>
-    <div class="ringwrap"><div class="ring" id="progressring" role="img" aria-label="0 из 24 тренировок"><svg viewBox="0 0 50 50"><circle class="tr" cx="25" cy="25" r="21"/><circle class="pr" id="ringp" cx="25" cy="25" r="21" stroke-dasharray="131.9" stroke-dashoffset="131.9"/></svg><b id="ringt">0/24</b></div><span class="ringnote">тренировок</span></div>
+    <div class="ring" title="Выполнено тренировок"><svg viewBox="0 0 50 50"><circle class="tr" cx="25" cy="25" r="21"/><circle class="pr" id="ringp" cx="25" cy="25" r="21" stroke-dasharray="131.9" stroke-dashoffset="131.9"/></svg><b id="ringt">0/24</b></div>
   </div>
-  <details class="schedule" id="schedule">
-    <summary><b id="schedule-current">Неделя 1 · День 1</b><span class="schedule-action">Сменить</span></summary>
-    <div class="schedule-body">
-      <div class="weeks" id="weeks" role="group" aria-label="Неделя"></div>
-      <div class="seg" id="days" role="group" aria-label="День">
-        <button type="button" data-day="1">День 1</button>
-        <button type="button" data-day="2">День 2</button>
-      </div>
-    </div>
-  </details>
+  <div class="weeks" id="weeks" role="group" aria-label="Неделя"></div>
+  <div class="seg" id="days" role="group" aria-label="День">
+    <button type="button" data-day="1">День 1</button>
+    <button type="button" data-day="2">День 2</button>
+  </div>
 </div></header>
 <main><div class="wrap" id="view"></div></main>
 <div id="timer" hidden><div class="wrap"><div class="in" id="timerin">
@@ -541,9 +503,9 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
 <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-h" tabindex="-1"><button type="button" class="panelx" id="sheetclose" aria-label="Закрыть">×</button><div class="wrap"><span class="grab"></span>
   <svg class="okmark" id="sh-ok" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="42"/><path d="M25 43.5l11.5 11.5L60 31"/></svg><span class="peachmark" id="sh-peach" hidden aria-hidden="true"><svg><use href="#peach"/></svg></span>
   <h3 id="sh-h">Тренировка готова</h3><p id="sh-sub"></p><p id="sh-coach" class="completion-coach"></p>
-  <div class="stats completion-stats"><div class="stat"><b id="sh-sets"></b><span>подходов записано</span></div><div class="stat"><b id="sh-n"></b><span>тренировок</span></div></div>
+  <div class="stats"><div class="stat"><b id="sh-ton"></b><span>всего поднято</span></div><div class="stat"><b id="sh-diff"></b><span>к прошлой неделе</span></div><div class="stat"><b id="sh-n"></b><span>тренировок</span></div></div>
   <div class="block-results" id="sh-block" hidden><div class="block-results-list" id="sh-results" role="list" aria-label="Итоги по основным упражнениям"></div><p class="meta">Оценка силы нужна для сравнения результатов. Не пробуй этот вес.</p><button type="button" class="cta" id="sheetnewblock">Посмотреть следующий блок</button><button type="button" class="btn" id="sheetshare">Поделиться результатом</button><p class="sharemsg" id="sharemsg" role="status"></p></div>
-  <button type="button" class="cta" id="sheetnext"></button><button type="button" class="ghostbtn" id="sheetok">Остаться здесь</button><details class="sheet-more" id="sheetmore"><summary>Дополнительно</summary><button type="button" class="ghostbtn" id="sheetcal" hidden>Добавить следующую тренировку в календарь</button><button type="button" class="ghostbtn" id="sheetinstall" hidden>Добавить PEACH на главный экран</button><button type="button" class="ghostbtn" id="sheetcopy" hidden></button></details>
+  <button type="button" class="cta" id="sheetnext"></button><button type="button" class="ghostbtn" id="sheetcal" hidden>Добавить следующую тренировку в календарь</button><button type="button" class="ghostbtn" id="sheetinstall" hidden>Добавить PEACH на главный экран</button><button type="button" class="ghostbtn" id="sheetok">Остаться здесь</button><button type="button" class="ghostbtn" id="sheetcopy" hidden></button>
 </div></div></div>
 
 <div id="info" hidden><button type="button" id="infox" tabindex="-1" aria-label="Закрыть"></button>
@@ -661,57 +623,6 @@ const nSets=(ex,w)=>{const n=setsAt(ex,w), d=EX[1].some(x=>x.id===ex.id)?1:2;ret
 function dayKg(id,w){const k=planKg(id,w);if(!easy(w,liftDay(id)))return k;const st=num(S.start[id].step)||2.5;return Math.round(k*0.9/st)*st}
 const HOW={"ht": {"st": ["Скамья под нижним краем лопаток, гриф в складке бёдер, под гриф — мягкая накладка", "Стопы на ширине таза и на таком расстоянии, чтобы вверху голени стояли вертикально"], "mv": ["Подбородок к груди, рёбра опущены: корпус от плеч до таза двигается одним блоком", "Толкай пятками и поднимай таз до прямой линии колени — таз — плечи", "Вверху пауза 1–2 с, вниз под контролем около 2 с"], "feel": "Ягодицы. Больше работает перед бедра — стопы слишком близко; задняя поверхность бедра — слишком далеко", "err": ["Прогиб в пояснице и запрокинутая голова вверху", "Таз не доходит до прямой линии", "Штанга отбивается от пола"]}, "rdl": {"st": ["Стопы на ширине таза, гриф у бёдер, хват чуть шире ног", "Лопатки сведены и опущены. Колени согнуты заметно, а не чуть-чуть: на прямых ногах нагрузку забирает поясница", "Хват не держит вес — возьми лямки: это упражнение на бёдра, а не на кисти"], "mv": ["Отводи таз назад, будто закрываешь им дверь; колени остаются согнутыми под тем же углом", "Гриф скользит по ногам, спина ровная от затылка до копчика", "Опускай, только пока таз идёт назад. Таз остановился — это низ, обычно чуть ниже колен; ниже не нужно. Вверх — тазом вперёд"], "feel": "Натяжение задней поверхности бедра внизу, ягодицы на подъёме. Поясница устаёт раньше бёдер — согни колени сильнее и не опускайся так низко", "err": ["Спина округляется", "Колени уходят вперёд: получается присед, а не наклон", "Почти прямые ноги и слишком низкий наклон: подход заканчивает поясница, а не бёдра"]}, "bulg": {"st": ["Подъём задней стопы лежит на скамье высотой примерно до колена", "Передняя стопа так далеко, чтобы внизу колено было над серединой стопы"], "mv": ["Заметно наклони корпус вперёд, спина ровная", "Опускайся вниз и чуть назад, пока бедро не станет параллельно полу или ниже", "Вставай толчком пятки передней ноги; задняя только держит равновесие"], "feel": "Ягодица передней ноги, сильнее всего внизу. Корпус вертикально — больше работает перед бедра", "err": ["Толчок задней ногой", "Колено заваливается внутрь", "Короткая амплитуда"]}, "abd": {"st": ["Таз плотно в сиденье, валики на внешней стороне бёдер у колен", "Корпус ровно или слегка наклонён вперёд, руки на рукоятях"], "mv": ["Разводи бёдра плавно до упора, пауза 1 с", "Возвращай 2–3 с и не давай плитам лечь между повторениями"], "feel": "Верх и бок ягодиц", "err": ["Рывок с откидыванием корпуса", "Слишком большой вес и половина амплитуды", "Плиты падают на возврате"]}, "sq": {"st": ["Спина и таз прижаты к спинке, плечи под валиками", "Стопы в верхней половине платформы, чуть шире таза, носки слегка врозь"], "mv": ["Опускайся 2–3 с так глубоко, как получается с прижатым тазом", "Колени идут в сторону носков", "Вставай, толкаясь всей стопой; вверху колени до щелчка не выпрямляй"], "feel": "Перед бедра и ягодицы. Чем глубже присед, тем больше работы у ягодиц", "err": ["Полуприсед", "Пятки или таз отрываются от опоры", "Колени сходятся внутрь"]}, "hyper": {"st": ["Валик ниже тазовых костей, чтобы таз свободно сгибался", "Носки развёрнуты наружу, ноги чуть шире таза"], "mv": ["Слегка скругли верх спины, подбородок к груди — и держи так весь подход", "Опустись до растяжения и поднимайся толчком таза в валик", "Вверху тело в одну линию, ягодицы сжаты 1 с"], "feel": "Ягодицы и задняя поверхность бедра. Устаёт поясница — значит, разгибаешься спиной", "err": ["Переразгибание в пояснице вверху", "Рывок и раскачка", "Валик слишком высоко: таз не сгибается"]}, "kick": {"st": ["Манжета на лодыжке, блок внизу, встань лицом к стойке", "Корпус наклонён вперёд, руки на стойке, опорное колено чуть согнуто"], "mv": ["Отводи почти прямую ногу назад и вверх, пока таз остаётся неподвижным", "Пауза 1 с, возвращай медленно; нога проходит чуть вперёд опорной"], "feel": "Ягодица рабочей ноги", "err": ["Прогиб в пояснице вместо движения в бедре", "Мах по инерции", "Таз разворачивается в сторону"]}, "curl": {"st": ["Подвинь спинку так, чтобы колено было напротив оси тренажёра", "Нижний валик чуть выше пятки, верхний плотно прижимает бёдра"], "mv": ["Слегка наклони корпус вперёд и держись за рукояти", "Сгибай ноги до упора, короткая пауза", "Возвращай 2–3 с почти до прямых ног"], "feel": "Задняя поверхность бедра по всей длине", "err": ["Таз отрывается от сиденья", "Вес падает на возврате", "Ноги не разгибаются до конца"]}};
 const HOWA={"Выпады назад с наклоном": {"st": ["Стопы на ширине таза, гантели в опущенных руках"], "mv": ["Шагни назад и опускайся, наклоняя корпус вперёд; вес остаётся на передней ноге", "Вниз, пока заднее колено почти не коснётся пола", "Вставай толчком пятки передней ноги"], "feel": "Ягодица передней ноги", "err": ["Толчок задней ногой", "Короткий шаг и вертикальный корпус", "Колено передней ноги заваливается внутрь"]}, "Зашагивания на платформу": {"st": ["Платформа высотой до колена или чуть ниже, одна стопа стоит на ней целиком"], "mv": ["Наклони корпус вперёд и поднимайся за счёт верхней ноги", "Вверху выпрямись полностью", "Опускайся 2–3 с, едва касаясь пола нижней ногой"], "feel": "Ягодица верхней ноги, сильнее всего на опускании", "err": ["Толчок нижней ногой от пола", "Падение вниз без контроля", "Низкая платформа"]}, "Отведение стоя в кроссовере": {"st": ["Манжета на дальней от блока лодыжке, блок внизу, встань боком к стойке", "Держись за стойку, корпус слегка наклони к ней"], "mv": ["Отводи прямую ногу в сторону и чуть назад, таз неподвижен", "Пауза 1 с, возвращай медленно, заводя ногу слегка за опорную"], "feel": "Верх и бок ягодицы рабочей ноги", "err": ["Корпус раскачивается", "Носок разворачивается вверх", "Мах по инерции"]}, "Румынская тяга на одной ноге": {"st": ["Гантель в руке, противоположной опорной ноге; свободная рука — в сторону для равновесия. Сильно шатает — придерживайся ею за стойку", "Опорное колено слегка согнуто"], "mv": ["Отводи таз назад, свободная нога уходит назад в одну линию с корпусом", "Таз не разворачивается: обе тазовые кости смотрят в пол", "Опускай до натяжения задней поверхности бедра, вверх — тазом вперёд"], "feel": "Ягодица и задняя поверхность бедра опорной ноги", "err": ["Таз раскрывается в сторону", "Спина округляется", "Приседание на опорной ноге"]}, "Мост на одной ноге": {"st": ["Лопатки на скамье, одна стопа на полу, вторая нога согнута и поднята", "Стопа стоит так, чтобы вверху голень была вертикальной"], "mv": ["Подбородок к груди, толкай пяткой до прямой линии колено — таз — плечи", "Таз держи ровно, без перекоса", "Пауза 1–2 с вверху, вниз под контролем"], "feel": "Ягодица опорной ноги", "err": ["Таз проваливается в сторону", "Прогиб в пояснице", "Неполный подъём"]}, "Кикбэк в тренажёре": {"st": ["Грудь или предплечья на опоре, стопа рабочей ноги на платформе", "Поясница в нейтральном положении"], "mv": ["Толкай платформу назад и вверх пяткой, пока таз неподвижен", "Пауза 1 с, возвращай медленно до сильного сгибания в бедре"], "feel": "Ягодица рабочей ноги", "err": ["Прогиб в пояснице", "Рывок", "Короткая амплитуда"]}, "Сгибание ног лёжа": {"st": ["Колени чуть за краем скамьи, напротив оси тренажёра", "Валик чуть выше пяток, таз прижат"], "mv": ["Сгибай ноги до упора, не отрывая таз", "Возвращай 2–3 с почти до прямых ног"], "feel": "Задняя поверхность бедра", "err": ["Таз поднимается от скамьи", "Вес падает на возврате", "Рывок в начале"]}, "Румынская тяга с гантелями": {"st": ["Гантели в опущенных руках перед бёдрами, стопы на ширине таза", "Колени согнуты заметно, лопатки сведены"], "mv": ["Отводи таз назад, гантели идут вдоль ног", "Опускай, только пока таз идёт назад, — обычно чуть ниже колен", "Вверх — тазом вперёд, спина ровная"], "feel": "Задняя поверхность бедра и ягодицы. Хвату и пояснице легче, чем со штангой", "err": ["Почти прямые ноги и слишком низкий наклон", "Спина округляется", "Гантели уходят далеко вперёд"]}, "Жим ногами": {"st": ["Таз и поясница прижаты к спинке", "Стопы в верхней половине платформы, чуть шире таза"], "mv": ["Опускай платформу 2–3 с так глубоко, как получается с прижатым тазом", "Колени идут в сторону носков", "Выжимай всей стопой, колени до щелчка не выпрямляй"], "feel": "Перед бедра и ягодицы; чем выше стопы и глубже движение, тем больше работы у ягодиц", "err": ["Таз отрывается и поясница округляется внизу", "Короткая амплитуда с большим весом", "Колени сходятся внутрь"]}};   /* technique for the swap options, by name */
-/* Three key positions for the main movements. Text instructions below remain the source of detail. */
-const TECH={
- ht:[
-  {c:"Лопатки на скамье",p:[50,46,58,68,88,106,112,74,112,120,76,82,96,91],eq:'<path d="M24 70 H58 M30 70 V121 M21 121 H40 M70 91 H124 M73 82 V100 M121 82 V100"/>'},
-  {c:"Толкай пятками",p:[49,47,56,65,86,91,115,84,115,120,74,76,95,82],eq:'<path d="M24 70 H58 M30 70 V121 M21 121 H40 M69 82 H125 M72 73 V91 M122 73 V91"/>',ar:'<path d="M132 105 Q143 85 131 65 M125 72 L131 65 L136 73"/>'},
-  {c:"Пауза: корпус в линию",p:[47,54,55,65,85,75,115,85,115,120,72,75,94,77],eq:'<path d="M24 70 H57 M30 70 V121 M21 121 H40 M68 77 H124 M71 68 V86 M121 68 V86"/>'}
- ],
- rdl:[
-  {c:"Колени согнуты",p:[75,24,70,39,68,74,72,98,72,122,77,62,78,84],eq:'<path d="M38 124 H125 M45 84 H103 M48 75 V93 M100 75 V93"/>'},
-  {c:"Таз назад, гриф по ногам",p:[43,50,53,58,84,73,66,97,66,122,60,78,58,96],eq:'<path d="M30 124 H125 M32 96 H90 M35 87 V105 M87 87 V105"/>',ar:'<path d="M105 65 H126 M119 59 L126 65 L119 71"/>'},
-  {c:"Низ — где остановился таз",p:[32,61,43,68,88,71,66,97,66,122,55,87,55,105],eq:'<path d="M27 124 H125 M29 105 H85 M32 96 V114 M82 96 V114"/>',ar:'<path d="M113 92 Q126 72 113 53 M107 60 L113 53 L119 60"/>'}
- ],
- bulg:[
-  {c:"Задняя стопа на скамье",p:[66,28,70,43,82,72,105,96,112,122,70,64,82,82],extra:'<path class="tech-body" d="M82 72 L55 88 L42 78"/>',eq:'<path d="M16 79 H53 M22 79 V121 M14 121 H32 M95 124 H132"/>'},
-  {c:"Вниз и чуть назад",p:[52,39,58,53,80,88,105,103,112,122,65,75,80,90],extra:'<path class="tech-body" d="M80 88 L55 96 L42 78"/>',eq:'<path d="M16 79 H53 M22 79 V121 M14 121 H32 M95 124 H132"/>',ar:'<path d="M133 60 V91 M127 84 L133 91 L139 84"/>'},
-  {c:"Толчок передней пяткой",p:[66,28,70,43,82,72,105,96,112,122,70,64,82,82],extra:'<path class="tech-body" d="M82 72 L55 88 L42 78"/>',eq:'<path d="M16 79 H53 M22 79 V121 M14 121 H32 M95 124 H132"/>',ar:'<path d="M133 94 V61 M127 68 L133 61 L139 68"/>'}
- ],
- sq:[
-  {c:"Спина и таз прижаты",p:[45,26,55,43,75,72,98,91,108,121,64,58,60,47],eq:'<path d="M35 119 L69 22 M43 121 L77 25 M49 40 L75 78 M96 124 H130"/>'},
-  {c:"Колени — за носками",p:[55,47,65,62,82,88,105,101,110,122,72,68,67,55],eq:'<path d="M35 119 L69 22 M43 121 L77 25 M59 59 L82 94 M96 124 H130"/>',ar:'<path d="M132 52 V87 M126 80 L132 87 L138 80"/>'},
-  {c:"Вставай через всю стопу",p:[45,26,55,43,75,72,98,91,108,121,64,58,60,47],eq:'<path d="M35 119 L69 22 M43 121 L77 25 M49 40 L75 78 M96 124 H130"/>',ar:'<path d="M132 91 V55 M126 62 L132 55 L138 62"/>'}
- ],
- hyper:[
-  {c:"Валик ниже таза",p:[41,41,55,54,82,75,103,93,113,111,62,69,77,77],eq:'<path d="M64 78 H91 M78 78 L65 120 M54 120 H88 M101 110 H125 M113 110 V124"/>'},
-  {c:"Опустись до растяжения",p:[45,101,56,84,82,75,103,93,113,111,64,93,78,82],eq:'<path d="M64 78 H91 M78 78 L65 120 M54 120 H88 M101 110 H125 M113 110 V124"/>',ar:'<path d="M35 58 Q20 80 35 101 M29 94 L35 101 L42 95"/>'},
-  {c:"Поднимай тазом, без переразгиба",p:[41,41,55,54,82,75,103,93,113,111,62,69,77,77],eq:'<path d="M64 78 H91 M78 78 L65 120 M54 120 H88 M101 110 H125 M113 110 V124"/>',ar:'<path d="M35 102 Q20 80 35 57 M29 64 L35 57 L42 63"/>'}
- ],
- kick:[
-  {c:"Корпус и таз неподвижны",p:[63,25,65,42,70,74,70,98,70,122,52,55,35,58],extra:'<path class="tech-body" d="M70 74 L91 94 L105 111"/>',eq:'<path d="M25 25 V123 M17 123 H36 M25 105 L105 111 M52 124 H126"/>'},
-  {c:"Отведи ногу и сделай паузу",p:[63,25,65,42,70,74,70,98,70,122,52,55,35,58],extra:'<path class="tech-body" d="M70 74 L100 78 L132 72"/>',eq:'<path d="M25 25 V123 M17 123 H36 M25 105 L132 72 M52 124 H126"/>',ar:'<path d="M111 99 Q133 91 137 73 M130 76 L137 73 L138 81"/>'},
-  {c:"Вернись медленно",p:[63,25,65,42,70,74,70,98,70,122,52,55,35,58],extra:'<path class="tech-body" d="M70 74 L91 94 L105 111"/>',eq:'<path d="M25 25 V123 M17 123 H36 M25 105 L105 111 M52 124 H126"/>',ar:'<path d="M137 73 Q133 94 111 101 M115 94 L111 101 L120 103"/>'}
- ],
- curl:[
-  {c:"Колено напротив оси",p:[47,29,52,47,60,80,100,82,105,119,72,62,91,70],eq:'<path d="M40 82 H87 M47 82 V121 M41 45 V82 M96 88 L111 121 M93 121 H123"/><circle cx="100" cy="82" r="5"/>'},
-  {c:"Сгибай, не отрывая таз",p:[47,29,52,47,60,80,100,82,70,108,72,62,91,70],eq:'<path d="M40 82 H87 M47 82 V121 M41 45 V82 M96 88 L111 121 M93 121 H123"/><circle cx="100" cy="82" r="5"/>',ar:'<path d="M124 111 Q137 82 112 64 M116 71 L112 64 L121 63"/>'},
-  {c:"Возвращай 2–3 секунды",p:[47,29,52,47,60,80,100,82,105,119,72,62,91,70],eq:'<path d="M40 82 H87 M47 82 V121 M41 45 V82 M96 88 L111 121 M93 121 H123"/><circle cx="100" cy="82" r="5"/>',ar:'<path d="M112 64 Q137 82 124 111 M130 104 L124 111 L119 103"/>'}
- ]
-};
-function abdFrame(k){
- const q=[{a:[64,100,60,123],b:[96,100,100,123],pads:[55,105]},{a:[40,98,32,121],b:[120,98,128,121],pads:[30,130]},{a:[54,100,49,123],b:[106,100,111,123],pads:[45,115]}][k];
- return `<g class="tech-eq"><path d="M52 79 H108 M58 79 V122 M102 79 V122 M80 45 V79 M44 123 H116"/><path d="M${q.pads[0]} 91 V108 M${q.pads[1]} 91 V108"/></g><circle class="tech-head" cx="80" cy="26" r="8"/><path class="tech-body" d="M65 48 L70 78 H90 L95 48 M65 50 L55 74 M95 50 L105 74 M70 78 L${q.a[0]} ${q.a[1]} L${q.a[2]} ${q.a[3]} M90 78 L${q.b[0]} ${q.b[1]} L${q.b[2]} ${q.b[3]}"/>`;
-}
-TECH.abd=[{c:"Таз плотно в сиденье"},{c:"Разведи и пауза",ar:'<path d="M58 91 L42 83 M47 81 L42 83 L45 88 M102 91 L118 83 M113 81 L118 83 L115 88"/>'},{c:"Верни без падения веса"}].map((q,i)=>Object.assign(q,{custom:abdFrame(i)}));
-function techFigure(q){
- const p=q.p,[hx,hy,sx,sy,px,py,kx,ky,ax,ay,ex,ey,wx,wy]=p;
- return `${q.extra||""}<circle class="tech-head" cx="${hx}" cy="${hy}" r="8"/><path class="tech-body" d="M${sx} ${sy} L${px} ${py} L${kx} ${ky} L${ax} ${ay} M${ax} ${ay} L${ax+11} ${Math.min(125,ay+2)} M${sx} ${sy} L${ex} ${ey} L${wx} ${wy}"/>`;
-}
-function techDiagram(e){
- if(e.alt||!TECH[e.id])return"";const steps=TECH[e.id];
- return `<div class="tech-steps" role="img" aria-label="Три ключевых положения: ${esc(steps.map(q=>q.c).join("; "))}">${steps.map((q,i)=>`<figure class="tech-step"><svg viewBox="0 0 160 140" aria-hidden="true" focusable="false"><g class="tech-eq">${q.custom?"":q.eq||""}</g>${q.custom||techFigure(q)}${q.ar?`<path class="tech-move" d="${q.ar.match(/d="([^"]+)/)[1]}"/>`:""}</svg><figcaption><b>${i+1}</b>${esc(q.c)}</figcaption></figure>`).join("")}</div>`;
-}
 const WHY={"ht": ["Средняя", "В прямом сравнении ягодичный мост и присед со штангой дали одинаковый рост большой ягодичной (Plotkin, 2023: 34 новичка, 9 недель, МРТ). Добавление моста к жиму ногами и тяге усилило рост ягодиц у девушек-новичков (Kassiano, 2024), но объём между группами, возможно, не уравнивали", "Разгибание бедра — главная функция большой ягодичной мышцы. Колени согнуты, поэтому задняя поверхность бедра укорочена и помогает меньше, чем в тяге", "Нагрузка максимальна вверху, когда ягодицы сокращены. Румынская тяга, гакк и выпады, наоборот, нагружают их в растянутом положении — вместе получается вся амплитуда. Большой вес при этом не давит на позвоночник сверху"], "rdl": ["Низкая", "Задняя поверхность бедра сильнее росла от нагрузки в растянутом положении (Maeo, 2024; знаем по аннотации). Тяга на прямых ногах увеличила её объём в одном препринте 2024 года. Рост ягодиц от румынской тяги напрямую не измеряли", "Разгибание бедра при почти неподвижных коленях: работают ягодицы, задняя поверхность бедра и большая приводящая мышца. Мышцы спины удерживают положение статически", "Самая тяжёлая точка — внизу, где ягодицы и задняя поверхность бедра растянуты. Главное упражнение программы на заднюю поверхность бедра"], "bulg": ["Практика", "Глубокое сгибание бедра под весом: глубокий присед вырастил ягодицы на 6,7% против 2,2% у полуприседа (Kubo, 2019: 17 мужчин, 10 недель, МРТ). На выпады этот вывод перенесён по сходству движения; исследований роста именно от болгарских выпадов мы не нашли", "Подъём из выпада — разгибание бедра и колена передней ноги: работают её ягодица, перед бедра и большая приводящая мышца. Наклон корпуса увеличивает долю ягодицы", "Глубокое сгибание бедра растягивает ягодицу под весом. Работа одной ногой нагружает ягодицы при небольшом весе в руках и показывает разницу между сторонами"], "abd": ["Практика", "Средняя и малая ягодичные слабо росли и от моста, и от приседа (Plotkin, 2023), поэтому для них отдельное упражнение. Само отведение сидя в тренажёре по росту мышц не изучали: выбор сделан по анатомии", "Отведение бедра — работа средней и малой ягодичных мышц и верхних волокон большой. Сидя бедро согнуто, и большая ягодичная участвует сильнее, чем при отведении стоя", "Единственное упражнение программы на отведение: мост, тяга и присед эти мышцы почти не нагружают"], "sq": ["Средняя", "Глубина важна: глубокий присед — ягодицы +6,7%, полуприсед — +2,2% (Kubo, 2019). Жим ногами, близкое движение, вырастил ягодицы на 15,4% у новичков (Kinoshita, 2026: 17 человек, 12 недель, МРТ). Гакк отдельно не изучали", "Колено разгибает четырёхглавая мышца — перед бедра, бедро — ягодицы и большая приводящая. Спина зафиксирована, поэтому подход ограничивают ноги, а не корпус", "Главное упражнение на перед бедра. Внизу ягодицы растянуты под весом, поэтому глубина важнее килограммов"], "hyper": ["Низкая", "Упражнение на разгибание бедра вырастило длинную головку бицепса бедра сильнее, чем нордические сгибания (Bourne, 2017; какое именно упражнение — в аннотации не сказано). Данных о росте ягодиц от гиперэкстензии мы не нашли", "Разгибание бедра на весу: работают ягодицы и задняя поверхность бедра. Скруглённый верх спины и подбородок к груди — тренерский приём: так труднее разгибаться поясницей, и нагрузка остаётся на ягодицах", "Второй за неделю наклон, но без штанги в руках: объём для ягодиц и задней поверхности бедра, который не утомляет хват и спину так, как тяга"], "kick": ["Низкая", "В одном исследовании отведение ноги назад в кроссовере растило большую ягодичную сильнее, чем отведение в сторону (Attarieh, 2026: 17 новичков, 10 недель, МРТ; знаем по аннотации)", "Разгибание бедра одной ногой: работает большая ягодичная, задняя поверхность бедра помогает. Таз неподвижен — значит, движение идёт в тазобедренном суставе, а не в пояснице", "Изолированный объём для большой ягодичной в конце тренировки, когда ноги и спина уже устали от гакка"], "curl": ["Средняя", "Сгибание ног сидя вырастило заднюю поверхность бедра сильнее, чем лёжа: +14,1% против +9,3% (Maeo, 2021: 20 человек, 12 недель, МРТ). В приседе задняя поверхность бедра не выросла (Kubo, 2019)", "Сгибание колена — функция задней поверхности бедра. Сидя бедро согнуто, поэтому мышцы работают в растянутом положении", "Единственное упражнение программы на сгибание колена. Присед заднюю поверхность бедра не растит, а тяга нагружает её только как разгибатель бедра"]};
 HOWA["Ягодичный мост без веса"]={st:["Ляг на пол, лопатки и стопы прижаты, колени согнуты","Стопы на ширине таза и на таком расстоянии, чтобы вверху голени стояли вертикально"],mv:["Подбородок к груди, рёбра опущены. Поднимай таз толчком пяток","Вверху колени, таз и плечи образуют прямую линию. Сделай паузу 1–2 с","Опускай таз под контролем около 2 с, без прогиба в пояснице"],feel:"Ягодицы. Если больше чувствуешь переднюю поверхность бедра — поставь стопы чуть дальше; если заднюю — чуть ближе",err:["Прогиб в пояснице и запрокинутая голова","Таз не доходит до прямой линии","Рывок вверх вместо контролируемого движения"]};
 const WHYA={"Жим ногами": ["Средняя", "Жим ногами вырастил ягодицы на 15,4% у новичков (Kinoshita, 2026: 17 человек, 12 недель, МРТ)"], "Сгибание ног лёжа": ["Средняя", "Растит заднюю поверхность бедра, но слабее, чем сидя: +9,3% против +14,1% (Maeo, 2021). Бери, если тренажёра сидя нет"], "Румынская тяга на одной ноге": ["Практика", "Исследований роста мышц именно от тяги на одной ноге мы не нашли: вывод сделан по сходству движения с румынской тягой", "Разгибание бедра опорной ноги: работают её ягодица и задняя поверхность бедра. Средняя и малая ягодичные удерживают таз ровно — на двух ногах этой работы почти нет", "Сильное упражнение само по себе, а не запасной вариант: ягодица работает в растянутом положении при небольшом весе, а заодно тренируются равновесие и контроль таза. Лучше делать без опоры: так равновесие и контроль таза тренируются в полную силу. Держаться свободной рукой за стойку тоже нормально — если шатает так, что подход заканчивается раньше, чем устала ягодица"]};
@@ -846,19 +757,16 @@ const CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.
 function renderChrome(scroll){
   const {w,d}=S.cur, dn=doneWorkouts();
   $("ttl").textContent=tab==="train"?"Неделя "+w:tab==="progress"?"Прогресс":"Настройки";
-  $("sub").textContent=tab==="train"?(isBeg(w)?"уровень «Новичок»":LABEL[ph(w)]):tab==="progress"?"12 недель · дневник и рабочие веса":"профиль, программа и данные";
+  $("sub").textContent=tab==="train"?(isBeg(w)?"уровень «Новичок»":LABEL[ph(w)]):tab==="progress"?"12 недель · дневник и рабочие веса":"уровень, веса и копии";
   if(isFirst()&&tab==="train"){$("ttl").textContent="Начнём";$("sub").textContent="PEACH · ягодицы и ноги · 12 недель"}
-  $("ringt").textContent=dn+"/24"; $("progressring").setAttribute("aria-label",dn+" из 24 тренировок"); $("ringp").style.strokeDashoffset=String(131.9*(1-dn/24));
+  $("ringt").textContent=dn+"/24"; $("ringp").style.strokeDashoffset=String(131.9*(1-dn/24));
   $("weeks").innerHTML=Array.from({length:12},(_,i)=>{const n=i+1;
     return `<button type="button" class="wk${complete(n,1)&&complete(n,2)?" done":""}" data-w="${n}" data-p="${isBeg(n)?1:ph(n)}" aria-pressed="${n===w}" aria-label="Неделя ${n}, ${wkLabel(n)}"><i></i><span>${n}</span></button>`}).join("");
   document.querySelectorAll("#days button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.day===d)));
   document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.tab===tab)));
-  const showSchedule=tab==="train"&&!isFirst()&&!(isBeg(w)&&w===1&&d===1&&!Object.keys(S.log||{}).length);
-  $("schedule").hidden=!showSchedule;$("weeks").hidden=$("days").hidden=false;
-  $("schedule-current").textContent="Неделя "+w+" · День "+d;
-  if(scroll||!showSchedule)$("schedule").open=false;
+  $("weeks").hidden=$("days").hidden=tab!=="train"||isFirst();
   const cur=$("weeks").querySelector('[aria-pressed="true"]');
-  if(cur&&tab==="train"&&scroll&&$("schedule").open)cur.scrollIntoView({block:"nearest",inline:"center"});
+  if(cur&&tab==="train"&&scroll)cur.scrollIntoView({block:"nearest",inline:"center"});
 }
 const hitTop=(ex,lt)=>{const top=num(ex.range.split("–")[1]);return !rest(lt.w)&&lt.r.length>=setsAt(ex,lt.w)&&lt.r.every(x=>num(x[1])>=top)};
 const isBodyweight=ex=>ex.alt&&ex.name==="Ягодичный мост без веса";
@@ -902,13 +810,12 @@ function returnBreak(w,d,c){
 }
 function beginnerGuide(ex,w){
   if(!isBeg(w)||w!==1)return"";
-  const kg=noviceKg(ex,w),top=ex.range?ex.range.split("–")[0]:"8",bar=!ex.alt&&(ex.id==="ht"||ex.id==="rdl");
-  let start="";
-  if(bar)start=`Начни с пустого грифа — <b>${esc(kg)} кг</b>. Сделай ${top} повторений.`;
-  else if(ex.id==="sq"&&!ex.alt)start=`Начни с минимального веса тренажёра. Если платформу не учитываешь, оставь <b>0 кг</b>.`;
-  else if(kg==="0")start=`Начни без дополнительного веса — <b>0 кг</b>. Сделай ${top} повторений${esc(ex.per||"")}.`;
-  else start=`Выбери лёгкий вес и сделай ${top} повторений${esc(ex.per||"")}.`;
-  return `<div class="novice-guide"><b>Первый подход</b><p>${start}</p><p class="meta">Остановись, когда сможешь сделать ещё 2–3 повторения с той же техникой.</p><details class="why"><summary>Когда изменить вес</summary><ul><li>Могла бы сделать ещё больше 3 — ${bar?"добавь 5 кг к общему весу":"немного прибавь"}.</li><li>Осталось 2–3 — оставь вес.</li><li>Не получился минимум диапазона — ${bar?"убавь 5 кг":"немного убавь"}.</li></ul></details></div>`
+  const kg=noviceKg(ex,w),top=ex.range?ex.range.split("–")[0]:"8";let steps=[];
+  if(!ex.alt&&(ex.id==="ht"||ex.id==="rdl"))steps=[`Начни с пустого грифа — по умолчанию это <b>${esc(kg)} кг</b>. Проверь вес на грифе или спроси в зале.`,`Сделай ${top} повторений с хорошей техникой.`,`Могла бы сделать ещё больше 3 — в следующем подходе добавь 5 кг к общему весу. Осталось 2–3 — оставь вес. Не получился минимум — убавь 5 кг.`];
+  else if(ex.id==="sq"&&!ex.alt)steps=["Начни с минимального веса на тренажёре. Если вес платформы пока не учитываешь, оставь <b>0 кг</b> в записи.",`Сделай ${top} повторений без рывка и с хорошей техникой.`,`Если после подхода остаётся больше 3 повторений, немного прибавь. Если не получается минимум — убавь.`];
+  else if(kg==="0")steps=[`Начни без дополнительного веса — в поле уже стоит <b>0 кг</b>.`,`Сделай ${top} повторений${esc(ex.per||"")} с хорошей техникой.`,`Закончи, когда сможешь сделать ещё только 2–3 повторения без потери техники.`];
+  else steps=[`Начни с самого лёгкого рабочего веса и сделай ${top} повторений${esc(ex.per||"")}.`,`Если после подхода остаётся больше 3 повторений — немного прибавь. Если не получается минимум — убавь.`,`Запас 2–3 повторения важнее большого веса: техника должна оставаться такой же.`];
+  return `<div class="novice-guide"><b>Как подобрать вес на первом подходе</b><ol>${steps.map(x=>`<li>${x}</li>`).join("")}</ol><p><b>Запас 2–3 повторения</b> — после остановки ты могла бы сделать ещё 2–3 повторения с той же техникой, но не больше.</p></div>`
 }
 function exerciseWhy(ex){
   const y=ex.alt?(WHYA[ex.name]||["Практика","Замена подобрана по тому же движению и той же мышце. Прямых сравнений с основным упражнением по росту мышц нет"]):WHY[ex.id];if(!y)return"";
@@ -918,9 +825,9 @@ function renderTrain(fresh){
   const {w,d}=S.cur, beg=isBeg(w), p=beg?0:ph(w), date=S.dates[w+"-"+d], c=counts(w,d), cur=current(w,d), t=tonnage(w,d), ez=easy(w,d), jd=justDone, rb=returnBreak(w,d,c), firstDay=beg&&w===1&&d===1&&c.done===0&&!Object.keys(S.log||{}).length;
   const focusId=edit&&EXD(w,d).some(x=>x.id===edit.id)?edit.id:inspect&&EXD(w,d).some(x=>x.id===inspect)?inspect:cur?cur.id:null;
   let h=`<section class="hero${firstDay?" first-hero":""}"><div class="hring"><svg viewBox="0 0 84 84"><circle class="tr" cx="42" cy="42" r="35"/><circle class="pr" id="hbar" cx="42" cy="42" r="35" stroke-dasharray="219.9" stroke-dashoffset="${lastOff}"/></svg><b>${c.done}/${c.total}</b></div>
-    <div class="htxt"><span class="cap">${d===1?"День 1":"День 2"} · ${firstDay?`Новичок · ${c.done}/${c.total}`:esc(LEVELS[lvl(w)].n)+" уровень"}${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка готова":firstDay?"Начнём с первого подхода":c.done===0?todaySets(c.total):"Осталось "+(c.total-c.done)+" "+setsWord(c.total-c.done)}</strong>
-    <p>${firstDay?`${c.total} ${setsWord(c.total)}. После каждого нажми «Готово» — отдых начнётся сам.`:c.done===0?"Сначала разминка — она не входит в этот счёт. ":""}${firstDay?"":ez?"Лёгкий день: вес на 10% ниже и на один подход меньше. Тренировка засчитана."+(p===2?" Контрольный подход сегодня не учитывается: веса не изменятся.":""):beg?"Разминка отдельно. После подхода нажми «Готово» — отдых начнётся сам.":p===2?"Неделя проверки. В первом подходе ★ сделай максимум повторений без потери техники. По нему обновим веса на следующие 4 недели.":p===3?"Неделя отдыха: меньше вес и подходов. Работай спокойно, без отказа.":"После каждого подхода нажми «Готово». Между подходами отдых начнётся сам."}</p>${firstDay?`<button type="button" class="cta first-start" data-firstset>К первому подходу</button>`:p===3?"":`<button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть лёгкую неделю</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Пропустить лёгкую неделю</button>`):""}</div></section>`;
-  const firstOptions=firstDay?`<details class="why workout-options"><summary>Сегодня нужно полегче?</summary><p>Можно уменьшить вес на 10% и сделать на один подход меньше. Такая тренировка тоже засчитывается.</p><button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Включить лёгкий день"}</button></details>`:"";
+    <div class="htxt"><span class="cap">${d===1?"День 1":"День 2"} · ${esc(LEVELS[lvl(w)].n)} уровень${date?" · "+esc(date):""}</span><strong>${c.done>=c.total?"Тренировка готова":firstDay?"Начнём с первого подхода":c.done===0?todaySets(c.total):"Осталось "+(c.total-c.done)+" "+setsWord(c.total-c.done)}</strong>
+    <p>${firstDay?`Всего ${c.total} ${setsWord(c.total)}. Сначала разминка, затем подскажем, с какого веса начать и когда его менять.`:c.done===0?"Сначала разминка — она не входит в этот счёт. ":""}${firstDay?"":ez?"Лёгкий день: вес на 10% ниже и на один подход меньше. Тренировка засчитана."+(p===2?" Контрольный подход сегодня не учитывается: веса не изменятся.":""):beg?"После каждого подхода нажми «Готово». Заканчивай с запасом 2–3 повторения и хорошей техникой.":p===2?"Неделя проверки. В первом подходе ★ сделай максимум повторений без потери техники. По нему обновим веса на следующие 4 недели.":p===3?"Неделя отдыха: меньше вес и подходов. Работай спокойно, без отказа.":"После каждого подхода нажми «Готово». Между подходами отдых начнётся сам."}</p>${firstDay?`<button type="button" class="cta first-start" data-firstset>К первому подходу</button>`:p===3?"":`<button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Сегодня полегче"}</button>`}${!beg&&(w-1)%4===3&&!wkHas(w)?(S.noRest&&S.noRest[w]?`<button type="button" class="easy" data-norest aria-pressed="true">Вернуть лёгкую неделю</button>`:S.noRest&&S.noRest[w-4]?"":`<button type="button" class="easy" data-norest aria-pressed="false">Пропустить лёгкую неделю</button>`):""}</div></section>`;
+  if(firstDay)h+=`<details class="why workout-options"><summary>Сегодня нужно полегче?</summary><p>Можно уменьшить вес на 10% и сделать на один подход меньше. Такая тренировка тоже засчитывается.</p><button type="button" class="easy" data-easy aria-pressed="${ez}">${ez?"Вернуть обычный план":"Включить лёгкий день"}</button></details>`;
   if(rb)h+=`<div class="note" data-return-note><b>Перерыв ${rb.days} ${daysWord(rb.days)}.</b> Не догоняй пропущенное — продолжи с недели ${w}, дня ${d}. ${ez?"Лёгкий день уже включён: вес ниже и на один подход меньше.":"Если сил мало, включи лёгкий день: вес будет на 10% ниже и на один подход меньше."} <span class="nacts">${ez?"":`<button type="button" class="ghostbtn" data-returneasy="${rb.seen}">Включить лёгкий день</button>`}<button type="button" class="ghostbtn dim" data-seen="${rb.seen}">${ez?"Понятно":"Обычный план"}</button></span></div>`;
   if(!beg&&(w-1)%4===3&&!wkHas(w))h+=`<div class="note">${S.noRest&&S.noRest[w]?"Вместо отдыха будет средняя неделя. Следующую лёгкую неделю пропустить нельзя.":S.noRest&&S.noRest[w-4]?"Прошлую неделю отдыха ты уже пропустила. Сейчас делаем лёгкую.":"Если сил достаточно, неделю отдыха можно заменить средней. Но не два раза подряд."}</div>`;
   if(c.done===0||c.done>=c.total){
@@ -928,10 +835,11 @@ function renderTrain(fresh){
     if(bd)h+=`<div class="note"><b>${bd==="a"?"Время фото «до».":bd==="m"?"Время второго фото.":"Время фото «после»."}</b> ${bd==="a"?"Оно поможет увидеть изменения через 12 недель. Фото останется в твоём телефоне.":bd==="m"?"Повтори условия первого кадра: то же место, свет, одежда и поза.":"Повтори условия первого кадра, чтобы сравнение было честным."} <span class="nacts"><button type="button" class="ghostbtn" data-gobody>Как сфотографироваться ›</button><button type="button" class="ghostbtn dim" data-seen="body">Позже</button></span></div>`;
     if(sl)h+=`<div class="note"><b>${SN[sl[0].id]}: вес не растёт.</b> Это нормально. Проверим технику, сон и питание. <span class="nacts"><button type="button" class="ghostbtn" data-stall="${sl[0].id}">Что проверить ›</button><button type="button" class="ghostbtn dim" data-seen="st-${sl[0].id}-${sl[1]}">Скрыть</button></span></div>`}
   if(!S.startSet)h+=`<div class="note">Сейчас указаны примеры. Открой «Настройки» и впиши свои обычные веса и повторения в мосту, тяге и гакке. Не максимум на один раз.</div>`;
+  if(beg&&!firstDay&&!EXD(w,d).some(x=>lastTime(w,x.id)||rows(w,x.id).some(full)))h+=`<div class="note"><b>Сначала подбери вес.</b> Начни с лёгкого. Если после подхода можешь сделать ещё больше 3 повторений — немного прибавь. Если не выходит минимум из плана — убавь. Цель: закончить с запасом 2–3 повторения.</div>`;
   if(!beg&&LIFTS.some(l=>l.day===d&&pick(l.id,w)))h+=`<div class="note"><b>Подбери вес.</b> Начни с лёгкого. Заканчивай подход, когда с хорошей техникой останется ещё 2–3 повторения. По этим записям приложение рассчитает следующие веса.</div>`;
   if(!beg&&LIFTS.some(l=>l.day===d&&!pick(l.id,w)&&!base(l.id,1)))h+=`<div class="note">Не указаны стартовые вес и повторения. Впиши их в «Настройках», иначе приложение не сможет рассчитать план.</div>`;
   EXD(w,d).forEach((ex0,i)=>{
-    const ex=asBeg(eff(ex0,w),w), plan=nSets(ex,w), r=rows(w,ex.id), n=Math.max(plan,r.length), lt=lastTime(w,ex.id), firstGuide=beg&&w===1&&!lt&&!r.some(full);
+    const ex=asBeg(eff(ex0,w),w), plan=nSets(ex,w), r=rows(w,ex.id), n=Math.max(plan,r.length), lt=lastTime(w,ex.id);
     let fin=true;for(let s=0;s<plan;s++)if(!full(r[s]))fin=false;
     if(transition&&transition.w===w&&transition.d===d&&transition.nextId===ex.id)h+=`<div class="note transition-note" data-transition-note role="status"><b>«${esc(transition.doneName)}» готово.</b> Дальше: ${esc(transition.nextName)}. Можно отдохнуть или сразу продолжить.<span class="nacts"><button type="button" class="ghostbtn" data-transitionrest>Отдохнуть ${restText(transition.sec)}</button><button type="button" class="ghostbtn" data-transitionskip>Перейти без отдыха</button>${undoSet?`<button type="button" class="ghostbtn dim" data-undo>Отменить последний подход</button>`:""}</span></div>`;
     if(ex.id!==focusId){
@@ -948,7 +856,7 @@ function renderTrain(fresh){
       }
     else{const top=ex.range.split("–")[1],bw=isBodyweight(ex),progressRule=bw?`Сделаешь по ${top} повторений в каждом из ${plan} подходов — в следующий раз повтори без веса с паузой 2–3 с вверху. Когда это станет легко, нажми «заменить» и выбери мост на одной ноге`:`Сделаешь по ${top} повторений${ex.per} в каждом из ${plan} подходов — в следующий раз ${ex.main?`прибавь ${fk(num(S.start[ex.id].step)||2.5)} кг. Приложение подставит новый вес само`:"немного прибавь вес"}`;
       h+=`<div class="plan"><b>${plan} × ${esc(ex.range)}</b><span>повторений${esc(ex.per)}</span></div>
-      <p class="hint">${ez?"Лёгкий день: возьми меньше обычного и оставь 3–4 повторения в запасе":p===3?"Неделя отдыха: работай спокойно и оставляй 3–4 повторения в запасе":firstGuide?"":(beg||ex.main)&&!lt&&!fin?"Начни легко: после подхода должно оставаться 2–3 повторения с хорошей техникой":progressRule}</p>`;
+      <p class="hint">${ez?"Лёгкий день: возьми меньше обычного и оставь 3–4 повторения в запасе":p===3?"Неделя отдыха: работай спокойно и оставляй 3–4 повторения в запасе":(beg||ex.main)&&!lt&&!fin?"Начни легко: после подхода должно оставаться 2–3 повторения с хорошей техникой":progressRule}</p>`;
       if(lt){const hit=p!==3&&hitTop(ex,lt);
         h+=`<p class="meta">${lt.w?"Неделя "+lt.w:"Прошлый блок"}: ${lt.r.map(x=>fk(num(x[0]))+" × "+num(x[1])).join(" · ")}</p>`+(hit?`<p class="hint">${bw?`В прошлый раз было по ${top} повторений в каждом подходе. Сегодня повтори без веса с паузой 2–3 с вверху`:ex.main?`В прошлый раз было по ${top} повторений${ex.per} в каждом подходе. Сегодня вес уже увеличен`:`В прошлый раз было по ${top} повторений${ex.per} в каждом подходе. Сегодня немного прибавь вес`}</p>`:"")}}
     let coach="";
@@ -963,7 +871,9 @@ function renderTrain(fresh){
      if(ef)coach+=`<p class="meta"><b>Насколько тяжело:</b> ${ef}.</p>`}
     if(ex.tip)coach+=`<p class="meta">${esc(ex.tip)}.</p>`;
     if(ex.alt?HOWA[ex.name]:HOW[ex.id])coach+=`<button type="button" class="ghostbtn" data-how="${ex.id}">Техника упражнения ›</button>`;
-    if(firstGuide)h+=beginnerGuide(ex,w);
+    h+=`<p class="meta">Отдых ${ex.rest}.</p>`;
+    if(coach)h+=`<details class="why coach"><summary>Как делать подходы</summary><div class="coach-body">${coach}</div></details>`;
+    if(beg&&w===1&&!lt&&!r.some(full))h+=beginnerGuide(ex,w);
     h+=`<div class="sets">`;
     for(let s=0;s<n;s++){
       const on=full(r[s]), sg=suggest(ex,w,d,s), emptyUndo=justUndone&&justUndone.id===ex.id&&justUndone.s===s&&!justUndone.prev, v=on?r[s]:emptyUndo?["",""]:[sg.kg,sg.reps];
@@ -972,22 +882,20 @@ function renderTrain(fresh){
         h+=`<div class="editor" id="editor">${jd&&jd.id===ex.id?`<div class="setfeedback" role="status"><span>${jd.failed?"Только в этой вкладке":jd.isNew?`Подход ${jd.s+1} записан`:`Изменения подхода ${jd.s+1} сохранены`}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew&&!jd.failed&&jd.rest?" · отдых пошёл":""}</span><button type="button" data-undo>${jd.isNew?"Отменить запись":"Вернуть прежние значения"}</button></div>`:justUndone&&justUndone.id===ex.id?`<div class="setfeedback" role="status"><span>${justUndone.prev?`Прежние вес и повторения подхода ${s+1} восстановлены.`:`Подход ${s+1} удалён. Поля пустые — можно записать его заново.`}</span></div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ контрольный: максимум повторений":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · последний: оставь 1–2 в запасе":""}</div>
           ${pr?`<div class="prevset">Было: ${fk(num(pr[0]))} кг × ${num(pr[1])}${lt.w?" · неделя "+lt.w:" · прошлый блок"}</div>`:""}
           <div class="steps">${stepper(0,v[0],"кг","decimal")}${stepper(1,v[1],"повторений","numeric")}</div><p class="fielderror" id="editorerror" role="alert"></p>
-          <div class="erow"><button type="button" class="cta" data-done="${s}">${on?"Сохранить изменения":s>0&&full(r[s-1])?`Готово · ${esc(v[0])} × ${esc(v[1])}`:"Готово"}</button>${on?`<button type="button" class="btn" data-clear="${s}">Удалить</button>`:""}</div></div>`;
+          <div class="erow"><button type="button" class="cta" data-done="${s}">${on?"Сохранить":"Готово"}</button>${on?`<button type="button" class="btn" data-clear="${s}">Удалить запись</button>`:""}</div></div>`;
       }else h+=`<button type="button" class="srow${on?" on":""}${justDone&&justDone.id===ex.id&&justDone.s===s?" new":""}" data-edit="${s}" aria-label="Подход ${s+1}${on?", выполнен":""}"><span class="n">${s+1}</span><span class="val">${v[0]!==""?`<b>${esc(v[0])}</b> кг × <b>${esc(v[1])}</b>`:"— кг × "+esc(v[1])}</span><span class="ck">${on?CK:""}</span></button>`;
     }
     h+=`</div>`;
-    h+=`<p class="meta">Отдых ${ex.rest}.</p>`;
-    if(coach)h+=`<details class="why coach"><summary>Техника и как делать подходы</summary><div class="coach-body">${coach}</div></details>`;
     h+=exerciseWhy(ex);
     if(ex.wave&&!pick(ex.id,w)){const v=e1(w,ex.id),tv=p===2&&!ez?testE1(w,ex.id):0;let best=base(ex.id,1);for(let x=1;x<w;x++)best=Math.max(best,e1(x,ex.id));
       if(v)h+=`<div class="e1">Оценка силы: <b>≈${fmt(v)} кг на 1 повторение</b>${v>best+0.05?'<span class="tag">рекорд</span>':""}</div><p class="meta">Только для сравнения результатов. Не пробуй этот вес.</p>`;
       if(tv)h+=`<p class="meta">Следующие 4 недели рассчитаем по первому контрольному подходу ★. Его оценка: <b>≈${fmt(tv)} кг на 1 повторение</b>.</p>`}
     h+=`</section>`;
-    if(firstDay&&i===0)h+=firstOptions;
   });
+  const prev=w>1?tonnage(w-1,d):0, diff=prev?t-prev:0;
   if(c.done>=c.total)h+=`<section class="summary"><h3>Тренировка готова</h3>${doneWorkouts()===1?`<p class="meta">Самое трудное уже сделано — ты начала. Дай себе 2–3 дня на восстановление, затем возвращайся на день 2.</p>`:""}<div class="stats">
-      <div class="stat"><b>${c.done}</b><span>подходов записано</span></div>
-      <div class="stat"><b>${doneWorkouts()} из 24</b><span>тренировок</span></div></div>${doneWorkouts()>=24?`<button type="button" class="cta nextwork" data-blocksummary>Итоги и следующий блок</button>`:nextPos()?`<button type="button" class="cta nextwork" data-nextwork>Дальше: неделя ${nextPos().w} · день ${nextPos().d}</button><details class="sheet-more inline-options"><summary>Дополнительно</summary><button type="button" class="ghostbtn nextwork" data-calendar>Добавить следующую тренировку в календарь</button></details>`:`<button type="button" class="cta nextwork" data-tab="progress">Смотреть прогресс</button>`}</section>`;
+      <div class="stat"><b>${kgf(t)} кг</b><span>всего поднято</span></div>
+      <div class="stat"><b>${prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—"}</b><span>к прошлой неделе</span></div></div>${doneWorkouts()>=24?`<button type="button" class="cta nextwork" data-blocksummary>Итоги и следующий блок</button>`:nextPos()?`<button type="button" class="cta nextwork" data-nextwork>Дальше: неделя ${nextPos().w} · день ${nextPos().d}</button><button type="button" class="ghostbtn nextwork" data-calendar>Добавить следующую тренировку в календарь</button>`:`<button type="button" class="cta nextwork" data-tab="progress">Смотреть прогресс</button>`}</section>`;
   else if(t)h+=`<div class="row e1"><span>Поднято пока</span><b>${kgf(t)} кг</b></div>`;
   h+=`<div class="card"><label class="lbl" for="note-${w}-${d}">Заметка о тренировке</label>
       <textarea id="note-${w}-${d}" maxlength="2000" placeholder="Сон, самочувствие, день цикла — по желанию">${esc(S.notes[w+"-"+d]||"")}</textarea></div>
@@ -1070,7 +978,7 @@ function achCard(){
 function bodyCard(){
   const a=S.body||[], f=k=>a.filter(x=>num(x[k])), talk=bodyTalk(), p=S.photo||{}, due=photoDue(), dt=t=>new Date(t).toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit"});
   let h=`<section class="card" id="bodycard"><div class="row"><h3>Фото и замеры</h3><span class="pill ${p.a?"good":"wait"}">${p.z?"до и после есть":p.a?"точка отсчёта есть":"начни с фото"}</span></div>`;
-  if(!p.a)h+=`<p><b>Фото помогают увидеть изменения.</b> Сними первый кадр сегодня: он останется в твоём телефоне, приложение его не загружает.</p>`;
+  if(!p.a)h+=`<p><b>Фото помогают увидеть изменения.</b> То, что происходит постепенно, трудно заметить в зеркале каждый день.</p><p>Сними первое фото сегодня. Оно останется в твоём телефоне — приложение его не загружает.</p>`;
   h+=`<div class="pht">${PHO.map(([k,n])=>`<div class="${p[k]?"on":k===due?"due":""}"><b>${p[k]?"✓ ":""}${n}</b><span>${p[k]?dt(p[k]):k==="a"?"сегодня":k==="m"?"недели 6–8":"после 12-й недели"}</span></div>`).join("")}</div>`;
   if(due)h+=`<button type="button" class="easy" data-photo="${due}">${due==="a"?"Фото «до» сделала":due==="m"?"Фото на середине сделала":"Фото «после» сделала"}</button>`;
   else if(p.z)h+=`<p><b>Открой первое и последнее фото рядом.</b> Сравнивай их в одинаковом свете.</p>`;
@@ -1123,7 +1031,13 @@ function renderProgressBeg(){
     h+=`<section class="card"><div class="row"><h3>${l.name}</h3><span class="pill ${got.length<2?"wait":diff>0?"good":"warn"}">${got.length<2?"ждём записей":diff>0?"вес растёт":"вес пока на месте"}</span></div>
       ${got.length?`<div class="big">${fk(last)} <small>кг${got.length>1?` · ${diff>=0?"+":"−"}${fk(Math.abs(diff))} кг к первой неделе`:" · рабочий вес"}</small></div>${weekChart(vals)}`:`<p class="meta">Рабочий вес появится после первой тренировки с этим упражнением.</p>`}</section>`;
   }
-  h+=bodyCard()+`<p class="meta">На графике — самый тяжёлый рабочий подход каждой недели.</p>`+achCard();
+  h+=achCard()+`<p class="meta">На графике — самый тяжёлый рабочий подход каждой недели.</p>`+bodyCard()+`
+    <section class="card"><h3>Если вес не растёт</h3><ul>
+    <li>Не получился максимум диапазона — повтори тот же вес в следующий раз.</li>
+    <li>Вес стоит три недели — проверь, не остаётся ли после подхода больше 3 повторений. Если да, немного прибавь.</li>
+    <li>Копится усталость или падают веса — включи «Сегодня полегче».</li>
+    <li>Для прогресса нужны сон, достаточно еды и белок 1,6–2,2 г на килограмм веса.</li>
+    <li>Болит сустав или поясница — остановись и замени упражнение. Боль не терпи.</li></ul></section>`;
   $("view").innerHTML=h;syncFooter();
 }
 function renderProgress(){
@@ -1146,30 +1060,34 @@ function renderProgress(){
     h+=`<tr class="${p===3?"rest":""}${w===S.cur.w?" cur":""}"><td>${w} · ${LABEL[p]}</td>`+
       LIFTS.map(l=>`<td>${isBeg(w)?"новичок":(pick(l.id,w)||!base(l.id,1)?"подбор":fk(planKg(l.id,w)))+" × "+SC(w)[l.day].reps[p]}</td>`).join("")+`</tr>`}
   h+=`</tbody></table></div><p class="meta">В таблице: вес × повторения. После недель 3, 7 и 11 план обновится по контрольным подходам ★.</p></section>
-`+bodyCard()+achCard();
+`+achCard()+bodyCard()+`<section class="card"><h3>Если вес не растёт</h3><ul>
+    <li>Одна неудачная тренировка — норма. Следующую начни по плану.</li>
+    <li>Меньше повторений две проверки подряд — проверь сон, питание и технику.</li>
+    <li>Для прогресса нужны достаточно еды и белок 1,6–2,2 г на килограмм веса.</li>
+    <li>Падают веса сразу во всех упражнениях — сделай лёгкую неделю и поспи 7–9 часов.</li>
+    <li>Болит сустав или поясница — остановись и замени упражнение. Боль не терпи.</li></ul></section>`;
   $("view").innerHTML=h;syncFooter();
 }
 const isFirst=()=>!S.startSet&&!Object.keys(S.log||{}).length;
 const OB={};
 function levelCard(){
   const L=OB.lv;
-  let h=`<section class="card ob-question"><h3>Какой у тебя опыт?</h3><p class="meta">Программа одна — меняется объём и подбор веса.</p>`;
-  if(!L){for(const k of Object.keys(LEVELS))h+=`<button type="button" class="opt lv" data-lvpick="${k}" aria-pressed="false"><span><b>${LEVELS[k].n}</b><i>${LEVELS[k].who}</i></span></button>`}
-  else h+=`<div class="note"><b>Выбран уровень «${LEVELS[L].n}».</b></div>`;
-  return h+`</section>`
+  let h=`<section class="card"><h3>Какой у тебя опыт?</h3><p class="meta">Программа одна. Меняется количество подходов и способ подбора веса.</p>`;
+  for(const k of Object.keys(LEVELS))h+=`<button type="button" class="opt lv" data-lvpick="${k}" aria-pressed="${L===k}"><span><b>${LEVELS[k].n}</b><i>${LEVELS[k].who}</i></span></button>`;
+  if(L)h+=`<div class="note"><b>Твой уровень: «${LEVELS[L].n}».</b> ${LEVELS[L].text}</div>`;
+  return h+`</section>`;
 }
 function renderWelcome(){
-  const L=OB.lv,B=L==="beg";
-  if(!L){$("view").innerHTML=levelCard()+`<p class="sync">12 недель · 2 тренировки в неделю. Дневник хранится только в этом браузере.</p>`;return}
-  const fin=`<details class="why"><summary>Перед первой тренировкой</summary><p class="meta">Если есть травма, беременность или ограничения по здоровью, сначала согласуй нагрузку с врачом. При резкой боли, головокружении или нехватке воздуха остановись.</p><p class="meta">Записи не переносятся между устройствами автоматически. Копию можно скачать в «Настройках».</p></details><div class="ob-actions"><button type="button" class="cta" id="obgo">${B||OB.nw?"Перейти к тренировке":"Рассчитать программу"}</button><button type="button" class="ghostbtn" data-lvback>‹ Уровень</button></div>`;
+  const L=OB.lv, B=L==="beg", fin=`<section class="card"><h3>Перед первой тренировкой</h3><p class="meta">Если есть травма, беременность или ограничения по здоровью, сначала согласуй нагрузку с врачом. При резкой боли, головокружении или нехватке воздуха остановись.</p></section><button type="button" class="cta" id="obgo">Начать</button><p class="sync">${L?`Выбран уровень <b>«${LEVELS[L].n}»</b>. `:""}Настройки можно изменить позже. Записи хранятся только в этом браузере и не переносятся между устройствами автоматически. Копию можно скачать в «Настройках».</p>`;
   let h=levelCard();
-  if(B||OB.nw)h+=`<section class="card"><h3>${B?"Стартовый вес":"Вес подберём в зале"}</h3><p class="meta">${B?"В мосту и тяге начнём с <b>20 кг</b> — это ориентир, не обязательный вес. После первого подхода скорректируешь. Мост можно заменить вариантом без веса.":"Начни с лёгкого веса. После первого подхода приложение подскажет, когда прибавить или убавить."}</p>${B?`<details class="why"><summary>Знаю вес своего грифа</summary><p class="meta">Если не знаешь, оставь 20 кг.</p><div class="obbar">${[["ht","Гриф для моста"],["rdl","Гриф для тяги"]].map(([id,n])=>`<div><label class="lbl" for="ob-bar-${id}">${n}</label><div class="field"><input id="ob-bar-${id}" inputmode="decimal" autocomplete="off" data-obbar="${id}" value="${esc(OB["bar-"+id]||"20")}" aria-describedby="obgo"><span>кг</span></div></div>`).join("")}</div></details>`:`<button type="button" class="easy" data-nw aria-pressed="true">Знаю свои рабочие веса</button>`}</section>`;
-  else{h+=`<section class="card"><h3>Твой обычный рабочий подход</h3><p class="meta">Впиши вес и повторения, которые делаешь уверенно и с хорошей техникой. Не максимум на один раз.</p>`;
+  if(!L){$("view").innerHTML=h+`<section class="card"><h3>Не просто дневник</h3><p class="meta">12 недель, две тренировки в неделю. У каждого упражнения есть техника и объяснение, зачем оно в программе. Где есть исследования, они указаны; где вывод основан на практике, это тоже написано.</p></section><section class="card"><h3>Как заниматься</h3><ol><li>В карточке указаны вес, повторения и отдых.</li><li>После подхода нажми «Готово» — результат сохранится.</li><li>Если упражнение незнакомо, сначала открой «Техника».</li></ol></section>`;return}
+  if(B||OB.nw)h+=`<section class="card"><h3>${B?"Начнём с пустого грифа":"Вес подберём в зале"}</h3><p class="meta">${B?"В мосту и тяге подставим <b>20 кг</b> как ориентир. На первой тренировке проверь вес грифа: после подхода приложение подскажет, когда прибавить или убавить. Если штанга пока неудобна, мост можно заменить вариантом без веса.":"Сейчас ничего вводить не нужно. На первой тренировке начнёшь с лёгкого веса, а приложение подскажет, когда прибавить или убавить."}</p>${B?`<details class="why"><summary>Знаю вес своего грифа</summary><p class="meta">Если не знаешь, просто оставь 20 кг. Это стартовый ориентир, а не обязательный вес.</p><div class="obbar">${[["ht","Гриф для моста"],["rdl","Гриф для тяги"]].map(([id,n])=>`<div><label class="lbl" for="ob-bar-${id}">${n}</label><div class="field"><input id="ob-bar-${id}" inputmode="decimal" autocomplete="off" data-obbar="${id}" value="${esc(OB["bar-"+id]||"20")}" aria-describedby="obgo"><span>кг</span></div></div>`).join("")}</div></details>`:`<button type="button" class="easy" data-nw aria-pressed="true">Знаю свои рабочие веса</button>`}</section>`;
+  else{h+=`<section class="card"><h3>Твой обычный рабочий подход</h3><p class="meta">Впиши вес и повторения, которые делаешь уверенно и с хорошей техникой. Не максимум на один раз. По ним рассчитаем первую тренировку.</p>`;
     for(const l of LIFTS)h+=`<div class="obrow"><b>${l.name}</b><button type="button" class="ghostbtn" data-how="${l.id}">Посмотреть технику ›</button><div class="grid2">
       <div class="field"><input id="ob-${l.id}-w" inputmode="decimal" autocomplete="off" data-ob="${l.id}-w" value="${esc(OB[l.id+"-w"]||"")}" aria-label="${l.name}: вес"><span>кг</span></div>
       <div class="field"><input id="ob-${l.id}-r" inputmode="numeric" autocomplete="off" data-ob="${l.id}-r" value="${esc(OB[l.id+"-r"]||"")}" aria-label="${l.name}: повторения"><span>повт</span></div></div></div>`;
     h+=`<button type="button" class="easy" data-nw aria-pressed="false">Не знаю веса — подберу на первой тренировке</button></section>`}
-  $("view").innerHTML=h+fin
+  $("view").innerHTML=h+fin;
 }
 function isStandalone(){try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return navigator.standalone===true}}
 let installPrompt=null,installConfirmed=isStandalone();
@@ -1200,12 +1118,12 @@ window.addEventListener("appinstalled",()=>{installPrompt=null;installConfirmed=
 try{matchMedia("(display-mode: standalone)").addEventListener("change",e=>{if(e.matches){installConfirmed=true;refreshInstallUI()}})}catch(e){}
 function renderSetup(){
   const B=S.level==="beg";
-  let h=`<div class="settings-jump" role="navigation" aria-label="Разделы настроек"><button type="button" data-setupjump="setup-profile">Профиль</button><button type="button" data-setupjump="setup-app">Приложение</button><button type="button" data-setupjump="setup-help">Справка</button><button type="button" data-setupjump="setup-data">Данные</button></div><h2 class="settings-group" id="setup-profile">Профиль и программа</h2>`;
-  h+=B?"":`<p class="meta"><b>Обычный рабочий подход.</b> Впиши вес и повторения, которые делаешь уверенно и с хорошей техникой. Не максимум на один раз. По ним рассчитаем план.</p>`;
+  let h=B?"":`<p class="meta"><b>Обычный рабочий подход.</b> Впиши вес и повторения, которые делаешь уверенно и с хорошей техникой. Не максимум на один раз. По ним рассчитаем план.</p>`;
   if(!S.startSet&&!B)h+=`<div class="note">Сейчас указаны примеры. Замени их на свои веса и повторения.</div>`;
   {const L=LEVELS[S.level]?S.level:"mid",logged=Object.keys(S.lvAt||{}).length;
   h+=`<section class="card"><h3>Уровень</h3><div class="seg seg3" role="group" aria-label="Уровень">${["beg","mid","adv"].map(k=>`<button type="button" data-level="${k}" aria-pressed="${L===k}">${LEVELS[k].n}</button>`).join("")}</div>
     <p class="meta"><b>${LEVELS[L].who}.</b> ${LEVELS[L].text}${logged?" Новый уровень применится только к неделям без записей. Прошлые тренировки не изменятся.":""}</p></section>`;}
+  h+=themeCard()+installCard();
   if(!B)for(const l of LIFTS){const s=S.start[l.id];
     const cb=calibOn(l.id),cv=cb?base(l.id,1):0;
     h+=`<section class="card"><div class="row"><h3>${l.name}</h3><span class="e1">оценка силы: <b id="b-${l.id}">${cb&&!cv?"—":fmt(base(l.id,1))+" кг"}</b></span></div>${cb?`<p class="meta">${cv?"Сейчас используется расчёт по первой тренировке.":"Расчёт появится после первой тренировки."} Если знаешь свой рабочий подход, впиши его — расчёт обновится.</p>`:""}
@@ -1233,9 +1151,8 @@ function renderSetup(){
       <li>В остальных упражнениях прибавь вес после максимального числа повторений в каждом подходе. Например, по 15 при плане 12–15.</li>
       <li>В неделю отдыха вес ниже и подходов меньше. Можно заменить её средней, но не два раза подряд.</li>
       <li>Нет сил — нажми «Сегодня полегче». Упражнение не подходит — нажми «Заменить».</li></ol></details></section>`;
-  h+=`<h2 class="settings-group" id="setup-app">Приложение</h2>${themeCard()}${installCard()}<h2 class="settings-group" id="setup-help">Справка</h2>
-    <section class="card"><details class="why" style="border:0;padding:0;margin:0"><summary>На чём это основано</summary><ul style="padding-left:18px;margin:6px 0 0">${BASIS.map(x=>`<li><b>${x[0]}</b>${x[1]} <small>Доказательность: ${x[2]}</small></li>`).join("")}</ul><p class="meta">Опираемся только на исследования, где рост мышц измеряли напрямую: МРТ, УЗИ, биопсия. Где данных нет — так и пишем.</p></details></section>`;
-  h+=`<h2 class="settings-group" id="setup-data">Данные</h2>${backupCard()}${safetyCard()}
+  h+=`<section class="card"><details class="why" style="border:0;padding:0;margin:0"><summary>На чём это основано</summary><ul style="padding-left:18px;margin:6px 0 0">${BASIS.map(x=>`<li><b>${x[0]}</b>${x[1]} <small>Доказательность: ${x[2]}</small></li>`).join("")}</ul><p class="meta">Опираемся только на исследования, где рост мышц измеряли напрямую: МРТ, УЗИ, биопсия. Где данных нет — так и пишем.</p></details></section>`;
+  h+=`${backupCard()}${safetyCard()}
     <section class="card"><h3>Новый блок</h3><p class="meta">Сейчас идёт блок ${S.block||1}. Сначала проверь веса для нового блока. Дневник очистится только после подтверждения; перед этим сохранится автоматическая копия.</p>
       <div class="row"><button type="button" class="btn" id="newblock">Подготовить новый блок</button><span class="e1" id="nbmsg" role="status"></span></div></section>
     <section class="card"><h3>Начать заново</h3><p class="meta">Удалит все записи и вернёт исходные настройки. Сначала сохранится автоматическая копия, из которой дневник можно восстановить.</p>
@@ -1383,8 +1300,9 @@ async function shareBlockResult(){
 
 /* ---------- bottom sheet for a closed workout ---------- */
 function party(){
-  const {w,d}=S.cur,blockDone=doneWorkouts()>=24;
-  $("sh-sets").textContent=counts(w,d).done;
+  const {w,d}=S.cur,t=tonnage(w,d),prev=w>1?tonnage(w-1,d):0,diff=prev?t-prev:0,blockDone=doneWorkouts()>=24;
+  $("sh-ton").textContent=kgf(t)+" кг";
+  $("sh-diff").textContent=prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—";
   $("sh-n").textContent=doneWorkouts()+" из 24";
   const rec=ph(w)===2&&!isBeg(w)&&!easy(w,d)?LIFTS.filter(l=>l.day===d&&!altOf(w,l.id)&&testE1(w,l.id)>base(l.id,wave(w))*1.001):[]; /* only the first ★ set drives the next wave */
   $("sh-h").textContent=storageErr?"Сохрани дневник":blockDone?"12 недель готовы: 24 из 24":rec.length?"Оценка силы выросла":"Тренировка готова";
@@ -1397,8 +1315,6 @@ function party(){
   const sc=$("sheetcopy"),copyDue=doneWorkouts()-(S.backupAt||0)>=4;sc.hidden=!storageErr&&(cloud==="ok"||!copyDue);sc.textContent=storageErr?"Сохранить копию дневника":copyDue?"Сохранить новую копию дневника":"Сохранить копию дневника";
   const n=blockDone?null:nextPos();$("sheetnext").hidden=!n;$("sheetcal").hidden=!n;if(n)$("sheetnext").textContent="Дальше: неделя "+n.w+" · день "+n.d;
   $("sheetinstall").hidden=doneWorkouts()!==1||installConfirmed||isStandalone();
-  $("sheetmore").open=!!storageErr;
-  $("sheetmore").hidden=!storageErr&&!n&&$("sheetinstall").hidden&&sc.hidden;
   $("sheetok").textContent=n?"Остаться здесь":"Готово";$("sheetok").className=n||blockDone?"ghostbtn":"cta";
   openDialog("sheet");
 }
@@ -1669,13 +1585,11 @@ document.addEventListener("click",e=>{
   else if(b.dataset.nw!==undefined){OB.nw=!OB.nw;renderWelcome()}
   else if(b.dataset.firstset!==undefined){const el=$("editor")||$("ex-ht");if(el){el.scrollIntoView({block:"center"});const input=$("ed-0");if(input)input.focus({preventScroll:true})}}
   else if(b.dataset.lvpick){OB.lv=b.dataset.lvpick;renderWelcome()}
-  else if(b.dataset.lvback!==undefined){OB.lv="";OB.nw=false;renderWelcome();window.scrollTo(0,0)}
-  else if(b.dataset.setupjump){const el=$(b.dataset.setupjump);if(el)el.scrollIntoView({block:"start",behavior:"smooth"})}
   else if(b.dataset.level){const L=b.dataset.level;if(L!==S.level){S.lvAt=S.lvAt||{};for(let x=1;x<=12;x++)if(!S.lvAt[x]&&Object.keys(S.log).some(k=>k.startsWith(x+"-")&&S.log[k].some(full)))S.lvAt[x]=lvl(x); /* weeks already trained keep their level */
     if(String(S.growth)===LEVELS[S.level].growth)S.growth=LEVELS[L].growth;S.level=L;edit=null;save();render()}}
   else if(b.dataset.how){const e0=EX[1].concat(EX[2]).find(q=>q.id===b.dataset.how),e=eff(e0,w),x=e.alt?HOWA[e.name]:HOW[e0.id];if(!x)return;
     const ul=a=>`<ul>${a.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
-    $("infobody").innerHTML=`<h3>${esc(e.name)}</h3><div class="hw">${techDiagram(e)}<span class="cap">Настройка</span>${ul(x.st)}<span class="cap">Движение</span>${ul(x.mv)}<span class="cap">Где чувствовать</span><p>${esc(x.feel)}.</p><span class="cap">Частые ошибки</span>${ul(x.err)}${/ногу/.test(e.per||"")?`<span class="cap">Если одна сторона слабее</span><p>Начинай со слабой ноги. На сильной делай столько же повторений — не больше.</p>`:""}${(y=>`<details class="why"><summary>Почему это упражнение</summary>${y[2]?`<p><b>Что работает.</b> ${esc(y[2])}.</p><p><b>Зачем в программе.</b> ${esc(y[3])}.</p>`:""}<p class="meta"><b>Исследования.</b> ${esc(y[1])}.</p></details>`)(e.alt?(WHYA[e.name]||["Практика","Замена подобрана по тому же движению и той же мышце. Прямых сравнений с основным упражнением по росту мышц нет"]):WHY[e0.id])}<p class="meta">Делай полное движение без рывков. Отказ — следующее повторение уже не получается с хорошей техникой. При резкой боли остановись и замени упражнение.</p></div>`;openDialog("info")}
+    $("infobody").innerHTML=`<h3>${esc(e.name)}</h3><div class="hw"><span class="cap">Настройка</span>${ul(x.st)}<span class="cap">Движение</span>${ul(x.mv)}<span class="cap">Где чувствовать</span><p>${esc(x.feel)}.</p><span class="cap">Частые ошибки</span>${ul(x.err)}${/ногу/.test(e.per||"")?`<span class="cap">Если одна сторона слабее</span><p>Начинай со слабой ноги. На сильной делай столько же повторений — не больше.</p>`:""}${(y=>`<details class="why"><summary>Почему это упражнение</summary>${y[2]?`<p><b>Что работает.</b> ${esc(y[2])}.</p><p><b>Зачем в программе.</b> ${esc(y[3])}.</p>`:""}<p class="meta"><b>Исследования.</b> ${esc(y[1])}.</p></details>`)(e.alt?(WHYA[e.name]||["Практика","Замена подобрана по тому же движению и той же мышце. Прямых сравнений с основным упражнением по росту мышц нет"]):WHY[e0.id])}<p class="meta">Делай полное движение без рывков. Отказ — следующее повторение уже не получается с хорошей техникой. При резкой боли остановись и замени упражнение.</p></div>`;openDialog("info")}
   else if(b.dataset.safety){
     const q=safetyList().find(x=>x.id===b.dataset.safety),m=$("safetymsg");
     if(!q){if(m)m.textContent="Эта копия больше недоступна";return}
