@@ -1,0 +1,170 @@
+timestamp=20261125T064214Z
+command=fresh browser: playwright-cli -s=v4public run-code --filename=/tmp/peach-v4-public.js
+public_commit=f5ed3653eb65870f82fda395a720a563a376089c
+### Result
+{"base":"https://morozovandrew20.github.io/peach-fitness/","checks":{"onboarding_mid":true,"onboarding_adv":true,"onboarding_beg":true,"brandLogo":{"src":"peach-logo.svg","loaded":true},"navigationEasy":true,"replacementCustom":true,"restAllControls":true,"undoRow":{"index":"2","rows":[["20","8"],["",""]]},"undoAndOrdinarySave":true,"invalidMeasurementFeedback":"Каждый замер должен быть от 20 до 250 см. Исправь выделенное поле или очисти его.","notesPlatesWarmMeasurements":true,"settings":true,"exports":true,"restoreRoundTrip":true,"installAndBlockCancel":true,"completionCalendarPhoto":true,"resetSafetyRestore":true,"newBlock":true,"gymHelpersTransitions":true,"responsive":[320,360,390,768,1440],"unnamedControls":[],"cacheNames":["peach-flagship-7"],"offlineRepeatReload":true},"consoleErrors":[],"onlineRequestFailures":[]}
+### Ran Playwright code
+```js
+await (async page => {
+  const base = 'https://morozovandrew20.github.io/peach-fitness/';
+  const prefix = '/mnt/agents/peach-v4-public';
+  const out = {base,checks:{},consoleErrors:[],onlineRequestFailures:[]};
+  const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+  let offline=false;
+  page.on('console',m=>{if(m.type()==='error')out.consoleErrors.push(m.text())});
+  page.on('pageerror',e=>out.consoleErrors.push(e.message));
+  page.on('requestfailed',r=>{if(!offline&&r.url().startsWith(base))out.onlineRequestFailures.push(r.url()+': '+(r.failure()?.errorText||''))});
+  const state=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('volny-v1')));
+  const clean=async()=>{await page.evaluate(()=>{localStorage.removeItem('volny-v1');localStorage.removeItem('volny-rest-v1');localStorage.removeItem('volny-safety-v1')});await page.reload({waitUntil:'networkidle'})};
+  const stopRest=async()=>{if(await page.locator('#timer').isVisible()){await page.locator('#texpand').click();await page.locator('#rfstop').click()}};
+  const noOverflow=async label=>{const v=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));assert(v.scroll===v.width,label+' horizontal overflow '+JSON.stringify(v))};
+  const noDuplicateIds=async()=>{const d=await page.evaluate(()=>{const a=[...document.querySelectorAll('[id]')].map(x=>x.id),c={};a.forEach(x=>c[x]=(c[x]||0)+1);return Object.keys(c).filter(x=>c[x]>1)});assert(!d.length,'duplicate dynamic ids: '+d.join(','))};
+  await page.setViewportSize({width:360,height:800});
+  await page.goto(base,{waitUntil:'networkidle'});
+  await page.context().grantPermissions(['clipboard-read','clipboard-write']);
+  await page.evaluate(()=>{const original=URL.createObjectURL.bind(URL);URL.createObjectURL=blob=>{window.__lastExportBlob=blob;return original(blob)}});
+  await page.evaluate(async()=>{localStorage.clear();const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.map(r=>r.unregister()));const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)))});
+  await page.reload({waitUntil:'networkidle'});
+
+  // Every onboarding route, including known and unknown working weights.
+  for(const level of ['mid','adv']){
+    await clean();
+    await page.locator(`[data-lvpick="${level}"]`).click();
+    if(level==='mid')await page.locator('[data-nw]').click();
+    else for(const id of ['ht','rdl','sq']){await page.locator(`#ob-${id}-w`).fill('40');await page.locator(`#ob-${id}-r`).fill('10')}
+    await page.locator('#obgo').click();
+    await page.locator('.hero').waitFor();
+    assert((await state()).level===level,level+' onboarding failed');
+    out.checks['onboarding_'+level]=true;
+  }
+  await clean();
+  await page.locator('[data-lvpick="beg"]').click();
+  await page.locator('#obgo').click();
+  await page.locator('[data-firstset]').waitFor();
+  assert((await state()).level==='beg','beginner onboarding failed');
+  out.checks.onboarding_beg=true;
+  out.checks.brandLogo=await page.locator('.brand-logo').evaluate(img=>({src:img.getAttribute('src'),loaded:img.complete&&img.naturalWidth>0}));
+  assert(out.checks.brandLogo.src==='peach-logo.svg'&&out.checks.brandLogo.loaded,'original logo missing');
+
+  // Week/day, easy day and exercise replacement/custom variant.
+  await page.locator('[data-w="2"]').click();assert((await state()).cur.w===2,'week navigation failed');
+  await page.locator('[data-day="2"]').click();assert((await state()).cur.d===2,'day navigation failed');
+  await page.locator('[data-w="1"]').click();await page.locator('[data-day="1"]').click();
+  await page.locator('.workout-options summary').click();await page.locator('.workout-options [data-easy]').click();assert((await state()).easy['1-1']===true,'easy day not enabled');
+  await page.locator('.workout-options summary').click();await page.locator('.workout-options [data-easy]').click();assert(!(await state()).easy['1-1'],'easy day not disabled');
+  out.checks.navigationEasy=true;
+  await page.locator('[data-swap="ht"]').click();await page.locator('[data-alt="ht:1"]').click();assert((await state()).alt.ht===1,'exercise replacement failed');
+  await page.locator('[data-swap="ht"]').click();await page.locator('#own-name').fill('Мой мост');await page.locator('#own-range').fill('10–12');await page.locator('[data-own="ht"]').click();
+  assert((await state()).custom.ht.name==='Мой мост','custom exercise failed');
+  await page.locator('[data-swap="ht"]').click();await page.locator('[data-alt="ht:0"]').click();
+  out.checks.replacementCustom=true;
+
+  // Focus save, all rest controls, paused reload and undo.
+  await page.locator('[data-firstset]').click();await page.locator('#setfocus:not([hidden])').waitFor();await page.waitForTimeout(400);
+  await page.locator('#sfdone').focus();await page.keyboard.press('Tab');assert(await page.evaluate(()=>document.activeElement.id)==='sfclose','focus trap regressed');
+  await page.locator('#sf-0').fill('22.5');await page.locator('#sf-1').fill('9');await page.locator('#sfhow').click();await page.locator('#info:not([hidden]) .tech-visual').waitFor();await page.keyboard.press('Escape');assert(await page.locator('#sf-0').inputValue()==='22.5'&&await page.locator('#sf-1').inputValue()==='9','technique draft return regressed');
+  await page.locator('#sf-1').fill('0');await page.locator('#sfdone').click();assert((await page.locator('#sferror').textContent()).length>10&&await page.locator('#setfocus').isVisible(),'focus validation regressed');
+  await page.locator('#sf-0').fill('20');await page.locator('#sf-1').fill('8');await page.locator('#sfdone').click();await page.locator('#restfocus:not([hidden])').waitFor();
+  assert((await state()).log['1-ht'][0].join('×')==='20×8','focus save failed');
+  await page.locator('#rfmin').click();assert(await page.locator('#restfocus').isHidden()&&await page.locator('#timer').isVisible(),'rest minimize failed');
+  await page.locator('#texpand').click();await page.locator('#rfpause').click();
+  let rest=await page.evaluate(()=>JSON.parse(localStorage.getItem('volny-rest-v1')));assert(rest.paused>0,'pause was not persisted');
+  const pausedClock=await page.locator('#rfclock').textContent();await page.waitForTimeout(600);assert(await page.locator('#rfclock').textContent()===pausedClock,'paused clock still runs');
+  await page.reload({waitUntil:'networkidle'});assert(await page.locator('#timer').isVisible(),'timer lost on reload');await page.locator('#texpand').click();
+  assert((await page.locator('#rfpause').textContent()).includes('Продолжить'),'paused state lost on reload');
+  await page.locator('#rfpause').click();rest=await page.evaluate(()=>JSON.parse(localStorage.getItem('volny-rest-v1')));const end=rest.end;
+  await page.locator('#rfplus').click();rest=await page.evaluate(()=>JSON.parse(localStorage.getItem('volny-rest-v1')));assert(rest.end===end+30000,'+30 seconds failed');
+  await page.locator('#rfminus').click();rest=await page.evaluate(()=>JSON.parse(localStorage.getItem('volny-rest-v1')));assert(rest.end===end,'-30 seconds failed');
+  await page.locator('#rfstop').click();assert(await page.locator('#timer').isHidden(),'skip rest failed');
+  out.checks.restAllControls=true;
+  if(await page.locator('[data-undo]').count()===0){if(await page.locator('#ed-0').count()===0)await page.locator('[data-edit="1"]').first().click();await page.locator('#ed-0').fill('21');await page.locator('#ed-1').fill('9');await page.locator('[data-done]').click();await stopRest()}
+  const undoIndex=await page.locator('[data-done]').getAttribute('data-done');
+  await page.locator('[data-undo]').click();const afterUndo=await state();out.checks.undoRow={index:undoIndex,rows:afterUndo.log['1-ht']};assert(!afterUndo.log['1-ht']?.[+undoIndex]?.[1],'undo did not clear set');
+  await page.locator('#ed-0').fill('20');await page.locator('#ed-1').fill('8');await page.locator('[data-done]').click();await stopRest();
+  out.checks.undoAndOrdinarySave=true;
+
+  // Notes, plates, warm-up, measurements and photo markers.
+  const note=page.locator('textarea[id^="note-"]');await note.fill('Сон хороший, техника спокойная.');assert((await state()).notes['1-1'].includes('Сон хороший'),'note not saved');
+  if(await page.locator('#ed-0').count()===0)await page.locator('[data-edit="0"]').first().click();
+  if(await page.locator('[data-plates]').count()){await page.locator('[data-plates]').click();await page.locator('#info:not([hidden]) .barbell').waitFor();await page.keyboard.press('Escape')}
+  const warm=page.locator('[data-warm]').first();if(await warm.count()){await warm.click();assert((await state()).warm.length===1,'warm-up marker failed')}
+  await page.locator('nav [data-tab="progress"]').click();await page.locator('.history').waitFor();
+  await page.locator('#bd-g').fill('95');await page.locator('#bd-w').fill('70');await page.locator('[data-bodyadd]').click();assert((await state()).body.length===1,'measurement not saved');
+  await page.locator('#bd-g').fill('5');await page.locator('[data-bodyadd]').click();
+  out.checks.invalidMeasurementFeedback=await page.locator('#bodycard [role="alert"]').textContent().catch(()=> '');
+  assert(out.checks.invalidMeasurementFeedback.length>5,'invalid measurement gives no feedback');
+  out.checks.notesPlatesWarmMeasurements=true;
+
+  // Themes, gym settings, exports, clipboard and backup validation/round-trip.
+  await page.locator('nav [data-tab="setup"]').click();
+  for(const accent of ['ocean','mint','lavender','sunset','berry']){await page.locator(`[data-accent="${accent}"]`).click();assert((await state()).theme.accent===accent,'accent '+accent+' failed')}
+  for(const look of ['dark','light','auto']){await page.locator(`[data-look="${look}"]`).click();assert((await state()).theme.look===look,'look '+look+' failed')}
+  await page.locator('[data-awake]').click();assert((await state()).awake===false,'wake lock preference failed');
+  await page.locator('#bar-ht').fill('17.5');assert((await state()).bar.ht==='17.5','bar setting failed');
+  await page.locator('#st-ht-step').fill('5');assert((await state()).start.ht.step==='5','step setting failed');
+  out.checks.settings=true;
+  await page.evaluate(()=>{const original=URL.createObjectURL.bind(URL);URL.createObjectURL=blob=>{window.__lastExportBlob=blob;return original(blob)}});
+  const backupDownload=page.waitForEvent('download');await page.locator('[data-download]').click();await backupDownload;const backupCode=await page.evaluate(()=>window.__lastExportBlob.text());assert(backupCode.startsWith('VOLNY1:'),'backup download invalid');
+  const csvDownload=page.waitForEvent('download');await page.locator('[data-export]').click();await csvDownload;const csv=await page.evaluate(()=>window.__lastExportBlob.text());assert(csv.includes('Ягодичный мост')&&csv.includes('20'),'CSV export invalid');
+  await page.locator('[data-copy="code"]').click();const clipCode=await page.evaluate(()=>navigator.clipboard.readText());assert(clipCode.startsWith('VOLNY1:'),'transfer code copy failed');
+  await page.locator('[data-copy="report"]').click();const report=await page.evaluate(()=>navigator.clipboard.readText());assert(report.includes('PEACH')&&report.includes('дневник'),'coach report copy failed');
+  out.checks.exports=true;
+  const beforeBad=JSON.stringify(await state());await page.locator('#restorein').fill('VOLNY1:broken');await page.locator('#restore').click();assert(JSON.stringify(await state())===beforeBad,'invalid backup changed state');
+  await page.locator('#restorein').fill(backupCode);await page.locator('#restore').click();assert(await page.locator('#restore').textContent()==='Заменить дневник','restore confirmation missing');await page.locator('#restore').click();
+  assert((await state()).body.length===1&&(await state()).notes['1-1'].includes('Сон хороший'),'backup round-trip failed');
+  assert(await page.evaluate(()=>JSON.parse(localStorage.getItem('volny-safety-v1')).length>0),'restore safety copy missing');
+  out.checks.restoreRoundTrip=true;
+  await page.locator('nav [data-tab="setup"]').click();await page.locator('[data-install]').click();await page.locator('#info:not([hidden])').waitFor();await page.keyboard.press('Escape');
+  await page.locator('#newblock').click();await page.locator('#confirmnewblock').waitFor();const blockBefore=(await state()).block;await page.locator('#infook').click();assert((await state()).block===blockBefore,'cancel new block changed state');
+  out.checks.installAndBlockCancel=true;
+
+  // Complete workout, calendar file, photos, reset confirmation and safety restore.
+  await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('volny-v1'));for(const [id,n]of[['ht',3],['rdl',2],['bulg',2]])s.log['1-'+id]=Array.from({length:n},()=>['20','8']);s.log['1-abd']=[['20','8'],['','']];localStorage.setItem('volny-v1',JSON.stringify(s))});
+  await page.reload({waitUntil:'networkidle'});if(await page.locator('#ed-0').count()===0)await page.locator('#ex-abd [data-edit="1"]').click();await page.locator('#ed-0').fill('20');await page.locator('#ed-1').fill('8');await page.locator('[data-done="1"]').click();await page.locator('#sheet:not([hidden])').waitFor();
+  await page.locator('#sheetcal').click();await page.locator('#cal-download').waitFor();await page.evaluate(()=>{const original=URL.createObjectURL.bind(URL);URL.createObjectURL=blob=>{window.__lastExportBlob=blob;return original(blob)}});const icsDownload=page.waitForEvent('download');await page.locator('#cal-download').click();await icsDownload;const ics=await page.evaluate(()=>window.__lastExportBlob.text());assert(ics.includes('BEGIN:VCALENDAR')&&ics.includes('PEACH'),'calendar download invalid');await page.keyboard.press('Escape');
+  await page.locator('nav [data-tab="progress"]').click();await page.locator('[data-photo="a"]').click();assert((await state()).photo.a>0,'photo marker failed');await page.locator('[data-photoundo]').click();assert(!(await state()).photo.a,'photo undo failed');
+  out.checks.completionCalendarPhoto=true;
+  await page.locator('nav [data-tab="setup"]').click();await page.locator('#reset').click();assert(Object.keys((await state()).log).length>0,'reset did not wait for confirmation');await page.locator('#reset').click();assert(!Object.values((await state()).log).some(r=>r.some(x=>x[1])),'confirmed reset failed');
+  await page.locator('[data-safety]').first().click();await page.locator('[data-safety]').first().click();assert(Object.keys((await state()).log).length>0,'automatic safety restore failed');
+  out.checks.resetSafetyRestore=true;
+  await page.locator('nav [data-tab="setup"]').click();await page.locator('#newblock').click();await page.locator('#confirmnewblock').click();assert((await state()).block===blockBefore+1&&!Object.values((await state()).log).some(r=>r.some(x=>x[1])),'new block confirmation failed');
+  out.checks.newBlock=true;
+
+  // Gym helpers and both choices at an exercise boundary.
+  await page.locator('nav [data-tab="setup"]').click();await page.locator('[data-level="mid"]').click();
+  for(const id of ['ht','rdl','sq']){await page.locator(`#st-${id}-w`).fill('40');await page.locator(`#st-${id}-r`).fill('10')}
+  await page.locator('nav [data-tab="train"]').click();await page.locator('[data-plates]').click();await page.locator('#info:not([hidden]) .barbell').waitFor();await page.keyboard.press('Escape');
+  await page.locator('[data-warm]').first().click();assert((await state()).warm.length===1,'warm-up marker failed for known weights');
+  await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('volny-v1'));s.log['1-ht']=[['40','10'],['40','10'],['40','10']];localStorage.setItem('volny-v1',JSON.stringify(s))});await page.reload({waitUntil:'networkidle'});
+  if(await page.locator('#ed-0').count()===0)await page.locator('[data-edit="3"]').click();await page.locator('#ed-0').fill('40');await page.locator('#ed-1').fill('10');await page.locator('[data-done="3"]').click();await page.locator('[data-transitionrest]').waitFor();await page.locator('[data-transitionrest]').click();assert(await page.locator('#timer').isVisible(),'transition rest failed');await stopRest();
+  await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('volny-v1'));s.log['1-ht']=[['40','10'],['40','10'],['40','10']];localStorage.setItem('volny-v1',JSON.stringify(s))});await page.reload({waitUntil:'networkidle'});await page.locator('#ed-0').fill('40');await page.locator('#ed-1').fill('10');await page.locator('[data-done="3"]').click();await page.locator('[data-transitionskip]').click();assert(await page.locator('[data-transition-note]').count()===0,'transition skip failed');
+  out.checks.gymHelpersTransitions=true;
+
+  // Responsive layouts, reduced motion, accessible names and offline.
+  for(const width of [320,360,390,768,1440]){
+    await page.setViewportSize({width,height:width<500?800:1000});
+    for(const tabName of ['train','progress','setup']){await page.locator(`nav [data-tab="${tabName}"]`).click();await noOverflow(`${width} ${tabName}`);await noDuplicateIds()}
+  }
+  out.checks.responsive=[320,360,390,768,1440];
+  await page.setViewportSize({width:360,height:800});await page.locator('nav [data-tab="train"]').click();if(await page.locator('[data-firstset]').count())await page.locator('[data-firstset]').click();else await page.locator('[data-setfocus]').click();await page.waitForTimeout(400);await noOverflow('360 focus');await page.screenshot({path:prefix+'-focus-360.png'});await page.keyboard.press('Escape');
+  await page.emulateMedia({reducedMotion:'reduce'});assert(await page.evaluate(()=>getComputedStyle(document.querySelector('.set-screen')).animationName==='none'),'reduced motion failed');
+  out.checks.unnamedControls=await page.evaluate(()=>[...document.querySelectorAll('button,input,textarea,summary')].filter(el=>{const r=el.getBoundingClientRect();if(!r.width||!r.height)return false;const label=el.getAttribute('aria-label')||el.getAttribute('title')||el.textContent.trim();const forLabel=el.id&&document.querySelector(`label[for="${CSS.escape(el.id)}"]`);return !label&&!forLabel}).map(el=>el.outerHTML.slice(0,160)));assert(!out.checks.unnamedControls.length,'unnamed controls: '+out.checks.unnamedControls.join(';'));
+  await page.evaluate(async()=>{await navigator.serviceWorker.ready});if(!await page.evaluate(()=>!!navigator.serviceWorker.controller))await page.reload({waitUntil:'networkidle'});
+  out.checks.cacheNames=await page.evaluate(()=>caches.keys());assert(out.checks.cacheNames.includes('peach-flagship-7'),'offline cache v7 missing');
+  offline=true;await page.context().setOffline(true);await page.reload({waitUntil:'domcontentloaded'});await page.locator('.brand').waitFor();assert((await page.locator('.brand').textContent()).includes('PEACH'),'offline reload failed');await page.reload({waitUntil:'domcontentloaded'});await page.locator('.brand').waitFor();out.checks.offlineRepeatReload=true;await page.context().setOffline(false);offline=false;
+  assert(!out.consoleErrors.length,'console errors: '+out.consoleErrors.join(' | '));assert(!out.onlineRequestFailures.length,'request failures: '+out.onlineRequestFailures.join(' | '));
+  return out;
+}
+)(page);
+```
+### Page
+- Page URL: https://morozovandrew20.github.io/peach-fitness/
+- Page Title: PEACH
+### Events
+- Downloading file PEACH-копия-2026-11-25.txt ...
+- Downloaded file PEACH-копия-2026-11-25.txt to "../../../../tmp/.playwright-cli/PEACH-копия-2026-11-25.txt"
+- Downloading file PEACH-дневник.csv ...
+- Downloaded file PEACH-дневник.csv to "../../../../tmp/.playwright-cli/PEACH-дневник.csv"
+- Downloading file PEACH-неделя-1-день-2.ics ...
+- Downloaded file PEACH-неделя-1-день-2.ics to "../../../../tmp/.playwright-cli/PEACH-неделя-1-день-2.ics"
+exit_code=0

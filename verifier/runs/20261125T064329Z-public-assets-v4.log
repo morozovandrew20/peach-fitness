@@ -1,0 +1,69 @@
+timestamp=20261125T064329Z
+command=HTTP GET every offline-core asset and manifest
+public_commit=f5ed3653eb65870f82fda395a720a563a376089c
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/urllib3/response.py", line 754, in _error_catcher
+    yield
+  File "/usr/local/lib/python3.12/site-packages/urllib3/response.py", line 879, in _raw_read
+    data = self._fp_read(amt, read1=read1) if not fp_closed else b""
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/urllib3/response.py", line 862, in _fp_read
+    return self._fp.read(amt) if amt is not None else self._fp.read()
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/http/client.py", line 479, in read
+    s = self.fp.read(amt)
+        ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/ssl.py", line 1251, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/ssl.py", line 1103, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/requests/models.py", line 820, in generate
+    yield from self.raw.stream(chunk_size, decode_content=True)
+  File "/usr/local/lib/python3.12/site-packages/urllib3/response.py", line 1066, in stream
+    data = self.read(amt=amt, decode_content=decode_content)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/urllib3/response.py", line 955, in read
+    data = self._raw_read(amt)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/urllib3/response.py", line 878, in _raw_read
+    with self._error_catcher():
+         ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/usr/local/lib/python3.12/site-packages/urllib3/response.py", line 759, in _error_catcher
+    raise ReadTimeoutError(self._pool, None, "Read timed out.") from e  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='morozovandrew20.github.io', port=443): Read timed out.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+  File "/usr/local/lib/python3.12/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/requests/sessions.py", line 746, in send
+    r.content
+  File "/usr/local/lib/python3.12/site-packages/requests/models.py", line 902, in content
+    self._content = b"".join(self.iter_content(CONTENT_CHUNK_SIZE)) or b""
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/requests/models.py", line 826, in generate
+    raise ConnectionError(e)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='morozovandrew20.github.io', port=443): Read timed out.
+exit_code=1
