@@ -1,9 +1,10 @@
-const CACHE = "peach-flagship-1";
+const CACHE = "peach-flagship-2";
 const NAV_TIMEOUT = 3500;
 const CORE = [
   "./",
   "./index.html",
   "./flagship.css",
+  "./technique.js",
   "./manrope-cyrillic.woff2",
   "./manrope-latin.woff2",
   "./manifest.webmanifest",

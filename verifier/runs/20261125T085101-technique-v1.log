@@ -1,0 +1,50 @@
+2026-11-25T08:51:01+08:00
+command: playwright-cli -s=peachtech eval all technique plates
+exit_code: 0
+### Result
+[
+  {
+    "id": "ht",
+    "svg": true,
+    "label": true
+  },
+  {
+    "id": "rdl",
+    "svg": true,
+    "label": true
+  },
+  {
+    "id": "bulg",
+    "svg": true,
+    "label": true
+  },
+  {
+    "id": "sq",
+    "svg": true,
+    "label": true
+  },
+  {
+    "id": "abd",
+    "svg": true,
+    "label": true
+  },
+  {
+    "id": "hyper",
+    "svg": true,
+    "label": true
+  },
+  {
+    "id": "kick",
+    "svg": true,
+    "label": true
+  },
+  {
+    "id": "curl",
+    "svg": true,
+    "label": true
+  }
+]
+### Ran Playwright code
+```js
+await page.evaluate('() => ([\'ht\',\'rdl\',\'bulg\',\'sq\',\'abd\',\'hyper\',\'kick\',\'curl\'].map(id=>({id,svg:peachTechnique(id).includes(\'<svg\'),label:peachTechnique(id).includes(\'figcaption\')})))');
+```

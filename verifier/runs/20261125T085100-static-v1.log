@@ -1,0 +1,17 @@
+2026-11-25T08:51:00+08:00
+command: python3 verifier/v1/static_check.py
+exit_code: 0
+{
+  "values": {
+    "flagship.css_bytes": 14127,
+    "sw.js_bytes": 2407,
+    "manrope-cyrillic.woff2_bytes": 14352,
+    "manrope-latin.woff2_bytes": 24532,
+    "reduced_motion_rules": 4,
+    "has_dark_theme": true,
+    "has_local_fonts": true,
+    "primary_exercise_count": 6,
+    "core_assets_kb": 399.3
+  },
+  "errors": []
+}

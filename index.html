@@ -514,6 +514,7 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
   <button type="button" class="cta" id="infook">Понятно</button>
 </div></div></div>
 
+<script src="technique.js"></script>
 <script>
 (function(){
 "use strict";
@@ -871,8 +872,8 @@ function renderTrain(fresh){
       :"заканчивай, когда с хорошей техникой останется ещё 1–2 повторения";
      if(ef)coach+=`<p class="meta"><b>Насколько тяжело:</b> ${ef}.</p>`}
     if(ex.tip)coach+=`<p class="meta">${esc(ex.tip)}.</p>`;
-    if(ex.alt?HOWA[ex.name]:HOW[ex.id])coach+=`<button type="button" class="ghostbtn" data-how="${ex.id}">Техника упражнения ›</button>`;
     h+=`<p class="meta">Отдых ${ex.rest}.</p>`;
+    if(ex.alt?HOWA[ex.name]:HOW[ex.id])h+=`<button type="button" class="technique-link" data-how="${ex.id}"><span>Показать технику</span><small>схема и подсказки</small><b aria-hidden="true">›</b></button>`;
     if(coach)h+=`<details class="why coach"><summary>Как делать подходы</summary><div class="coach-body">${coach}</div></details>`;
     if(beg&&w===1&&!lt&&!r.some(full))h+=beginnerGuide(ex,w);
     h+=`<div class="sets">`;
@@ -1590,7 +1591,7 @@ document.addEventListener("click",e=>{
     if(String(S.growth)===LEVELS[S.level].growth)S.growth=LEVELS[L].growth;S.level=L;edit=null;save();render()}}
   else if(b.dataset.how){const e0=EX[1].concat(EX[2]).find(q=>q.id===b.dataset.how),e=eff(e0,w),x=e.alt?HOWA[e.name]:HOW[e0.id];if(!x)return;
     const ul=a=>`<ul>${a.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
-    $("infobody").innerHTML=`<h3>${esc(e.name)}</h3><div class="hw"><span class="cap">Настройка</span>${ul(x.st)}<span class="cap">Движение</span>${ul(x.mv)}<span class="cap">Где чувствовать</span><p>${esc(x.feel)}.</p><span class="cap">Частые ошибки</span>${ul(x.err)}${/ногу/.test(e.per||"")?`<span class="cap">Если одна сторона слабее</span><p>Начинай со слабой ноги. На сильной делай столько же повторений — не больше.</p>`:""}${(y=>`<details class="why"><summary>Почему это упражнение</summary>${y[2]?`<p><b>Что работает.</b> ${esc(y[2])}.</p><p><b>Зачем в программе.</b> ${esc(y[3])}.</p>`:""}<p class="meta"><b>Исследования.</b> ${esc(y[1])}.</p></details>`)(e.alt?(WHYA[e.name]||["Практика","Замена подобрана по тому же движению и той же мышце. Прямых сравнений с основным упражнением по росту мышц нет"]):WHY[e0.id])}<p class="meta">Делай полное движение без рывков. Отказ — следующее повторение уже не получается с хорошей техникой. При резкой боли остановись и замени упражнение.</p></div>`;openDialog("info")}
+    $("infobody").innerHTML=`<h3>${esc(e.name)}</h3>${peachTechnique(e0.id)}<div class="hw"><span class="cap">Настройка</span>${ul(x.st)}<span class="cap">Движение</span>${ul(x.mv)}<span class="cap">Где чувствовать</span><p>${esc(x.feel)}.</p><span class="cap">Частые ошибки</span>${ul(x.err)}${/ногу/.test(e.per||"")?`<span class="cap">Если одна сторона слабее</span><p>Начинай со слабой ноги. На сильной делай столько же повторений — не больше.</p>`:""}${(y=>`<details class="why"><summary>Почему это упражнение</summary>${y[2]?`<p><b>Что работает.</b> ${esc(y[2])}.</p><p><b>Зачем в программе.</b> ${esc(y[3])}.</p>`:""}<p class="meta"><b>Исследования.</b> ${esc(y[1])}.</p></details>`)(e.alt?(WHYA[e.name]||["Практика","Замена подобрана по тому же движению и той же мышце. Прямых сравнений с основным упражнением по росту мышц нет"]):WHY[e0.id])}<p class="meta">Делай полное движение без рывков. Отказ — следующее повторение уже не получается с хорошей техникой. При резкой боли остановись и замени упражнение.</p></div>`;openDialog("info")}
   else if(b.dataset.safety){
     const q=safetyList().find(x=>x.id===b.dataset.safety),m=$("safetymsg");
     if(!q){if(m)m.textContent="Эта копия больше недоступна";return}

@@ -151,6 +151,32 @@ nav button[aria-pressed="true"] svg{transform:none}
 .rest-kicker,.rest-sub,.rest-hint{color:var(--muted)}
 .rest-next .cap{color:var(--a1)}
 
+.technique-link{width:100%;min-height:58px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 12px;align-items:center;padding:12px 16px;border:0;border-radius:16px;background:var(--fg);color:var(--surface);text-align:left}
+.technique-link span{font-size:14px;font-weight:750}
+.technique-link small{grid-column:1;font-size:11px;color:color-mix(in srgb,var(--surface) 66%,transparent)}
+.technique-link b{grid-column:2;grid-row:1/3;font-size:25px;font-weight:400}
+.technique-link:active{transform:scale(.985)}
+.tech-visual{margin:0;border:1px solid var(--line);border-radius:22px;background:var(--input);overflow:hidden}
+.tech-visual svg{display:block;width:100%;height:auto}
+.tv-floor,.tv-divider{fill:none;stroke:var(--line);stroke-width:2}
+.tv-divider{stroke-dasharray:4 7}
+.tv-equip{fill:none;stroke:color-mix(in srgb,var(--muted) 56%,transparent);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.tv-body{fill:none;stroke:var(--fg);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.tv-body.tv-focus{stroke:var(--a1)}
+.tv-body.tv-back{opacity:.52}
+.tv-arm{stroke-width:9}
+.tv-head{fill:var(--surface);stroke:var(--fg);stroke-width:7}
+.tv-bar{fill:none;stroke:var(--fg);stroke-width:5;stroke-linecap:round}
+.tv-plate{fill:none;stroke:var(--a1);stroke-width:9;stroke-linecap:round}
+.tv-align{fill:none;stroke:var(--a1);stroke-width:2;stroke-dasharray:5 5;opacity:.8}
+.tv-arrow{fill:none;stroke:var(--a1);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.tech-visual figcaption{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+.tech-visual figcaption span{display:flex;gap:5px;align-items:center;white-space:nowrap}
+.tech-visual figcaption b{color:var(--a1);font-size:10px}
+.tech-visual figcaption strong{color:var(--fg);font-size:10px;font-weight:700;text-align:center;text-transform:none;letter-spacing:0}
+#infobody>h3{font-size:26px;text-align:left}
+#infobody .hw{gap:10px}
+
 .ach>div,.pht>div{border-style:solid;border-color:var(--line);border-radius:16px}
 .ach>div.on,.pht>div.on{background:var(--input);border-color:color-mix(in srgb,var(--a1) 36%,var(--line))}
 .summary,.stat{box-shadow:none}
