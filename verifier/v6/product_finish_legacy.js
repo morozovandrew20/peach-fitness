@@ -1,0 +1,33 @@
+async page=>{
+ const base='http://127.0.0.1:4173/',prefix='/mnt/agents/peach-v6-finish',out={base,checks:{},screens:[],consoleErrors:[]};
+ const assert=(v,m)=>{if(!v)throw new Error(m)};
+ page.on('console',m=>{if(m.type()==='error')out.consoleErrors.push(m.text())});page.on('pageerror',e=>out.consoleErrors.push(e.message));
+ const cdp=await page.context().newCDPSession(page);await cdp.send('Network.enable');await cdp.send('Network.setCacheDisabled',{cacheDisabled:true});await cdp.send('Network.setBypassServiceWorker',{bypass:true});
+ const shot=async(name,fullPage=false)=>{await page.waitForTimeout(350);await page.screenshot({path:prefix+'-'+name+'.png',fullPage});out.screens.push(name)};
+ const noOverflow=async label=>{const v=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,inner:innerWidth}));assert(v.scroll<=v.inner+1,label+' horizontal overflow '+JSON.stringify(v))};
+ await page.setViewportSize({width:360,height:800});await page.goto(base,{waitUntil:'networkidle'});await page.evaluate(async()=>{localStorage.clear();const r=await navigator.serviceWorker.getRegistrations();await Promise.all(r.map(x=>x.unregister()));const k=await caches.keys();await Promise.all(k.map(x=>caches.delete(x)))});await page.reload({waitUntil:'networkidle'});
+ assert(await page.locator('.welcome-hero').count()===1,'designed welcome missing');assert((await page.locator('.level-card h3').textContent())==='Выбери уровень','level heading changed');await shot('welcome-360-light');
+ await page.locator('[data-lvpick="beg"]').click();await page.locator('#obgo').click();await noOverflow('first day');await shot('first-day-360-light');
+ const hierarchy=await page.evaluate(()=>{const tech=getComputedStyle(document.querySelector('.technique-link')),done=getComputedStyle(document.querySelector('[data-done]')),hero=document.querySelector('.hero').getBoundingClientRect();return{techBg:tech.backgroundColor,doneBg:done.backgroundColor,heroHeight:hero.height}});assert(hierarchy.techBg!==hierarchy.doneBg,'technique still competes with done');assert(hierarchy.heroHeight<310,'hero remains oversized');out.checks.hierarchy=hierarchy;
+ await page.locator('[data-firstset]').click();await page.waitForTimeout(350);assert(await page.locator('#setfocus').isVisible(),'focus did not open');await shot('set-360');await page.keyboard.press('Escape');assert(await page.locator('#setfocus').isHidden(),'Escape did not close focus');
+ await page.locator('[data-setfocus]').click();await page.locator('#sf-0').fill('20');await page.locator('#sf-1').fill('8');await page.locator('#sfdone').click();await page.waitForTimeout(350);assert(await page.locator('#restfocus').isVisible(),'rest did not open');
+ const rest=await page.evaluate(()=>({bg:getComputedStyle(document.querySelector('#restfocus')).backgroundColor,color:getComputedStyle(document.querySelector('.rest-screen')).color,clock:getComputedStyle(document.querySelector('#rfclock')).fontVariantNumeric,controls:[...document.querySelectorAll('.rest-control')].map(x=>x.getBoundingClientRect().height)}));assert(rest.bg==='rgb(23, 18, 15)','rest is not unified dark workstation');assert(rest.controls.every(x=>x>=48),'rest targets too small');out.checks.rest=rest;await shot('rest-360');await page.locator('#rfstop').click();
+ await page.locator('nav [data-tab="setup"]').click();await page.locator('[data-look="dark"]').click();await page.waitForTimeout(350);assert(await page.evaluate(()=>document.documentElement.dataset.look==='dark'),'dark theme not applied');await shot('settings-360-dark');await page.locator('nav [data-tab="train"]').click();await shot('workout-360-dark');await page.locator('nav [data-tab="setup"]').click();await page.locator('[data-look="light"]').click();
+ // Complete a real beginner workout through the same UI used in the gym.
+ await page.locator('nav [data-tab="train"]').click();
+ for(let i=0;i<16&&await page.locator('#sheet').isHidden();i++){
+   if(await page.locator('#restfocus').isVisible())await page.locator('#rfstop').click();
+   if(await page.locator('[data-firstset]').count())await page.locator('[data-firstset]').click();
+   else if(await page.locator('[data-setfocus]').count())await page.locator('[data-setfocus]').click();
+   else {const next=page.locator('.srow:not(.on)').first();if(await next.count())await next.click();else break}
+   if(await page.locator('#setfocus').isVisible()){await page.locator('#sf-0').fill('20');await page.locator('#sf-1').fill('8');await page.locator('#sfdone').click()}else if(await page.locator('#ed-0').count()){await page.locator('#ed-0').fill('20');await page.locator('#ed-1').fill('8');await page.locator('#editor [data-done]').click()}
+   await page.waitForTimeout(120);
+ }
+ if(await page.locator('#restfocus').isVisible())await page.locator('#rfstop').click();
+ assert(await page.locator('#sheet').isVisible(),'completion sheet not reached');await shot('completion-360');await page.locator('#sheetok').click();
+ await page.locator('nav [data-tab="progress"]').click();assert(await page.locator('.history').count(),'filled history missing');await shot('progress-filled-360');
+ for(const width of [320,390,1440]){await page.setViewportSize({width,height:width===1440?1000:800});for(const tab of ['train','progress','setup']){await page.locator(`nav [data-tab="${tab}"]`).click();await noOverflow(width+' '+tab)}}
+ out.checks.responsive=[320,360,390,1440];
+ await page.setViewportSize({width:360,height:800});await page.emulateMedia({reducedMotion:'reduce'});const motion=await page.evaluate(()=>({html:getComputedStyle(document.documentElement).scrollBehavior,rest:getComputedStyle(document.querySelector('.rest-screen')).animationName}));assert(motion.rest==='none','reduced motion rest failed');out.checks.reducedMotion=motion;
+ assert(!out.consoleErrors.length,'console errors '+out.consoleErrors.join(' | '));return out;
+}

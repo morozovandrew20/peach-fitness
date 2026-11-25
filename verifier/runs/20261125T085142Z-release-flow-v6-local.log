@@ -1,0 +1,8 @@
+timestamp=20261125T085142Z
+command=playwright-cli -s=v6release run-code --filename=verifier/v6/release_flow.js
+### Error
+Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4173/
+Call log:
+  - navigating to "http://127.0.0.1:4173/", waiting until "domcontentloaded"
+
+exit_code=1
