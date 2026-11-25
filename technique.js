@@ -49,19 +49,25 @@ function arrow(kind){
  const paths={up:'M245 176V86m-9 12 9-12 9 12',down:'M245 86v90m-9-12 9 12 9-12',back:'M185 105H75m12-10-12 10 12 10',out:'M126 165h95m-12-10 12 10-12 10',in:'M220 165h-95m12-10-12 10 12 10',bend:'M207 173q-8 37-48 42m5-12-5 12 13 1',extend:'M159 215q40-5 48-42m-13-1 13 1-5 12',return:'M204 105q25-25 12-57m-12 8 12-8 5 13'};
  return paths[kind]?`<path class="tv-arrow" d="${paths[kind]}"/>`:''
 }
-function figure(p,offset){
- const seg=(a,b,cls='tv-body')=>`<path class="${cls}" d="M${p[a][0]+offset} ${p[a][1]}L${p[b][0]+offset} ${p[b][1]}"/>`;
- let h=`<g>${equipment(p.gear||'')}<circle class="tv-head" cx="${p.head[0]+offset}" cy="${p.head[1]}" r="15"/>`;
+function motion(tag,attrs,a,b){
+ const anim=(name)=>a[name]===undefined?'':`<animate attributeName="${name}" values="${a[name]};${b[name]};${a[name]}" dur="3.2s" repeatCount="indefinite" keyTimes="0;0.5;1" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1"/>`;
+ return `<${tag} ${attrs}>${anim("d")}${anim("cx")}${anim("cy")}</${tag}>`
+}
+function movingFigure(a,b){
+ const pt=(p,k)=>p[k]||p.head,xy=(p,k)=>`${pt(p,k)[0]} ${pt(p,k)[1]}`,seg=(x,y,cls='tv-body')=>motion('path','',{d:`M${xy(a,x)}L${xy(a,y)}`},{d:`M${xy(b,x)}L${xy(b,y)}`}).replace('<path >',`<path class="${cls}">`);
+ let h=`<g>${equipment(a.gear||'')}${motion('circle','',{cx:a.head[0],cy:a.head[1]},{cx:b.head[0],cy:b.head[1]}).replace('<circle >','<circle class="tv-head" r="15">')}`;
  h+=seg('shoulder','hip')+seg('hip','knee','tv-body tv-focus')+seg('knee','ankle')+seg('shoulder','elbow','tv-arm')+seg('elbow','hand','tv-arm');
- if(p.backKnee){h+=`<path class="tv-body tv-back" d="M${p.hip[0]+offset} ${p.hip[1]}L${p.backKnee[0]+offset} ${p.backKnee[1]}L${p.backAnkle[0]+offset} ${p.backAnkle[1]}"/>`}
- if(p.otherKnee){h+=`<path class="tv-body tv-back" d="M${p.hip[0]+offset} ${p.hip[1]}L${p.otherKnee[0]+offset} ${p.otherKnee[1]}L${p.otherAnkle[0]+offset} ${p.otherAnkle[1]}"/>`}
- if(p.bar){const b=p.bar;h+=`<path class="tv-bar" d="M${b[0]+offset} ${b[1]}L${b[2]+offset} ${b[3]}"/><path class="tv-plate" d="M${b[0]+5+offset} ${b[1]-13}v26M${b[2]-5+offset} ${b[3]-13}v26"/>`}
- if(p.line)h+=`<path class="tv-align" d="M${p.line.map(q=>q[0]+offset+' '+q[1]).join(' L')}"/>`;
- return h+arrow(p.arrow)+'</g>'
+ if(a.backKnee)h+=motion('path','', {d:`M${xy(a,'hip')}L${xy(a,'backKnee')}L${xy(a,'backAnkle')}`},{d:`M${xy(b,'hip')}L${xy(b,'backKnee')}L${xy(b,'backAnkle')}`}).replace('<path >','<path class="tv-body tv-back">');
+ if(a.otherKnee)h+=motion('path','', {d:`M${xy(a,'hip')}L${xy(a,'otherKnee')}L${xy(a,'otherAnkle')}`},{d:`M${xy(b,'hip')}L${xy(b,'otherKnee')}L${xy(b,'otherAnkle')}`}).replace('<path >','<path class="tv-body tv-back">');
+ if(a.bar&&b.bar){const d=p=>`M${p.bar[0]} ${p.bar[1]}L${p.bar[2]} ${p.bar[3]}`;h+=motion('path','', {d:d(a)},{d:d(b)}).replace('<path >','<path class="tv-bar">');h+=motion('path','', {d:`M${a.bar[0]+5} ${a.bar[1]-13}v26M${a.bar[2]-5} ${a.bar[3]-13}v26`},{d:`M${b.bar[0]+5} ${b.bar[1]-13}v26M${b.bar[2]-5} ${b.bar[3]-13}v26`}).replace('<path >','<path class="tv-plate">')}
+ return h+arrow(a.arrow)+'</g>'
 }
 function plate(id){
- const poses=P[id]||P.rdl;
- return `<figure class="tech-visual" aria-label="Схема техники: ${LABELS[id]||LABELS.rdl}"><svg viewBox="0 0 620 260" role="img" aria-hidden="true"><path class="tv-floor" d="M20 218h580"/>${figure(poses[0],20)}${figure(poses[1],315)}<path class="tv-divider" d="M310 30v190"/></svg><figcaption><span><b>01</b> Начало</span><strong>${LABELS[id]||LABELS.rdl}</strong><span><b>02</b> Движение</span></figcaption></figure>`
+ const poses=P[id]||P.rdl,label=LABELS[id]||LABELS.rdl;
+ const html=`<figure class="tech-visual tech-animated" aria-label="Анимированная схема техники: ${label}"><svg viewBox="0 0 285 245" role="img" aria-hidden="true" data-tech-svg><path class="tv-floor" d="M20 218h245"/>${movingFigure(poses[0],poses[1])}</svg><button type="button" class="tech-motion" data-techmotion aria-pressed="false">Пауза</button><figcaption><strong>${label}</strong><span>Анимированная схема · не видео с человеком</span></figcaption></figure>`;
+ setTimeout(()=>{document.querySelectorAll('[data-tech-svg]').forEach(svg=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches){svg.pauseAnimations();const b=svg.parentElement.querySelector('[data-techmotion]');b.textContent='Смотреть движение';b.setAttribute('aria-pressed','true')}})},0);
+ return html
 }
+document.addEventListener('click',e=>{const b=e.target.closest('[data-techmotion]');if(!b)return;const svg=b.parentElement.querySelector('[data-tech-svg]'),paused=b.getAttribute('aria-pressed')!=='true';if(paused)svg.pauseAnimations();else svg.unpauseAnimations();b.setAttribute('aria-pressed',String(paused));b.textContent=paused?'Смотреть движение':'Пауза'});
 window.peachTechnique=plate;
 })();
