@@ -864,7 +864,7 @@ function renderTrain(fresh){
       const done=Math.min(plan,r.filter(full).length),brief=ex.wave?(pick(ex.id,w)?"подбор веса":fk(dayKg(ex.id,w))+" кг · "+plan+" × "+SC(w)[d].reps[p]):plan+" × "+ex.range+ex.per;
       h+=`<section class="excompact${fin?" fin":""}" data-ex="${ex.id}"><button type="button" class="excompact-btn" data-inspect="${ex.id}" aria-expanded="false"><span class="num">${i+1}</span><span class="excompact-main"><b>${esc(ex.name)}</b><small>${done}/${plan} подходов · ${esc(brief)}</small></span><span class="excompact-state" aria-hidden="true">${fin?CHECK:"›"}</span></button></section>`;return
     }
-    h+=`<section class="card${fin?" fin":""}${focusId===ex.id?" act":""}" id="ex-${ex.id}" tabindex="-1" data-ex="${ex.id}"><div class="ex-head"><div class="num">${i+1}</div><h2>${esc(ex.name)}</h2>${ALTS[ex.id]?`<button type="button" class="swap" data-swap="${ex.id}">заменить</button>`:""}</div>`;
+    h+=`<section class="card${fin?" fin":""}${focusId===ex.id?" act":""}" id="ex-${ex.id}" tabindex="-1" data-ex="${ex.id}"><div class="ex-head"><div class="num">${i+1}</div><h2>${esc(ex.short||ex.name)}</h2>${ALTS[ex.id]?`<button type="button" class="swap" data-swap="${ex.id}">заменить</button>`:""}</div>`;
     if(ex.wave&&pick(ex.id,w)){h+=`<div class="plan"><b>Подбери вес</b><span>${plan} × ${SC(w)[d].reps[p]} повторений</span></div><p class="hint">Начни легко. Заканчивай подход, когда с хорошей техникой останется ещё 2–3 повторения</p>`}
     else if(ex.wave){h+=`<div class="plan"><button type="button" class="pw" data-plates="${ex.id}" aria-label="Какие блины вешать"><b>${fk(dayKg(ex.id,w))} кг</b><small>блины ›</small></button><span>${plan} × ${SC(w)[d].reps[p]} повторений</span></div>`;
       const wu=fin?[]:warmup(ex,w);
@@ -1090,9 +1090,12 @@ function renderProgress(){
 }
 const isFirst=()=>!S.startSet&&!Object.keys(S.log||{}).length;
 const OB={};
+function welcomeHero(){
+  return `<section class="welcome-hero"><div class="welcome-copy"><span class="cap">PEACH · ПЛАН НА 12 НЕДЕЛЬ</span><h2>Твоя сила.<br>Твой темп.</h2><p>Две тренировки в неделю. Веса, техника и отдых — в одном спокойном ритме.</p></div><div class="welcome-plan" aria-label="План: 12 недель, 24 тренировки"><div><b>12</b><span>недель</span></div><div><b>24</b><span>тренировки</span></div><div class="welcome-line"><i></i><i></i><i></i><i></i><i></i><i></i></div><small>Прогресс сохраняется на устройстве</small></div></section>`
+}
 function levelCard(){
   const L=OB.lv;
-  let h=`<section class="card"><h3>Выбери уровень</h3><p class="meta">Программа одна. Меняется количество подходов и способ подбора веса.</p>`;
+  let h=welcomeHero()+`<section class="card level-card"><div class="section-heading"><span class="cap">Первый шаг</span><h3>Выбери уровень</h3></div><p class="meta">Программа одна. Меняется количество подходов и способ подбора веса.</p>`;
   for(const k of Object.keys(LEVELS))h+=`<button type="button" class="opt lv" data-lvpick="${k}" aria-pressed="${L===k}"><span><b>${LEVELS[k].n}</b><i>${LEVELS[k].who}</i></span></button>`;
   if(L)h+=`<div class="note"><b>Твой уровень: «${LEVELS[L].n}».</b> ${LEVELS[L].text}</div>`;
   return h+`</section>`;
