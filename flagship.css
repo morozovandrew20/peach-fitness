@@ -694,15 +694,6 @@ body.workout-mode .seg button{font-size:11px;padding-inline:5px}
 .live-elapsed{font-variant-numeric:tabular-nums;color:#fffaf7;font-weight:800;letter-spacing:.04em}
 .session-live .hero-status .hring .pr{filter:drop-shadow(0 0 5px rgba(255,250,247,.24))}
 .rest-coach{margin:10px 0 0;color:rgba(255,250,247,.78);font-size:13px;line-height:1.45;text-align:center}
-.rest-effort{width:min(100%,430px);margin:12px auto 0;padding-top:12px;border-top:1px solid rgba(255,250,247,.14)}
-.rest-effort>span,.inline-effort>span{display:block;font-size:12px;font-weight:750}
-.rest-effort>span small{font-weight:500;opacity:.62}
-.effort-options{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
-.effort-options button{min-height:42px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--fg);font:700 12px Manrope,sans-serif;cursor:pointer}
-.rest-effort .effort-options button{border-color:rgba(255,250,247,.18);background:rgba(255,250,247,.08);color:#fffaf7}
-.effort-options button[aria-pressed="true"],.effort-options button.selected{border-color:var(--a1);background:var(--a1);color:#fff}
-.effort-note{min-height:18px;margin:8px 0 0;font-size:12px;line-height:1.45;color:rgba(255,250,247,.72)}
-.inline-effort{padding:12px 0 2px}.inline-effort small{display:block;margin-top:7px;color:var(--muted);font-size:10px}
 .completion-outcomes{display:grid;gap:0;margin:14px 0;border-top:1px solid var(--line)}
 .completion-outcomes>div{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);text-align:left}
 .completion-outcomes span,.completion-next span{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}

@@ -503,7 +503,7 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
       <svg viewBox="0 0 280 280" aria-hidden="true"><circle class="rr-track" cx="140" cy="140" r="122"/><circle class="rr-progress" id="rfprogress" cx="140" cy="140" r="122" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
       <div class="rest-clockbox"><span class="rest-state" id="rfstate">Отдых</span><b class="rest-clock" id="rfclock" role="timer" aria-live="off">0:00</b><span class="rest-sub" id="rfsub">до подхода</span></div>
     </div>
-    <div class="rest-next" id="rfcard"></div><p id="rfcoach" class="rest-coach"></p><div class="rest-effort"><span>Как прошёл подход? <small>можно пропустить</small></span><div class="effort-options" id="rfeffort"><button type="button" data-effort="easy" aria-pressed="false">Легко</button><button type="button" data-effort="ok" aria-pressed="false">Нормально</button><button type="button" data-effort="hard" aria-pressed="false">Тяжело</button></div><p id="rfnote" class="effort-note" role="status"></p></div>
+    <div class="rest-next" id="rfcard"></div><p id="rfcoach" class="rest-coach"></p>
   </div>
   <div class="rest-controls" id="rfcontrols"><button type="button" class="rest-control" id="rfminus" aria-label="Уменьшить отдых на 30 секунд">−30 сек</button><button type="button" class="rest-control" id="rfpause" aria-pressed="false">Пауза</button><button type="button" class="rest-control" id="rfplus" aria-label="Увеличить отдых на 30 секунд">+30 сек</button></div>
   <button type="button" class="cta" id="rfnext" hidden>К следующему подходу</button>
@@ -645,7 +645,7 @@ function newBlock(){               /* carry working weights into a fresh 12 week
 }
 function tonnage(w,d){let t=0;for(const ex of EX[d])for(const r of rows(w,ex.id))t+=num(r[0])*num(r[1]);return t}
 const PV=2;                                                      /* program version: 2 = seated leg curl added */
-const RELEASE={version:"1.2.0",date:"26 ноября 2026",name:"PEACH"};
+const RELEASE={version:"1.3.0",date:"26 ноября 2026",name:"PEACH"};
 function dayVer(w,d){const v=(S.verAt||{})[w+"-"+d];if(v)return v;return EX[d].some(ex=>!ex.since&&rows(w,ex.id).some(full))?1:PV}
 const EXD=(w,d)=>EX[d].filter(ex=>(ex.since||1)<=dayVer(w,d));
 const easy=(w,d)=>!!(S.easy&&S.easy[w+"-"+d]);
@@ -679,11 +679,6 @@ function elapsedText(ms){const sec=Math.floor(ms/1000),m=Math.floor(sec/60),ss=s
 function startLive(){if(!liveSession()){stamp();save(true)}tickLive()}
 function tickLive(){const on=!!liveSession();document.body.classList.toggle("session-live",on);document.querySelectorAll("[data-elapsed]").forEach(el=>el.textContent=elapsedText(liveElapsed()))}
 function lastCompletedSet(w=S.cur.w,d=S.cur.d){for(const ex0 of EXD(w,d).slice().reverse()){const n=nSets(ex0,w),r=rows(w,ex0.id);for(let i=n-1;i>=0;i--)if(full(r[i]))return{id:ex0.id,s:i,ex:eff(ex0,w),kg:num(r[i][0]),reps:num(r[i][1])}}return null}
-function effortKey(id){return S.cur.w+"-"+id}
-function effortOf(id,s){return (S.effort&&S.effort[effortKey(id)]||{})[s]||""}
-function setEffort(val){const n=lastCompletedSet();if(!n||!["easy","ok","hard"].includes(val))return;S.effort=S.effort||{};S.effort[effortKey(n.id)]=S.effort[effortKey(n.id)]||{};S.effort[effortKey(n.id)][n.s]=val;save(true);updateEffortUI();const text=effortCoach(val,n);if($("rfnote"))$("rfnote").textContent=text;if($("rfcoach"))$("rfcoach").textContent=setComparison(n.w||S.cur.w,S.cur.d,n.id,n.s);speak(text)}
-function effortCoach(val,n){if(val==="easy")return"Легко — запас есть. Следующий подход делай по плану, без форсирования.";if(val==="hard"){const count=Object.values(S.effort||{}).reduce((a,x)=>a+Object.values(x).filter(v=>v==="hard").length,0);return count>1?"«Тяжело» повторяется. Оставь запас 2–3 повторения; при необходимости сделай паузу дольше и закончи спокойно.":"Тяжело — принято. Не работай в отказ: сохрани технику и при необходимости отдохни дольше."}return"Нормально — рабочий ритм подходит. Держи технику и запас 2–3 повторения."}
-function updateEffortUI(){const n=lastCompletedSet(),v=n?effortOf(n.id,n.s):"";document.querySelectorAll("[data-effort]").forEach(b=>{const on=b.dataset.effort===v;b.classList.toggle("selected",on);b.setAttribute("aria-pressed",String(on))})}
 function speak(text){if(!S.voice||!text||!("speechSynthesis" in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="ru-RU";u.rate=1.02;speechSynthesis.speak(u)}catch(e){}}
 function setComparison(w,d,id,s){const now=rows(w,id)[s],lt=lastTime(w,id),prev=lt&&lt.r[s];if(!full(now)||!full(prev))return"Этот подход — новый ориентир. Сравним с ним в следующий раз.";const diff=num(now[0])*num(now[1])-num(prev[0])*num(prev[1]);return diff>0?`К прошлому разу: +${fmt(diff)} кг·повт. Хороший шаг — план не меняем.`:diff<0?`К прошлому разу: −${fmt(Math.abs(diff))} кг·повт. Это сигнал восстановиться, не догонять.`:"Объём совпал с прошлым разом. Стабильность — тоже результат."}
 function workoutRecords(w,d){const out=[];for(const ex of EXD(w,d)){const current=Math.max(0,...rows(w,ex.id).filter(full).map(r=>num(r[0])*(1+num(r[1])/30)));if(!current)continue;let best=0;for(let x=1;x<w;x++)if(altOf(x,ex.id)===altOf(w,ex.id))best=Math.max(best,...rows(x,ex.id).filter(full).map(r=>num(r[0])*(1+num(r[1])/30)),0);if(current>best&&best>0)out.push(eff(ex,w).short)}return out}
@@ -931,7 +926,7 @@ function renderTrain(fresh){
       const on=full(r[s]), sg=suggest(ex,w,d,s), emptyUndo=justUndone&&justUndone.id===ex.id&&justUndone.s===s&&!justUndone.prev, v=on?r[s]:emptyUndo?["",""]:[sg.kg,sg.reps];
       if(cur&&cur.id===ex.id&&cur.s===s){
         const pr=lt&&lt.r[Math.min(s,lt.r.length-1)];
-        h+=`<div class="editor" id="editor">${jd&&jd.id===ex.id?`<div class="setfeedback" role="status"><span>${jd.failed?"Только в этой вкладке":jd.isNew?`Подход ${jd.s+1} записан`:`Изменения подхода ${jd.s+1} сохранены`}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew&&!jd.failed&&jd.rest?" · отдых пошёл":""}</span><button type="button" data-undo>${jd.isNew?"Отменить запись":"Вернуть прежние значения"}</div>${jd.isNew?`<div class="inline-effort"><span>Как прошёл подход?</span><div class="effort-options"><button type="button" data-effort="easy" aria-pressed="${effortOf(ex.id,s)==="easy"}">Легко</button><button type="button" data-effort="ok" aria-pressed="${effortOf(ex.id,s)==="ok"}">Нормально</button><button type="button" data-effort="hard" aria-pressed="${effortOf(ex.id,s)==="hard"}">Тяжело</button></div><small>Можно пропустить · план весов не меняется</small></div>`:""}`:justUndone&&justUndone.id===ex.id?`<div class="setfeedback" role="status"><span>${justUndone.prev?`Прежние вес и повторения подхода ${s+1} восстановлены.`:`Подход ${s+1} удалён. Поля пустые — можно записать его заново.`}</span></div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ контрольный: максимум повторений":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · последний: оставь 1–2 в запасе":""}</div><button type="button" class="focus-open" data-setfocus><span>Развернуть подход</span><b aria-hidden="true">↗</b></button>
+        h+=`<div class="editor" id="editor">${jd&&jd.id===ex.id?`<div class="setfeedback" role="status"><span>${jd.failed?"Только в этой вкладке":jd.isNew?`Подход ${jd.s+1} записан`:`Изменения подхода ${jd.s+1} сохранены`}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew&&!jd.failed&&jd.rest?" · отдых пошёл":""}</span><button type="button" data-undo>${jd.isNew?"Отменить запись":"Вернуть прежние значения"}</div>`:justUndone&&justUndone.id===ex.id?`<div class="setfeedback" role="status"><span>${justUndone.prev?`Прежние вес и повторения подхода ${s+1} восстановлены.`:`Подход ${s+1} удалён. Поля пустые — можно записать его заново.`}</span></div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ контрольный: максимум повторений":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · последний: оставь 1–2 в запасе":""}</div><button type="button" class="focus-open" data-setfocus><span>Развернуть подход</span><b aria-hidden="true">↗</b></button>
           ${pr?`<div class="prevset">Было: ${fk(num(pr[0]))} кг × ${num(pr[1])}${lt.w?" · неделя "+lt.w:" · прошлый блок"}</div>`:""}
           <div class="steps">${stepper(0,v[0],"кг","decimal")}${stepper(1,v[1],"повторений","numeric")}</div><p class="fielderror" id="editorerror" role="alert"></p>
           <div class="erow"><button type="button" class="cta" data-done="${s}">${on?"Сохранить":"Готово"}</button>${on?`<button type="button" class="btn" data-clear="${s}">Удалить запись</button>`:""}</div></div>`;
@@ -1326,7 +1321,7 @@ function addRestTime(delta=30000){
   persistRest()
 }
 function stopTimer(){clearInterval(tInt);clearTimeout(tHide);tInt=null;tPaused=0;tDone=false;$("timer").hidden=true;clearRest();if(!$("restfocus").hidden)closeDialog("restfocus")}
-function openRestFocus(){if($("timer").hidden)return;clearTimeout(tHide);const n=lastCompletedSet(tW,tD);if(n){$("rfcoach").textContent=setComparison(tW,tD,n.id,n.s);$("rfnote").textContent="Оценка необязательна — она помогает подстроить подсказки."}updateEffortUI();renderRestNext();syncRestFace();openDialog("restfocus")}
+function openRestFocus(){if($("timer").hidden)return;clearTimeout(tHide);const n=lastCompletedSet(tW,tD);if(n)$("rfcoach").textContent=setComparison(tW,tD,n.id,n.s);renderRestNext();syncRestFace();openDialog("restfocus")}
 function goRestNext(){
   const n=nextSetInfo();stopTimer();tab="train";
   if(n){S.cur={w:n.w,d:n.d};edit={id:n.id,s:n.s};inspect=null;undoSet=null;save(true);render(true);requestAnimationFrame(()=>openSetFocus(n))}
@@ -1631,7 +1626,6 @@ document.addEventListener("click",e=>{
   else if(b.dataset.inspect&&ex){inspect=ex.id;edit=null;transition=null;justUndone=null;renderTrain();requestAnimationFrame(()=>{const el=$("ex-"+ex.id);if(el){el.focus({preventScroll:true});el.scrollIntoView({block:"start",behavior:"smooth"})}})}
   else if(b.dataset.edit!==undefined&&ex){edit={id:ex.id,s:+b.dataset.edit};inspect=ex.id;transition=null;justUndone=null;renderTrain();toEditor()}
   else if(b.dataset.setfocus!==undefined){openSetFocus()}
-  else if(b.dataset.effort){setEffort(b.dataset.effort)}
   else if(b.dataset.sfstep){focusStep(b)}
   else if(b.id==="sfclose"){closeDialog("setfocus")}
   else if(b.id==="sfdone"){completeSetFocus()}
