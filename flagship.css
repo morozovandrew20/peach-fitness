@@ -40,6 +40,7 @@ header .wrap{padding-block:max(14px,env(safe-area-inset-top,0px)) 0;gap:15px}
 .brandline{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:30px}
 .brand{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:800;letter-spacing:.16em;line-height:1}
 .brand svg{width:21px;height:21px;fill:var(--a1)}
+.brand-logo{display:block;width:24px;height:24px;flex:0 0 24px;border-radius:6px}
 .brandnote{font-size:10px;font-weight:700;letter-spacing:.11em;color:var(--muted);text-transform:uppercase;text-align:right}
 .top{gap:16px}
 .top>div:first-child{gap:3px}

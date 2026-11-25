@@ -21,6 +21,8 @@ async page => {
   await page.reload({waitUntil:'networkidle'});
   out.checks.onboarding = await page.locator('h3').first().textContent();
   assert(out.checks.onboarding.trim() === 'Выбери уровень', 'wrong onboarding heading');
+  out.checks.brandLogo = await page.locator('.brand-logo').evaluate(img => ({src:img.getAttribute('src'),loaded:img.complete&&img.naturalWidth>0}));
+  assert(out.checks.brandLogo.src === 'peach-logo.svg' && out.checks.brandLogo.loaded, 'original brand logo not loaded');
   await page.locator('[data-lvpick="beg"]').click();
   await page.locator('#obgo').click();
   await page.locator('.hero').waitFor();
@@ -120,7 +122,7 @@ async page => {
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   if (!await page.evaluate(() => !!navigator.serviceWorker.controller)) await page.reload({waitUntil:'networkidle'});
   out.checks.cacheNames = await page.evaluate(() => caches.keys());
-  assert(out.checks.cacheNames.includes('peach-flagship-4'), 'flagship offline cache missing');
+  assert(out.checks.cacheNames.includes('peach-flagship-5'), 'flagship offline cache missing');
   offline = true;
   await page.context().setOffline(true);
   await page.reload({waitUntil:'domcontentloaded'});

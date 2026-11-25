@@ -7,7 +7,7 @@ errors=[]; values={}
 html=(root/'index.html').read_text(encoding='utf-8')
 soup=BeautifulSoup(html,'html.parser')
 if not soup.find('meta',attrs={'name':'viewport'}): errors.append('viewport missing')
-for asset in ['flagship.css','technique.js','sw.js','manrope-cyrillic.woff2','manrope-latin.woff2']:
+for asset in ['flagship.css','technique.js','peach-logo.svg','sw.js','manrope-cyrillic.woff2','manrope-latin.woff2']:
     p=root/asset
     if not p.exists() or p.stat().st_size==0: errors.append(f'missing asset: {asset}')
     else: values[asset+'_bytes']=p.stat().st_size
@@ -18,8 +18,8 @@ for name in ['technique.js','sw.js']:
     proc=subprocess.run(['node','--check',str(root/name)],text=True,capture_output=True)
     if proc.returncode: errors.append(name+' syntax: '+proc.stderr[:400])
 sw=(root/'sw.js').read_text(encoding='utf-8')
-if 'peach-flagship-4' not in sw: errors.append('stale service worker cache')
-for name in ['./flagship.css','./technique.js','./manrope-cyrillic.woff2','./manrope-latin.woff2']:
+if 'peach-flagship-5' not in sw: errors.append('stale service worker cache')
+for name in ['./flagship.css','./technique.js','./peach-logo.svg','./manrope-cyrillic.woff2','./manrope-latin.woff2']:
     if name not in sw: errors.append('asset missing from offline core: '+name)
 for marker in ['function progressOverview','function renderProgressEmpty','class="summary-mark"']:
     if marker not in html: errors.append('missing product marker: '+marker)
