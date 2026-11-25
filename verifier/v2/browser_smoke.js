@@ -120,7 +120,7 @@ async page => {
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   if (!await page.evaluate(() => !!navigator.serviceWorker.controller)) await page.reload({waitUntil:'networkidle'});
   out.checks.cacheNames = await page.evaluate(() => caches.keys());
-  assert(out.checks.cacheNames.includes('peach-flagship-3'), 'flagship offline cache missing');
+  assert(out.checks.cacheNames.includes('peach-flagship-4'), 'flagship offline cache missing');
   offline = true;
   await page.context().setOffline(true);
   await page.reload({waitUntil:'domcontentloaded'});

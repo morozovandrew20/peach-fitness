@@ -1,0 +1,8 @@
+timestamp=20261125T042458Z
+command=playwright-cli run-code --filename=verifier/v2/browser_smoke.js
+### Error
+Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4173/
+Call log:
+  - navigating to "http://127.0.0.1:4173/", waiting until "networkidle"
+
+exit_code=1

@@ -1,0 +1,21 @@
+timestamp=20261125T042337Z
+command=python3 verifier/v2/static_check.py && playwright-cli run-code --filename=verifier/v2/browser_smoke.js
+{
+  "values": {
+    "flagship.css_bytes": 18477,
+    "technique.js_bytes": 6045,
+    "sw.js_bytes": 2407,
+    "manrope-cyrillic.woff2_bytes": 14352,
+    "manrope-latin.woff2_bytes": 24532,
+    "reduced_motion_rules": 4,
+    "has_dark_theme": true,
+    "has_local_fonts": true,
+    "primary_exercise_count": 6,
+    "core_assets_kb": 405.1
+  },
+  "errors": []
+}
+The browser 'default' is not open, please run open first
+
+  playwright-cli open [params]
+exit_code=1
