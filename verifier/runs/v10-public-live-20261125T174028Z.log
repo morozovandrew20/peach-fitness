@@ -1,0 +1,6 @@
+page.reload: Timeout 60000ms exceeded.
+Call log:
+  - waiting for navigation until "domcontentloaded"
+
+    at eval (<anonymous>:10:113)
+    at async /mnt/agents/output/peach-fitness/verifier/v10/run_browser.cjs:8:73

@@ -1,0 +1,11 @@
+{
+  "values": {
+    "technique.js_sha": "0e191372a436",
+    "technique3d.js_sha": "fa9b3f998f92",
+    "assets/technique/peach-mannequin.glb_sha": "e7b24b80c5a3",
+    "assets/technique/LICENSE-desk-break.txt_sha": "bc10bb1b96ce",
+    "assets/technique/LICENSE-three.txt_sha": "bfe119ea4fd4",
+    "assets/technique/technique3d.src.js_sha": "de80ecfebc14"
+  },
+  "errors": []
+}

@@ -38,3 +38,15 @@
 - Public resilience final: `verifier/runs/v9-public-resilience-20261125T154423Z.log` — реальная анимация, pause, scrub, pixel-changing views, keyboard, hidden-render stop, настоящий Service Worker offline 3D reload, responsive 360–1440, localOnly и zeroErrors. Оба предшествующих диагностических запуска сохранены append-only.
 - Public full final: `verifier/runs/v9-public-full-20261125T154728Z.log` — onboarding всех уровней, оригинальный логотип, навигация, замены, все rest controls, undo, замеры, настройки, exports/clipboard, backup/restore/safety, completion/calendar/photo, new block, helpers/transitions, responsive 320–1440, accessible names, cache `peach-flagship-12` и offline repeat reload; ноль console errors и online request failures. Предшествующие сетевой и транзиентный запуски сохранены append-only.
 - Protocol commit: `8e19fd00b7f561b4280d0bebcfb0293ad35ebb24` (local `efb5a2d`). Release recovery tag: `flagship-ui-v9`; продукт и отдельный протокол опубликованы в GitHub Pages repository, все финальные публичные gates пройдены.
+
+## v10 — Релиз 1.0: упаковка для публикации и продажи (2026-11-26)
+- Acceptance: `verifier/v10/acceptance.md`.
+- Scope: релизные метаданные (title/description/canonical/og/twitter), welcome-строка и карточка релиза, юридические страницы (`release.html`, `privacy.html`, `terms.html`, `credits.html`), обновлённые манифесты со скриншотами и категориями, `favicon.ico`, install-флоу, кэш Service Worker `peach-flagship-13`.
+- Жёсткий gate: анимация не тронута — `technique.js`, `technique3d.js`, `peach-mannequin.glb`, лицензии и `technique3d.src.js` байт-в-байт совпадают с тегом `flagship-ui-v9` (SHA-256 в `static_check.py`).
+- Local: static (хэши, синтаксис, SW core, манифесты, метаданные, CSS) — `v10-static-20261125T172217Z.log`; release-browser (welcome strip, карточка и 5 ссылок, доки 200, манифесты и иконки/скриншоты, install prompt и инструкции, 3D-сцена 22 930 triangles/21 calls реально меняет кадры, кэш v13 и offline core, responsive 360–1440, zero errors) — `v10-local-release-20261125T172544Z.log`; полный регресс v9 — `v10-local-full-20261125T172631Z.log`.
+- Public product commit: `fd3c8029cf230da25907e244404c72ab28d8b9ae` (local `1859a87`).
+- Public release final: `v10-public-release-20261125T17*.log` — все локальные gates на GitHub Pages, zero errors. Первый запуск с зафиксированным ERR_ABORTED preload-шрифтов сохранён append-only.
+- Public live final: `v10-public-live-*.log` — elapsed restore, effort, voice, 3D pause, four-week, zeroErrors; сетевой таймаут reload сохранён append-only.
+- Public resilience final: `v10-public-resilience-20261125T174215Z.log` — анимация, offline 3D reload, responsive, localOnly, zeroErrors.
+- Public full final: `v10-public-full-*.log` — весь v9/v8/v7 регресс на GitHub Pages, кэш `peach-flagship-13`, offline repeat reload, ноль console/request errors.
+- Release tag: `release-1.0.0`.

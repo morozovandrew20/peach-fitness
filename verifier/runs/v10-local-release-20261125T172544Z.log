@@ -1,0 +1,87 @@
+{
+  "base": "http://127.0.0.1:4173/",
+  "checks": {
+    "welcomeStrip": "Релиз 1.03D-техникаОфлайнБез аккаунта",
+    "brandnote": "12 недель · 24 тренировки · Релиз 1.0",
+    "title": "PEACH — силовой дневник на 12 недель",
+    "metaDesc": "PEACH — спокойный силовой план на 12 недель: веса, 3D-техника, таймеры и дневник прогресса. Работает офлайн и без аккаунта.",
+    "canonical": "https://morozovandrew20.github.io/peach-fitness/",
+    "ogImage": "https://morozovandrew20.github.io/peach-fitness/assets/release/screenshot-mobile.png",
+    "releaseCard": "Релиз 1.0.0 · 26 ноября 2026PEACH готов к тренировкеПолный план, интерактивная техника, таймеры и копия дневника работают без аккаунта. Данные остаются на этом устройстве.Что новогоКонфиденциальностьУсловияИсточникиПоддержка",
+    "releaseLinks": [
+      {
+        "href": "release.html",
+        "text": "Что нового"
+      },
+      {
+        "href": "privacy.html",
+        "text": "Конфиденциальность"
+      },
+      {
+        "href": "terms.html",
+        "text": "Условия"
+      },
+      {
+        "href": "credits.html",
+        "text": "Источники"
+      },
+      {
+        "href": "https://github.com/morozovandrew20/peach-fitness/issues",
+        "text": "Поддержка"
+      }
+    ],
+    "docPages200": true,
+    "manifest_manifest.webmanifest": {
+      "name": "PEACH — силовой дневник на 12 недель",
+      "screenshots": 2,
+      "categories": [
+        "health",
+        "fitness",
+        "lifestyle"
+      ]
+    },
+    "manifest_manifest-dark.webmanifest": {
+      "name": "PEACH — силовой дневник на 12 недель",
+      "screenshots": 2,
+      "categories": [
+        "health",
+        "fitness",
+        "lifestyle"
+      ]
+    },
+    "faviconBytes": 3565,
+    "installInstructions": "PEACH на главном экранеОткрой меню браузера и выбери «Установить приложение», «Добавить на главный экран» или «Установить PEACH». Название зависит от браузера.Если пункта нет, PEACH продолжит работать как сайт.",
+    "installPromptAccepted": "Если PEACH не появился на главном экране, используй меню браузера.",
+    "installFlow": true,
+    "technique3D": {
+      "canvas": true,
+      "size": [
+        346,
+        316
+      ],
+      "ready": true,
+      "framesDelta": 6,
+      "timeDelta": 0.059,
+      "triangles": 22930,
+      "calls": 21
+    },
+    "cacheName": "peach-flagship-13",
+    "offlineCore": {
+      "release.html": true,
+      "privacy.html": true,
+      "terms.html": true,
+      "credits.html": true,
+      "favicon.ico": true,
+      "assets/release/screenshot-mobile.png": true,
+      "manifest.webmanifest": true
+    },
+    "noOverflow": true,
+    "themes": [
+      false,
+      false
+    ],
+    "zeroErrors": true
+  },
+  "consoleErrors": [],
+  "onlineRequestFailures": []
+}
