@@ -1,0 +1,53 @@
+{
+  "base": "http://127.0.0.1:4173/",
+  "checks": {
+    "onboarding_mid": true,
+    "onboarding_adv": true,
+    "onboarding_beg": true,
+    "brandLogo": {
+      "src": "peach-logo.svg",
+      "loaded": true
+    },
+    "navigationEasy": true,
+    "replacementCustom": true,
+    "restAllControls": true,
+    "undoRow": {
+      "index": "2",
+      "rows": [
+        [
+          "20",
+          "8"
+        ],
+        [
+          "",
+          ""
+        ]
+      ]
+    },
+    "undoAndOrdinarySave": true,
+    "invalidMeasurementFeedback": "Каждый замер должен быть от 20 до 250 см. Исправь выделенное поле или очисти его.",
+    "notesPlatesWarmMeasurements": true,
+    "settings": true,
+    "exports": true,
+    "restoreRoundTrip": true,
+    "installAndBlockCancel": true,
+    "completionCalendarPhoto": true,
+    "resetSafetyRestore": true,
+    "newBlock": true,
+    "gymHelpersTransitions": true,
+    "responsive": [
+      320,
+      360,
+      390,
+      768,
+      1440
+    ],
+    "unnamedControls": [],
+    "cacheNames": [
+      "peach-flagship-16"
+    ],
+    "offlineRepeatReload": true
+  },
+  "consoleErrors": [],
+  "onlineRequestFailures": []
+}

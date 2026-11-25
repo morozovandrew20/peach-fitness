@@ -1,0 +1,40 @@
+{
+  "checks": {
+    "realAnimation": {
+      "before": -0.0024266666666666954,
+      "after": 0.014916666666666743
+    },
+    "pause": true,
+    "scrub": true,
+    "viewPixels": true,
+    "keyboard": true,
+    "hiddenStops": true,
+    "offline3D": true,
+    "localOnly": true,
+    "zeroErrors": true
+  },
+  "metrics": {
+    "width360": {
+      "vw": 360,
+      "scroll": 360,
+      "stage": 326
+    },
+    "width390": {
+      "vw": 390,
+      "scroll": 390,
+      "stage": 348
+    },
+    "width768": {
+      "vw": 768,
+      "scroll": 768,
+      "stage": 640
+    },
+    "width1440": {
+      "vw": 1440,
+      "scroll": 1440,
+      "stage": 640
+    }
+  },
+  "errors": [],
+  "external": []
+}

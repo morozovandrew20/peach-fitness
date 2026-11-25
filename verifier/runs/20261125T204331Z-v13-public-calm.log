@@ -1,0 +1,33 @@
+{
+  "base": "https://morozovandrew20.github.io/peach-fitness/",
+  "checks": {
+    "welcomeHero": "PEACH · ПЛАН НА 12 НЕДЕЛЬТвоя сила.Твой темп.Две тренировки в неделю. Подскажем вес, покажем технику и засечём отдых.12недель24тренировкиПрогресс сохраняется на устройстве",
+    "welcomeNoPromo": true,
+    "trainStart": true,
+    "mergedHelp": 1,
+    "noEffortControls": true,
+    "restTextContained": true,
+    "navStable": true,
+    "progressFolds": 2,
+    "aboutCard": [
+      "release.html",
+      "privacy.html",
+      "terms.html",
+      "credits.html",
+      "https://github.com/morozovandrew20/peach-fitness/issues"
+    ],
+    "docPages200": true,
+    "installFlow": true,
+    "technique3D": {
+      "ready": true,
+      "framesDelta": 5,
+      "timeDelta": 0.052,
+      "triangles": 22930,
+      "calls": 21
+    },
+    "cacheName": "peach-flagship-16",
+    "zeroErrors": true
+  },
+  "consoleErrors": [],
+  "onlineRequestFailures": []
+}

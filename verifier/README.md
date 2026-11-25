@@ -72,3 +72,10 @@
 - Public product commit: `17a2dee49feb364a5c30bf47193844d54eb4cb8a` (local `0e02055`).
 - Public: calm/full/live/resilience зелёные (`v12-public-*`); один транзиентный «animation time does not advance» под софтварным GL сохранён append-only, повтор прошёл.
 - Release tag: `release-1.2.0` → `17a2dee`.
+
+## v13 — Релиз 1.3 «Только рабочие действия» (2026-11-26)
+- Acceptance: `verifier/v13/acceptance.md`. Отличие от v12: полностью удалены оценки усилия, которые не влияли на программу; проверяется, что запись подхода и весь таймер работают без дополнительного действия.
+- Local: static/calm/full зелёные (`20261125T203255Z-v13-static.log`, `20261125T203255Z-v13-local-calm.log`, `20261125T203325Z-v13-local-full.log`). Ноль effort-элементов, следующий шаг и сравнение доступны, 3D и офлайн сохранены.
+- Public product commit: `7ebac76e76ede44c3927ebadd58f99f7afc1cf98` (local `6f1cca4`).
+- Public: calm/full/live/resilience зелёные (`20261125T204331Z-v13-public-calm.log`, `20261125T204417Z-v13-public-full.log`, `20261125T204518Z-v13-public-live.log`, `20261125T204543Z-v13-public-resilience.log`). Запись 40 кг × 10 сохраняется после reload; zeroErrors, cache `peach-flagship-16`, offline 3D и responsive 360–1440 подтверждены.
+- Release tag: `release-1.3.0` → `7ebac76`.
