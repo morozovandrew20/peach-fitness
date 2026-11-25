@@ -1,0 +1,8 @@
+timestamp=20261125T075511Z
+command=playwright-cli -s=v5publicfinish run-code --filename=/tmp/peach-v5-finish-public.js
+### Error
+TimeoutError: page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://morozovandrew20.github.io/peach-fitness/", waiting until "domcontentloaded"
+
+exit_code=1

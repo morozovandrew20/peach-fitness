@@ -1,0 +1,20 @@
+timestamp=20261125T073033Z
+command=playwright-cli -s=v5audit run-code --filename=verifier/v5/visual_audit.js
+### Result
+{"base":"http://127.0.0.1:4173/","screens":["onboarding-mobile","progress-empty-mobile","settings-before-start-mobile","first-day-mobile","focus-mobile","rest-mobile","editor-mobile","progress-filled-mobile","settings-mobile","settings-desktop","workout-desktop"],"consoleErrors":[]}
+### Ran Playwright code
+```js
+await (async page=>{
+ const base='http://127.0.0.1:4173/',prefix='/mnt/agents/peach-v5-after',out={base,screens:[],consoleErrors:[]};
+ page.on('console',m=>{if(m.type()==='error')out.consoleErrors.push(m.text())});page.on('pageerror',e=>out.consoleErrors.push(e.message));
+ const shot=async name=>{await page.waitForTimeout(450);await page.screenshot({path:prefix+'-'+name+'.png',fullPage:true});out.screens.push(name)};
+ await page.setViewportSize({width:360,height:800});await page.goto(base,{waitUntil:'networkidle'});await page.evaluate(async()=>{localStorage.clear();const r=await navigator.serviceWorker.getRegistrations();await Promise.all(r.map(x=>x.unregister()));const k=await caches.keys();await Promise.all(k.map(x=>caches.delete(x)))});await page.reload({waitUntil:'networkidle'});
+ await shot('onboarding-mobile');await page.locator('nav [data-tab="progress"]').click();await shot('progress-empty-mobile');await page.locator('nav [data-tab="setup"]').click();await shot('settings-before-start-mobile');await page.locator('nav [data-tab="train"]').click();
+ await page.locator('[data-lvpick="beg"]').click();await page.locator('#obgo').click();await shot('first-day-mobile');await page.locator('[data-firstset]').click();await shot('focus-mobile');await page.locator('#sf-0').fill('20');await page.locator('#sf-1').fill('8');await page.locator('#sfdone').click();await shot('rest-mobile');await page.locator('#rfstop').click();await shot('editor-mobile');
+ await page.locator('nav [data-tab="progress"]').click();await shot('progress-filled-mobile');await page.locator('nav [data-tab="setup"]').click();await shot('settings-mobile');
+ await page.setViewportSize({width:1440,height:1000});await shot('settings-desktop');await page.locator('nav [data-tab="train"]').click();await shot('workout-desktop');
+ return out;
+}
+)(page);
+```
+exit_code=0

@@ -1,0 +1,20 @@
+timestamp=20261125T074754Z
+command=python requests public core asset check
+{
+  "./apple-touch-icon.png": 200,
+  "./flagship.css": 200,
+  "./icon-192.png": 200,
+  "./icon-512.png": 200,
+  "./icon-maskable-192.png": 200,
+  "./icon-maskable-512.png": 200,
+  "./index.html": 200,
+  "./logo-512.png": 200,
+  "./manifest-dark.webmanifest": 200,
+  "./manifest.webmanifest": 200,
+  "./manrope-cyrillic.woff2": 200,
+  "./manrope-latin.woff2": 200,
+  "./peach-logo.svg": 200,
+  "./sw.js": 200,
+  "./technique.js": 200
+}
+exit_code=0
