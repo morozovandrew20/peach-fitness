@@ -1,0 +1,19 @@
+timestamp=20261125T051605Z
+command=python3 verifier/v3/static_check.py
+{
+  "values": {
+    "flagship.css_bytes": 24971,
+    "technique.js_bytes": 6045,
+    "peach-logo.svg_bytes": 6588,
+    "sw.js_bytes": 2407,
+    "manrope-cyrillic.woff2_bytes": 14352,
+    "manrope-latin.woff2_bytes": 24532,
+    "reduced_motion_rules": 5,
+    "has_dark_theme": true,
+    "has_local_fonts": true,
+    "primary_exercise_count": 6,
+    "core_assets_kb": 406.2
+  },
+  "errors": []
+}
+exit_code=0

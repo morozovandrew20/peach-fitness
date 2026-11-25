@@ -500,6 +500,22 @@ input[aria-invalid="true"]{box-shadow:0 0 0 2px var(--bad)}
   <button type="button" class="rest-skip" id="rfstop">Пропустить отдых</button>
   <p class="rest-hint" id="rfhint">Можно свернуть — отсчёт продолжится.</p>
 </div></div>
+<div id="setfocus" hidden><div class="set-screen" role="dialog" aria-modal="true" aria-labelledby="sftitle" tabindex="-1">
+  <div class="set-top"><button type="button" class="set-min" id="sfclose">К списку</button><span class="set-kicker">Фокус подхода</span><button type="button" class="set-tech" id="sfhow" data-how="ht">Техника ›</button></div>
+  <div class="set-stage">
+    <span class="cap" id="sfweek">Неделя 1 · день 1</span>
+    <h2 id="sftitle">Упражнение</h2>
+    <div class="set-position"><span class="pill" id="sfset">Подход 1 из 3</span><span id="sftarget">8–12 повторений</span></div>
+    <div class="set-dots" id="sfprogress" aria-hidden="true"></div>
+    <p class="set-previous" id="sfprevious"></p>
+    <div class="set-steppers">
+      <div class="set-stepper"><span>Вес</span><div><button type="button" data-sfstep="-1" data-f="0" aria-label="Уменьшить вес">−</button><label><input id="sf-0" inputmode="decimal" autocomplete="off" aria-label="Вес в килограммах" aria-describedby="sferror"><small>кг</small></label><button type="button" data-sfstep="1" data-f="0" aria-label="Увеличить вес">+</button></div></div>
+      <div class="set-stepper"><span>Повторения</span><div><button type="button" data-sfstep="-1" data-f="1" aria-label="Уменьшить повторения">−</button><label><input id="sf-1" inputmode="numeric" autocomplete="off" aria-label="Количество повторений" aria-describedby="sferror"><small>повт</small></label><button type="button" data-sfstep="1" data-f="1" aria-label="Увеличить повторения">+</button></div></div>
+    </div>
+    <p class="set-error" id="sferror" role="alert"></p>
+  </div>
+  <div class="set-actions"><button type="button" class="cta" id="sfdone">Подход выполнен</button><p>Запись останется на этом устройстве.<br>После подхода отдых начнётся автоматически.</p></div>
+</div></div>
 <div id="sheet" hidden><button type="button" id="sheetx" tabindex="-1" aria-label="Закрыть"></button>
 <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-h" tabindex="-1"><button type="button" class="panelx" id="sheetclose" aria-label="Закрыть">×</button><div class="wrap"><span class="grab"></span>
   <svg class="okmark" id="sh-ok" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="42"/><path d="M25 43.5l11.5 11.5L60 31"/></svg><span class="peachmark" id="sh-peach" hidden aria-hidden="true"><svg><use href="#peach"/></svg></span>
@@ -881,7 +897,7 @@ function renderTrain(fresh){
       const on=full(r[s]), sg=suggest(ex,w,d,s), emptyUndo=justUndone&&justUndone.id===ex.id&&justUndone.s===s&&!justUndone.prev, v=on?r[s]:emptyUndo?["",""]:[sg.kg,sg.reps];
       if(cur&&cur.id===ex.id&&cur.s===s){
         const pr=lt&&lt.r[Math.min(s,lt.r.length-1)];
-        h+=`<div class="editor" id="editor">${jd&&jd.id===ex.id?`<div class="setfeedback" role="status"><span>${jd.failed?"Только в этой вкладке":jd.isNew?`Подход ${jd.s+1} записан`:`Изменения подхода ${jd.s+1} сохранены`}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew&&!jd.failed&&jd.rest?" · отдых пошёл":""}</span><button type="button" data-undo>${jd.isNew?"Отменить запись":"Вернуть прежние значения"}</button></div>`:justUndone&&justUndone.id===ex.id?`<div class="setfeedback" role="status"><span>${justUndone.prev?`Прежние вес и повторения подхода ${s+1} восстановлены.`:`Подход ${s+1} удалён. Поля пустые — можно записать его заново.`}</span></div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ контрольный: максимум повторений":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · последний: оставь 1–2 в запасе":""}</div>
+        h+=`<div class="editor" id="editor">${jd&&jd.id===ex.id?`<div class="setfeedback" role="status"><span>${jd.failed?"Только в этой вкладке":jd.isNew?`Подход ${jd.s+1} записан`:`Изменения подхода ${jd.s+1} сохранены`}: ${esc(jd.kg)} кг × ${esc(jd.reps)}${jd.isNew&&!jd.failed&&jd.rest?" · отдых пошёл":""}</span><button type="button" data-undo>${jd.isNew?"Отменить запись":"Вернуть прежние значения"}</button></div>`:justUndone&&justUndone.id===ex.id?`<div class="setfeedback" role="status"><span>${justUndone.prev?`Прежние вес и повторения подхода ${s+1} восстановлены.`:`Подход ${s+1} удалён. Поля пустые — можно записать его заново.`}</span></div>`:""}<div class="ecap">Подход ${s+1} из ${n}${ex.wave&&p===2&&s===0&&!ez?" · ★ контрольный: максимум повторений":""}${ex.wave&&!pick(ex.id,w)&&p<2&&s===plan-1&&!ez?" · последний: оставь 1–2 в запасе":""}</div><button type="button" class="focus-open" data-setfocus><span>Развернуть подход</span><b aria-hidden="true">↗</b></button>
           ${pr?`<div class="prevset">Было: ${fk(num(pr[0]))} кг × ${num(pr[1])}${lt.w?" · неделя "+lt.w:" · прошлый блок"}</div>`:""}
           <div class="steps">${stepper(0,v[0],"кг","decimal")}${stepper(1,v[1],"повторений","numeric")}</div><p class="fielderror" id="editorerror" role="alert"></p>
           <div class="erow"><button type="button" class="cta" data-done="${s}">${on?"Сохранить":"Готово"}</button>${on?`<button type="button" class="btn" data-clear="${s}">Удалить запись</button>`:""}</div></div>`;
@@ -1166,6 +1182,41 @@ function renderSetup(){
 }
 function render(fresh){applyTheme();awake();renderChrome(true);({train:isFirst()?renderWelcome:renderTrain,progress:renderProgress,setup:renderSetup})[tab]();const v=$("view");if(fresh){v.classList.remove("in");void v.offsetWidth;v.classList.add("in");clearTimeout(render.t);render.t=setTimeout(()=>v.classList.remove("in"),900)}}
 
+/* ---------- flagship active-set focus: presentation over the existing editor ---------- */
+let focusSet=null,focusResume=null;
+function openSetFocus(target){
+  const w=S.cur.w,d=S.cur.d,cur=target||current(w,d);if(!cur)return;
+  const ex0=EXD(w,d).find(x=>x.id===cur.id);if(!ex0)return;
+  const ex=asBeg(eff(ex0,w),w),s=cur.s,n=nSets(ex,w),r=rows(w,ex.id),on=full(r[s]),sg=suggest(ex,w,d,s),lt=lastTime(w,ex.id),pr=lt&&lt.r[Math.min(s,lt.r.length-1)];
+  focusSet={w,d,id:ex.id,s};
+  $("sfweek").textContent=`Неделя ${w} · день ${d} · ${LEVELS[lvl(w)].n}`;
+  $("sftitle").textContent=ex.short||ex.name;
+  $("sfset").textContent=`Подход ${s+1} из ${n}`;
+  $("sftarget").textContent=ex.wave?`${SC(w)[d].reps[ph(w)]} повторений`:`${ex.range||"по плану"}${ex.per||""}`;
+  $("sfprogress").innerHTML=Array.from({length:n},(_,i)=>`<i class="${full(r[i])?"done":i===s?"cur":""}"></i>`).join("");
+  $("sfprevious").textContent=pr?`В прошлый раз: ${fk(num(pr[0]))} кг × ${num(pr[1])}${lt.w?` · неделя ${lt.w}`:" · прошлый блок"}`:isBeg(w)?"Начни легко: после подхода должно остаться 2–3 повторения с хорошей техникой.":"Заканчивай с хорошей техникой — запас важнее числа на экране.";
+  $("sf-0").value=cur.kg!==undefined?cur.kg:($("ed-0")?$("ed-0").value:(on?r[s][0]:sg.kg));
+  $("sf-1").value=cur.reps!==undefined?cur.reps:($("ed-1")?$("ed-1").value:(on?r[s][1]:sg.reps));
+  $("sfhow").dataset.how=ex.id;$("sfdone").textContent=on?"Сохранить изменения":"Подход выполнен";
+  $("sferror").textContent="";$("sf-0").removeAttribute("aria-invalid");$("sf-1").removeAttribute("aria-invalid");
+  openDialog("setfocus")
+}
+function focusStep(button){
+  if(!focusSet)return;const f=+button.dataset.f,input=$("sf-"+f),dir=+button.dataset.sfstep,ex=EX[focusSet.d].find(x=>x.id===focusSet.id),st=f===1?1:ex.wave?(num(S.start[ex.id].step)||2.5):1,v=Math.max(f===1?1:0,num(input.value)+dir*st);
+  input.value=f===1?String(v):fk(v);input.removeAttribute("aria-invalid");$("sferror").textContent=""
+}
+function completeSetFocus(){
+  if(!focusSet)return;const q=Object.assign({},focusSet),kg=$("sf-0").value.trim(),reps=$("sf-1").value.trim(),cleanKg=cleanNumString(kg,0,1000),cleanRep=cleanReps(reps);
+  if(!cleanKg||!cleanRep){const input=$(!cleanKg?"sf-0":"sf-1");input.setAttribute("aria-invalid","true");input.focus();$("sferror").textContent="Проверь значения: вес 0–1000 кг, повторения — целое число от 1 до 200.";return}
+  let ed0=$("ed-0"),ed1=$("ed-1");
+  if(!ed0||!ed1){
+    closeDialog("setfocus");edit={id:q.id,s:q.s};inspect=null;undoSet=null;render(true);
+    ed0=$("ed-0");ed1=$("ed-1")
+  }
+  if(!ed0||!ed1)return;
+  ed0.value=kg;ed1.value=reps;closeDialog("setfocus");const done=document.querySelector(`[data-ex="${q.id}"] [data-done="${q.s}"]`);if(done){done.click();if(!$("timer").hidden&&$("sheet").hidden)openRestFocus()}
+}
+
 /* ---------- rest timer ---------- */
 let tEnd=0,tLen=0,tInt=null,audio=null,tPaused=0,tLabel="",tHide=0,tDone=false,tW=1,tD=1;
 const REST_LS="volny-rest-v1";
@@ -1229,7 +1280,7 @@ function stopTimer(){clearInterval(tInt);clearTimeout(tHide);tInt=null;tPaused=0
 function openRestFocus(){if($("timer").hidden)return;clearTimeout(tHide);renderRestNext();syncRestFace();openDialog("restfocus")}
 function goRestNext(){
   const n=nextSetInfo();stopTimer();tab="train";
-  if(n){S.cur={w:n.w,d:n.d};edit={id:n.id,s:n.s};inspect=null;undoSet=null;save(true);render(true);const input=$("ed-0");if(input)input.focus({preventScroll:true});requestAnimationFrame(toEditor)}
+  if(n){S.cur={w:n.w,d:n.d};edit={id:n.id,s:n.s};inspect=null;undoSet=null;save(true);render(true);requestAnimationFrame(()=>openSetFocus(n))}
   else render(true)
 }
 function restoreTimer(){
@@ -1487,15 +1538,15 @@ function modalBackground(on){document.querySelectorAll("header,main,nav,#timer")
 function openDialog(id){
   const el=$(id);if(!el)return;
   dialogReturn=document.activeElement;el.hidden=false;modalBackground(true);
-  const panel=el.querySelector(".panel,.rest-screen");if(panel){if(id==="info"){const title=el.querySelector("#infobody h3");if(title){title.id="info-title";panel.setAttribute("aria-labelledby","info-title");panel.removeAttribute("aria-label")}}panel.focus()}
+  const panel=el.querySelector(".panel,.rest-screen,.set-screen");if(panel){if(id==="info"){const title=el.querySelector("#infobody h3");if(title){title.id="info-title";panel.setAttribute("aria-labelledby","info-title");panel.removeAttribute("aria-label")}}panel.focus()}
 }
 function closeDialog(id){
   const el=$(id);if(!el||el.hidden)return;
   el.hidden=true;modalBackground(false);
   if(dialogReturn&&dialogReturn.isConnected)dialogReturn.focus();
-  dialogReturn=null;if(id==="restfocus"&&tDone)armTimerHide();if(id==="info"){$("infook").textContent="Понятно";$("infook").className="cta"}
+  dialogReturn=null;if(id==="setfocus")focusSet=null;if(id==="restfocus"&&tDone)armTimerHide();if(id==="info"){$("infook").textContent="Понятно";$("infook").className="cta";if(focusResume){const q=focusResume;focusResume=null;openSetFocus(q)}}
 }
-function visibleDialog(){return ["restfocus","info","sheet"].map($).find(el=>el&&!el.hidden)}
+function visibleDialog(){return ["setfocus","restfocus","info","sheet"].map($).find(el=>el&&!el.hidden)}
 
 /* ---------- events ---------- */
 function stamp(){const k=S.cur.w+"-"+S.cur.d;if(!S.dates[k])S.dates[k]=new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"2-digit"});S.sessions=S.sessions||{};if(!S.sessions[k]||!S.sessions[k].start)S.sessions[k]={start:Date.now(),end:0}}
@@ -1525,6 +1576,10 @@ document.addEventListener("click",e=>{
   else if(b.dataset.gobackup!==undefined){tab="setup";inspect=null;render(true);const el=$("backup");if(el)el.scrollIntoView({block:"start",behavior:"smooth"});const download=el&&el.querySelector("[data-download]");if(download)download.focus({preventScroll:true})}
   else if(b.dataset.inspect&&ex){inspect=ex.id;edit=null;transition=null;justUndone=null;renderTrain();requestAnimationFrame(()=>{const el=$("ex-"+ex.id);if(el){el.focus({preventScroll:true});el.scrollIntoView({block:"start",behavior:"smooth"})}})}
   else if(b.dataset.edit!==undefined&&ex){edit={id:ex.id,s:+b.dataset.edit};inspect=ex.id;transition=null;justUndone=null;renderTrain();toEditor()}
+  else if(b.dataset.setfocus!==undefined){openSetFocus()}
+  else if(b.dataset.sfstep){focusStep(b)}
+  else if(b.id==="sfclose"){closeDialog("setfocus")}
+  else if(b.id==="sfdone"){completeSetFocus()}
   else if(b.dataset.step){
     const f=+b.dataset.f,inp=$("ed-"+f),dir=+b.dataset.step,cex=EX[d].find(x=>x.id===b.closest("[data-ex]").dataset.ex);
     const st=f===1?1:cex.wave?(num(S.start[cex.id].step)||2.5):1, v=Math.max(f===1?1:0,num(inp.value)+dir*st);
@@ -1587,11 +1642,11 @@ document.addEventListener("click",e=>{
   else if(b.dataset.plates&&ex){const ed=card.querySelector("#ed-0"),v=ed?num(ed.value):0;showPlates(ex,v||dayKg(ex.id,w))}
   else if(b.dataset.warm){const k=b.dataset.warm;warmDone.has(k)?warmDone.delete(k):warmDone.add(k);b.setAttribute("aria-pressed",String(warmDone.has(k)));S.warm=Array.from(warmDone);save(true)}
   else if(b.dataset.nw!==undefined){OB.nw=!OB.nw;renderWelcome()}
-  else if(b.dataset.firstset!==undefined){const el=$("editor")||$("ex-ht");if(el){el.scrollIntoView({block:"center"});const input=$("ed-0");if(input)input.focus({preventScroll:true})}}
+  else if(b.dataset.firstset!==undefined){openSetFocus()}
   else if(b.dataset.lvpick){OB.lv=b.dataset.lvpick;renderWelcome()}
   else if(b.dataset.level){const L=b.dataset.level;if(L!==S.level){S.lvAt=S.lvAt||{};for(let x=1;x<=12;x++)if(!S.lvAt[x]&&Object.keys(S.log).some(k=>k.startsWith(x+"-")&&S.log[k].some(full)))S.lvAt[x]=lvl(x); /* weeks already trained keep their level */
     if(String(S.growth)===LEVELS[S.level].growth)S.growth=LEVELS[L].growth;S.level=L;edit=null;save();render()}}
-  else if(b.dataset.how){const e0=EX[1].concat(EX[2]).find(q=>q.id===b.dataset.how),e=eff(e0,w),x=e.alt?HOWA[e.name]:HOW[e0.id];if(!x)return;
+  else if(b.dataset.how){if(!$("setfocus").hidden){focusResume=Object.assign({},focusSet,{kg:$("sf-0").value,reps:$("sf-1").value});closeDialog("setfocus")}const e0=EX[1].concat(EX[2]).find(q=>q.id===b.dataset.how),e=eff(e0,w),x=e.alt?HOWA[e.name]:HOW[e0.id];if(!x)return;
     const ul=a=>`<ul>${a.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
     $("infobody").innerHTML=`<h3>${esc(e.name)}</h3>${peachTechnique(e0.id)}<div class="hw"><span class="cap">Настройка</span>${ul(x.st)}<span class="cap">Движение</span>${ul(x.mv)}<span class="cap">Где чувствовать</span><p>${esc(x.feel)}.</p><span class="cap">Частые ошибки</span>${ul(x.err)}${/ногу/.test(e.per||"")?`<span class="cap">Если одна сторона слабее</span><p>Начинай со слабой ноги. На сильной делай столько же повторений — не больше.</p>`:""}${(y=>`<details class="why"><summary>Почему это упражнение</summary>${y[2]?`<p><b>Что работает.</b> ${esc(y[2])}.</p><p><b>Зачем в программе.</b> ${esc(y[3])}.</p>`:""}<p class="meta"><b>Исследования.</b> ${esc(y[1])}.</p></details>`)(e.alt?(WHYA[e.name]||["Практика","Замена подобрана по тому же движению и той же мышце. Прямых сравнений с основным упражнением по росту мышц нет"]):WHY[e0.id])}<p class="meta">Делай полное движение без рывков. Отказ — следующее повторение уже не получается с хорошей техникой. При резкой боли остановись и замени упражнение.</p></div>`;openDialog("info")}
   else if(b.dataset.safety){
@@ -1662,7 +1717,7 @@ document.addEventListener("change",async e=>{
 });
 document.addEventListener("input",e=>{
   const t=e.target;
-  if(t.getAttribute("aria-invalid")){t.removeAttribute("aria-invalid");const er=$("editorerror");if(er)er.classList.remove("show")}
+  if(t.getAttribute("aria-invalid")){t.removeAttribute("aria-invalid");const er=$("editorerror");if(er)er.classList.remove("show");if(t.id&&t.id.startsWith("sf-"))$("sferror").textContent=""}
   if(t.dataset.bd){BD[t.dataset.bd]=t.value}
   else if(t.dataset.obbar){OB["bar-"+t.dataset.obbar]=t.value}
   else if(t.dataset.ob){OB[t.dataset.ob]=t.value}
@@ -1682,12 +1737,13 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Tab"&&dialog){
     const items=Array.from(dialog.querySelectorAll('button:not([hidden]),input:not([hidden]),textarea:not([hidden]),select:not([hidden]),summary,a[href],[tabindex]:not([tabindex="-1"])')).filter(el=>!el.disabled&&el.tabIndex>=0&&el.getClientRects().length);
     if(!items.length){e.preventDefault();return}
-    const first=items[0],last=items[items.length-1],active=document.activeElement,panel=dialog.querySelector(".panel,.rest-screen");
+    const first=items[0],last=items[items.length-1],active=document.activeElement,panel=dialog.querySelector(".panel,.rest-screen,.set-screen");
     if(active===panel||!dialog.contains(active)){e.preventDefault();(e.shiftKey?last:first).focus()}
     else if(e.shiftKey&&active===first){e.preventDefault();last.focus()}
     else if(!e.shiftKey&&active===last){e.preventDefault();first.focus()}
     return
   }
+  if(e.key==="Enter"&&e.target.id&&e.target.id.startsWith("sf-")){e.preventDefault();completeSetFocus();return}
   if(e.key==="Enter"&&e.target.id&&e.target.id.startsWith("ed-")){const b=document.querySelector("[data-done]");if(b)b.click()}
 });
 
