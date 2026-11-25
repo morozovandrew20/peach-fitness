@@ -1,0 +1,5 @@
+timestamp=20261125T010201Z
+command=PEACH_URL=http://127.0.0.1:4173/ playwright-cli run-code --filename=verifier/v2/browser_smoke.js
+### Error
+ReferenceError: process is not defined
+exit_code=1

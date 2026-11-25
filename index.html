@@ -895,7 +895,7 @@ function renderTrain(fresh){
     h+=`</section>`;
   });
   const prev=w>1?tonnage(w-1,d):0, diff=prev?t-prev:0;
-  if(c.done>=c.total)h+=`<section class="summary"><h3>Тренировка готова</h3>${doneWorkouts()===1?`<p class="meta">Самое трудное уже сделано — ты начала. Дай себе 2–3 дня на восстановление, затем возвращайся на день 2.</p>`:""}<div class="stats">
+  if(c.done>=c.total)h+=`<section class="summary"><div class="summary-mark" aria-hidden="true">${CK}</div><span class="cap">Тренировка завершена</span><h3>Отличная работа</h3>${doneWorkouts()===1?`<p class="meta">Самое трудное уже сделано — ты начала. Дай себе 2–3 дня на восстановление, затем возвращайся на день 2.</p>`:""}<div class="stats">
       <div class="stat"><b>${kgf(t)} кг</b><span>всего поднято</span></div>
       <div class="stat"><b>${prev?(diff>=0?"+":"−")+kgf(Math.abs(diff))+" кг":"—"}</b><span>к прошлой неделе</span></div></div>${doneWorkouts()>=24?`<button type="button" class="cta nextwork" data-blocksummary>Итоги и следующий блок</button>`:nextPos()?`<button type="button" class="cta nextwork" data-nextwork>Дальше: неделя ${nextPos().w} · день ${nextPos().d}</button><button type="button" class="ghostbtn nextwork" data-calendar>Добавить следующую тренировку в календарь</button>`:`<button type="button" class="cta nextwork" data-tab="progress">Смотреть прогресс</button>`}</section>`;
   else if(t)h+=`<div class="row e1"><span>Поднято пока</span><b>${kgf(t)} кг</b></div>`;
@@ -1020,20 +1020,23 @@ function historyCard(){
   }).join("")}</div></section>`
 }
 function syncFooter(){if(!$("sync"))$("view").insertAdjacentHTML("beforeend",'<p class="sync" id="sync"></p>');setSync()}
+function progressOverview(tot){
+  const n=doneWorkouts(),sets=Object.values(S.log||{}).reduce((a,r)=>a+r.filter(full).length,0),currentDone=complete(S.cur.w,S.cur.d),next=currentDone?nextPos():{w:S.cur.w,d:S.cur.d};
+  return `<section class="progress-hero"><div class="row"><span class="cap">12-недельный блок</span><span class="pill">${Math.round(n/24*100)}% завершено</span></div><div class="progress-main"><div class="progress-number">${n}<small>/24</small></div><p>тренировок записано.<br><b>${next?`Дальше — неделя ${next.w}, день ${next.d}.`:n>=24?"Блок завершён.":"Продолжай в своём темпе."}</b></p></div><div class="progress-track" aria-label="Выполнено ${Math.round(n/24*100)} процентов блока"><i style="width:${Math.round(n/24*100)}%"></i></div><div class="progress-weeks" aria-hidden="true">${Array.from({length:12},(_,i)=>{const w=i+1,done=complete(w,1)&&complete(w,2);return`<i class="${done?"done":w===S.cur.w?"cur":""}">${w}</i>`}).join("")}</div><div class="progress-kpis"><div><b>${tot?fmt(tot/1000)+" т":"—"}</b><span>общий объём</span></div><div><b>${sets}</b><span>подходов записано</span></div></div><button type="button" class="cta" ${currentDone&&next?'data-nextwork':'data-tab="train"'}>${next?"Продолжить тренировку":n>=24?"Открыть программу":"Записать подход"}</button></section>`
+}
 function renderProgressEmpty(){
-  $("view").innerHTML=`<section class="card empty"><h3>Здесь будет твой прогресс</h3><p>Запиши первый подход — появятся история тренировок и рабочие веса.</p><button type="button" class="cta" data-tab="train">Записать первый подход</button></section><section class="card"><h3>Что здесь появится</h3><ol><li>История всех записанных подходов.</li><li>Сравнение весов по неделям.</li><li>Фото и замеры — по желанию.</li></ol></section>`;syncFooter()
+  $("view").innerHTML=`<section class="empty-progress"><span class="cap">Твой первый блок</span><h3>Прогресс начинается с одного подхода</h3><p>Здесь появятся рабочие веса, история и спокойная статистика без сравнения с чужими результатами.</p><button type="button" class="cta" data-tab="train">Записать первый подход</button><div class="progress-roadmap"><div><b>01</b><span>Первая запись</span></div><div><b>06</b><span>Четверть блока</span></div><div><b>12</b><span>Половина пути</span></div><div><b>24</b><span>Новый уровень</span></div></div></section><section class="card"><h3>Что отслеживаем</h3><div class="feature-lines"><p><b>Сила</b><span>Веса и повторения по неделям</span></p><p><b>Регулярность</b><span>24 тренировки в твоём темпе</span></p><p><b>Форма</b><span>Фото и замеры — только по желанию</span></p></div></section>`;syncFooter()
 }
 function renderProgressBeg(){
   if(!hasLogs())return renderProgressEmpty();
   let tot=0;for(let w=1;w<=12;w++)tot+=tonnage(w,1)+tonnage(w,2);
-  let h=`<div class="stats"><div class="stat"><b>${doneWorkouts()} из 24</b><span>тренировок закрыто</span></div>
-      <div class="stat"><b>${tot?fmt(tot/1000)+" т":"—"}</b><span>поднято за 12 недель</span></div></div>`+historyCard();
+  let h=progressOverview(tot);
   for(const l of LIFTS){
     const vals=Array.from({length:12},(_,i)=>topKg(i+1,l.id)), got=vals.filter(Boolean), first=got[0]||0, last=got[got.length-1]||0, diff=last-first;
     h+=`<section class="card"><div class="row"><h3>${l.name}</h3><span class="pill ${got.length<2?"wait":diff>0?"good":"warn"}">${got.length<2?"ждём записей":diff>0?"вес растёт":"вес пока на месте"}</span></div>
       ${got.length?`<div class="big">${fk(last)} <small>кг${got.length>1?` · ${diff>=0?"+":"−"}${fk(Math.abs(diff))} кг к первой неделе`:" · рабочий вес"}</small></div>${weekChart(vals)}`:`<p class="meta">Рабочий вес появится после первой тренировки с этим упражнением.</p>`}</section>`;
   }
-  h+=achCard()+`<p class="meta">На графике — самый тяжёлый рабочий подход каждой недели.</p>`+bodyCard()+`
+  h+=historyCard()+achCard()+`<p class="meta">На графике — самый тяжёлый рабочий подход каждой недели.</p>`+bodyCard()+`
     <section class="card"><h3>Если вес не растёт</h3><ul>
     <li>Не получился максимум диапазона — повтори тот же вес в следующий раз.</li>
     <li>Вес стоит три недели — проверь, не остаётся ли после подхода больше 3 повторений. Если да, немного прибавь.</li>
@@ -1047,8 +1050,7 @@ function renderProgress(){
   if(S.level==="beg")return renderProgressBeg();
   const g=growth(); let tot=0;
   for(let w=1;w<=12;w++)tot+=tonnage(w,1)+tonnage(w,2);
-  let h=`<div class="stats"><div class="stat"><b>${doneWorkouts()} из 24</b><span>тренировок закрыто</span></div>
-      <div class="stat"><b>${tot?fmt(tot/1000)+" т":"—"}</b><span>поднято за 12 недель</span></div></div>`+historyCard();
+  let h=progressOverview(tot);
   for(const l of LIFTS){
     if(!base(l.id,1)){h+=`<section class="card"><div class="row"><h3>${l.name}</h3><span class="pill wait">${calibOn(l.id)?"подбор веса":"нет старта"}</span></div><p class="meta">${calibOn(l.id)?"Вес появится после первой тренировки с этим упражнением.":"Впиши обычный рабочий подход в «Настройках»."}</p></section>`;continue}
     const s=status(l.id), vals=[s.st,...s.tests], tg=[0,1,2,3].map(n=>s.st*Math.pow(1+g,n)), diff=s.last?s.last-s.st:0;
@@ -1062,7 +1064,7 @@ function renderProgress(){
     h+=`<tr class="${p===3?"rest":""}${w===S.cur.w?" cur":""}"><td>${w} · ${LABEL[p]}</td>`+
       LIFTS.map(l=>`<td>${isBeg(w)?"новичок":(pick(l.id,w)||!base(l.id,1)?"подбор":fk(planKg(l.id,w)))+" × "+SC(w)[l.day].reps[p]}</td>`).join("")+`</tr>`}
   h+=`</tbody></table></div><p class="meta">В таблице: вес × повторения. После недель 3, 7 и 11 план обновится по контрольным подходам ★.</p></section>
-`+achCard()+bodyCard()+`<section class="card"><h3>Если вес не растёт</h3><ul>
+`+historyCard()+achCard()+bodyCard()+`<section class="card"><h3>Если вес не растёт</h3><ul>
     <li>Одна неудачная тренировка — норма. Следующую начни по плану.</li>
     <li>Меньше повторений две проверки подряд — проверь сон, питание и технику.</li>
     <li>Для прогресса нужны достаточно еды и белок 1,6–2,2 г на килограмм веса.</li>

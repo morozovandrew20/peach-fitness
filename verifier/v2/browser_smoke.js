@@ -1,0 +1,135 @@
+async page => {
+  const base = 'http://127.0.0.1:4173/';
+  const prefix = '/mnt/agents/peach-v2-local';
+  const out = {base, checks:{}, consoleErrors:[], onlineRequestFailures:[]};
+  const assert = (ok, message) => { if (!ok) throw new Error(message); };
+  let offline = false;
+  page.on('console', m => { if (m.type() === 'error') out.consoleErrors.push(m.text()); });
+  page.on('pageerror', e => out.consoleErrors.push(e.message));
+  page.on('requestfailed', r => {
+    if (!offline && r.url().startsWith(base)) out.onlineRequestFailures.push(r.url()+': '+(r.failure()?.errorText||''));
+  });
+  await page.setViewportSize({width:360,height:800});
+  await page.goto(base, {waitUntil:'networkidle'});
+  await page.evaluate(async () => {
+    localStorage.clear();
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map(r => r.unregister()));
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+  });
+  await page.reload({waitUntil:'networkidle'});
+  out.checks.onboarding = await page.locator('h3').first().textContent();
+  assert(out.checks.onboarding.trim() === 'Выбери уровень', 'wrong onboarding heading');
+  await page.locator('[data-lvpick="beg"]').click();
+  await page.locator('#obgo').click();
+  await page.locator('.hero').waitFor();
+  out.checks.workoutStarted = await page.locator('.hero').isVisible();
+  await page.keyboard.press('Tab');
+  out.checks.keyboardFocus = await page.evaluate(() => document.activeElement && document.activeElement !== document.body);
+  assert(out.checks.keyboardFocus, 'keyboard focus did not move');
+
+  await page.locator('.technique-link').first().click();
+  await page.locator('#info:not([hidden]) svg.tech-visual, #info:not([hidden]) .tech-visual').first().waitFor();
+  out.checks.techniqueSvg = await page.locator('#info .tech-visual').count();
+  assert(out.checks.techniqueSvg > 0, 'technique SVG missing');
+  await page.keyboard.press('Escape');
+  assert(await page.locator('#info').isHidden(), 'Escape did not close technique dialog');
+
+  if (await page.locator('#ed-0').count() === 0) await page.locator('[data-edit="0"]').first().click();
+  await page.locator('#ed-0').fill('20');
+  await page.locator('#ed-1').fill('8');
+  await page.locator('[data-done="0"]').click();
+  out.checks.timerStarted = await page.locator('#timer').isVisible();
+  out.checks.savedBeforeReload = await page.evaluate(() => JSON.parse(localStorage.getItem('volny-v1')).log['1-ht'][0].join(' × '));
+  assert(out.checks.savedBeforeReload === '20 × 8', 'set was not saved');
+  if (await page.locator('#timer').isVisible()) { await page.locator('#texpand').click(); await page.locator('#rfstop').click(); }
+  await page.reload({waitUntil:'networkidle'});
+  if (await page.locator('#timer').isVisible()) { await page.locator('#texpand').click(); await page.locator('#rfstop').click(); }
+  out.checks.savedAfterReload = await page.locator('[data-edit="0"]').first().locator('.val').textContent();
+  assert(out.checks.savedAfterReload.includes('20') && out.checks.savedAfterReload.includes('8'), 'set did not survive reload');
+
+  await page.locator('nav [data-tab="progress"]').click();
+  out.checks.progress = await page.evaluate(() => ({
+    hero:!!document.querySelector('.progress-hero'),
+    weeks:document.querySelectorAll('.progress-weeks i').length,
+    sets:document.querySelector('.progress-kpis div:nth-child(2) b')?.textContent,
+    next:document.querySelector('.progress-main p b')?.textContent,
+    width:innerWidth,
+    scrollWidth:document.documentElement.scrollWidth
+  }));
+  assert(out.checks.progress.hero && out.checks.progress.weeks === 12 && out.checks.progress.sets === '1', 'progress overview incorrect');
+  assert(out.checks.progress.next.includes('неделя 1, день 1'), 'progress CTA points past the unfinished workout');
+  assert(out.checks.progress.scrollWidth === 360, 'mobile horizontal overflow');
+  await page.waitForTimeout(700);
+  await page.screenshot({path:prefix+'-progress-mobile.png',fullPage:true});
+
+  await page.locator('nav [data-tab="setup"]').click();
+  await page.locator('[data-look="dark"]').click();
+  out.checks.darkTheme = await page.evaluate(() => document.documentElement.dataset.look);
+  assert(out.checks.darkTheme === 'dark', 'dark theme not applied');
+  await page.locator('nav [data-tab="train"]').click();
+  out.checks.darkOverflow = await page.evaluate(() => document.documentElement.scrollWidth);
+  assert(out.checks.darkOverflow === 360, 'dark mobile horizontal overflow');
+  await page.waitForTimeout(700);
+  await page.screenshot({path:prefix+'-workout-dark-mobile.png',fullPage:true});
+
+  out.checks.unnamedControls = await page.evaluate(() => [...document.querySelectorAll('button,input,textarea,summary')].filter(el => {
+    const r=el.getBoundingClientRect(); if(!r.width||!r.height) return false;
+    const label=el.getAttribute('aria-label')||el.getAttribute('title')||el.textContent.trim();
+    const forLabel=el.id&&document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
+    return !label&&!forLabel;
+  }).map(el => el.outerHTML.slice(0,160)));
+  assert(out.checks.unnamedControls.length === 0, 'unnamed visible controls: '+out.checks.unnamedControls.join('; '));
+
+  await page.evaluate(() => {
+    const s=JSON.parse(localStorage.getItem('volny-v1'));
+    for(const [id,n] of [['ht',3],['rdl',2],['bulg',2]]) s.log['1-'+id]=Array.from({length:n},()=>['20','8']);
+    s.log['1-abd']=[['20','8'],['','']];
+    localStorage.setItem('volny-v1',JSON.stringify(s));
+  });
+  await page.reload({waitUntil:'networkidle'});
+  if (await page.locator('#ed-0').count() === 0) await page.locator('#ex-abd [data-edit="1"]').click();
+  await page.locator('#ed-0').fill('20');
+  await page.locator('#ed-1').fill('8');
+  await page.locator('[data-done="1"]').click();
+  await page.locator('#sheet:not([hidden])').waitFor();
+  out.checks.completionSheet = await page.locator('#sh-h').textContent();
+  assert(out.checks.completionSheet.includes('Тренировка'), 'completion sheet missing');
+  await page.locator('#sheetok').click();
+  out.checks.completionCard = await page.locator('.summary h3').textContent();
+  assert(out.checks.completionCard.includes('Отличная'), 'completion card missing');
+  await page.locator('nav [data-tab="progress"]').click();
+  out.checks.completedNext = await page.locator('.progress-main p b').textContent();
+  assert(out.checks.completedNext.includes('неделя 1, день 2'), 'completed workout does not point to day 2');
+  await page.locator('.progress-hero [data-nextwork]').click();
+  assert(await page.locator('[data-day="2"]').getAttribute('aria-pressed') === 'true', 'progress CTA did not open day 2');
+  await page.locator('[data-day="1"]').click();
+  await page.locator('.summary').waitFor();
+  await page.screenshot({path:prefix+'-complete-mobile.png',fullPage:true});
+
+  await page.setViewportSize({width:1440,height:1000});
+  out.checks.desktop = await page.evaluate(() => ({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,mainWidth:document.querySelector('main .wrap').getBoundingClientRect().width}));
+  assert(out.checks.desktop.scrollWidth === 1440 && out.checks.desktop.mainWidth <= 760, 'desktop layout overflow or overwide');
+  await page.screenshot({path:prefix+'-complete-desktop.png',fullPage:true});
+  await page.emulateMedia({reducedMotion:'reduce'});
+  out.checks.reducedMotion = await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
+  assert(out.checks.reducedMotion, 'reduced motion media query unavailable');
+
+  await page.setViewportSize({width:360,height:800});
+  await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+  if (!await page.evaluate(() => !!navigator.serviceWorker.controller)) await page.reload({waitUntil:'networkidle'});
+  out.checks.cacheNames = await page.evaluate(() => caches.keys());
+  assert(out.checks.cacheNames.includes('peach-flagship-3'), 'flagship offline cache missing');
+  offline = true;
+  await page.context().setOffline(true);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.locator('.brand').waitFor();
+  out.checks.offlineReload = await page.locator('.brand').textContent();
+  assert(out.checks.offlineReload.includes('PEACH'), 'offline reload failed');
+  await page.context().setOffline(false);
+  offline = false;
+  assert(out.consoleErrors.length === 0, 'console errors: '+out.consoleErrors.join(' | '));
+  assert(out.onlineRequestFailures.length === 0, 'online request failures: '+out.onlineRequestFailures.join(' | '));
+  return out;
+}
