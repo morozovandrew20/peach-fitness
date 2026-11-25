@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Источники и лицензии — PEACH</title>
+<meta name="description" content="Источники, авторство и лицензии открытых компонентов, использованных в PEACH 1.0.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="stylesheet" href="flagship.css">
+</head>
+<body class="doc-page">
+<div class="doc-shell">
+  <header class="doc-top">
+    <a class="doc-brand" href="./"><img src="peach-logo.svg" alt="">PEACH</a>
+    <a class="doc-home" href="./">← В приложение</a>
+  </header>
+
+  <section class="doc-hero">
+    <span class="cap">Источники и лицензии</span>
+    <h1>Красивое должно быть чистым</h1>
+    <p>PEACH использует открытые компоненты на условиях их лицензий. Авторство, уведомления и локальные копии лицензий сохранены вместе с приложением.</p>
+    <div class="doc-badges"><span>MIT</span><span>Локальные ассеты</span><span>Без CDN</span></div>
+  </section>
+
+  <nav class="doc-nav" aria-label="Документы PEACH">
+    <a href="release.html">Релиз</a>
+    <a href="privacy.html">Конфиденциальность</a>
+    <a href="terms.html">Условия</a>
+    <a href="credits.html" aria-current="page">Источники</a>
+  </nav>
+
+  <main class="doc-content">
+    <section>
+      <h2>Манекен и риг</h2>
+      <p><b>Источник:</b> Desk Break, Shlomy Reshef (<code>shlomorsh/desk-break</code>).</p>
+      <p><b>Исходный актив:</b> <code>library/mannequin.blend</code> и его параметрическая сетка с ригом.</p>
+      <p><b>Лицензия:</b> MIT, © 2026 Shlomy Reshef (parametric.co.il). Полный текст сохранён в <a href="assets/technique/LICENSE-desk-break.txt">LICENSE-desk-break.txt</a>.</p>
+      <p><b>Изменения в PEACH:</b> матовая фарфорово-графитовая обработка материалов, оптимизированная GLB-модель без внешних текстур, собственная постановка восьми движений, оригинальное оборудование, свет, камера и слой взаимодействия. Исходный предмет «компьютерная мышь» скрыт и не используется.</p>
+      <p>Ни один клип Desk Break не выдаётся за оборудованное упражнение PEACH. Все восемь движений и сцен оборудования созданы для этой интеграции.</p>
+    </section>
+
+    <section>
+      <h2>Three.js</h2>
+      <p>Используются Three.js r180, GLTFLoader, RoomEnvironment и SkeletonUtils. Компоненты собраны локально в <code>technique3d.js</code>.</p>
+      <p><b>Лицензия:</b> MIT. Полный текст сохранён в <a href="assets/technique/LICENSE-three.txt">LICENSE-three.txt</a>.</p>
+      <p>Приложение не загружает Three.js, шрифты, анимации или данные тренировок со сторонних CDN во время работы.</p>
+    </section>
+
+    <section>
+      <h2>Честность визуализации</h2>
+      <p>3D-сцена — учебная схема движения, а не запись реального тренера и не цифровое изображение конкретного человека. Инструкции и предупреждения остаются в доступном тексте рядом со сценой. Если WebGL или модель недоступны, используется прежняя локальная SVG-техника.</p>
+    </section>
+
+    <section class="doc-note">
+      <h2>Файлы уведомлений</h2>
+      <ul>
+        <li><a href="assets/technique/LICENSE-desk-break.txt">Лицензия Desk Break</a></li>
+        <li><a href="assets/technique/LICENSE-three.txt">Лицензия Three.js</a></li>
+        <li><a href="CREDITS.md">Текстовая копия сведений об источниках</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <p class="doc-footer">PEACH 1.0 · Авторство и лицензии сохранены.</p>
+</div>
+</body>
+</html>

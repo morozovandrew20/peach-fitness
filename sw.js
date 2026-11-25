@@ -1,4 +1,4 @@
-const CACHE = "peach-flagship-12";
+const CACHE = "peach-flagship-13";
 const NAV_TIMEOUT = 3500;
 const CORE = [
   "./",
@@ -14,13 +14,20 @@ const CORE = [
   "./manrope-latin.woff2",
   "./manifest.webmanifest",
   "./manifest-dark.webmanifest",
+  "./release.html",
+  "./privacy.html",
+  "./terms.html",
+  "./credits.html",
+  "./assets/release/screenshot-mobile.png",
+  "./assets/release/screenshot-progress.png",
   "./apple-touch-icon.png",
   "./icon-192.png",
   "./icon-512.png",
   "./icon-maskable-192.png",
   "./icon-maskable-512.png",
   "./logo-512.png",
-  "./peach-logo.svg"
+  "./peach-logo.svg",
+  "./favicon.ico"
 ];
 
 function store(key, response) {

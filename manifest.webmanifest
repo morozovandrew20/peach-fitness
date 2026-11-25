@@ -1,13 +1,19 @@
 {
-  "name": "PEACH",
+  "id": "./",
+  "name": "PEACH — силовой дневник на 12 недель",
   "short_name": "PEACH",
+  "description": "Понятный силовой план: веса, интерактивная техника, таймеры и дневник прогресса. Работает офлайн и без аккаунта.",
   "lang": "ru",
+  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
   "background_color": "#FF5B46",
-  "theme_color": "#F6F6FA",
+  "theme_color": "#FF5B46",
+  "categories": ["health", "fitness", "lifestyle"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon-192.png",
@@ -32,6 +38,22 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/release/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "PEACH: стартовый экран релиза"
+    },
+    {
+      "src": "assets/release/screenshot-progress.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "PEACH: прогресс и рабочие веса"
     }
   ]
 }

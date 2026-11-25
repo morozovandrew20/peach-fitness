@@ -752,3 +752,41 @@ body.workout-mode .seg button{font-size:11px;padding-inline:5px}
 @media(min-width:700px){.tech3d-stage{height:360px}}
 @media(prefers-reduced-motion:reduce){.tech3d-loading span{animation:none;border-color:#e8927f}.tech3d-hint{transition:none}}
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+/* v10 release packaging: app and legal pages stay on the established warm PEACH system */
+.release-strip{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+.release-strip span{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border:1px solid rgba(255,250,247,.15);border-radius:999px;background:rgba(255,250,247,.08);color:rgba(255,250,247,.78);font-size:10px;font-weight:800;letter-spacing:.045em;text-transform:uppercase}
+.release-card{background:linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--a1) 7%,var(--surface)));border:1px solid color-mix(in srgb,var(--a1) 18%,var(--line))}
+.release-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px}
+.release-link{display:flex;align-items:center;justify-content:center;min-height:44px;padding:9px 10px;border-radius:13px;background:var(--raised);color:var(--fg);font-size:13px;font-weight:750;text-align:center;text-decoration:none;transition:transform .18s var(--ease),background .2s,color .2s}
+.release-link:hover{background:var(--input)}
+.release-link:active{transform:scale(.97)}
+.release-link[href^="http"]{grid-column:1/-1}
+@media(max-width:380px){.release-actions{grid-template-columns:1fr}.release-link[href^="http"]{grid-column:auto}}
+
+body.doc-page{min-height:100vh;background:radial-gradient(circle at 20% -10%,color-mix(in srgb,var(--a1) 22%,transparent),transparent 34rem),var(--bg)}
+.doc-shell{width:min(720px,100%);margin:0 auto;padding:max(18px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+.doc-top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0 22px}
+.doc-brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-size:19px;font-weight:800;letter-spacing:-.02em}
+.doc-brand img{width:30px;height:30px}
+.doc-home{min-height:40px;padding:8px 12px;border-radius:12px;background:var(--raised);color:var(--fg);font-size:13px;font-weight:750;text-decoration:none;display:inline-flex;align-items:center}
+.doc-hero{padding:28px 24px;border-radius:30px;background:var(--fg);color:var(--surface);box-shadow:var(--shadow)}
+.doc-hero .cap{color:var(--a2)}
+.doc-hero h1{margin:7px 0 10px;font-family:var(--display);font-size:clamp(31px,8vw,48px);line-height:1.04;letter-spacing:-.055em;text-wrap:balance}
+.doc-hero p{max-width:560px;margin:0;color:color-mix(in srgb,var(--surface) 70%,transparent);font-size:15px;line-height:1.65}
+.doc-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.doc-nav a{min-height:46px;display:flex;align-items:center;justify-content:center;padding:9px 8px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--fg);font-size:12px;font-weight:800;text-align:center;text-decoration:none}
+.doc-nav a[aria-current="page"]{background:var(--fg);color:var(--surface)}
+.doc-content{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.doc-content section{background:var(--surface);border-radius:24px;padding:19px;box-shadow:0 10px 30px -24px rgba(29,22,16,.25)}
+.doc-content h2{margin:0 0 9px;font-family:var(--display);font-size:21px;line-height:1.15;letter-spacing:-.025em}
+.doc-content h3{margin:16px 0 7px;font-size:15px}
+.doc-content p,.doc-content li{color:var(--muted);font-size:14px;line-height:1.65}
+.doc-content p{margin:7px 0}.doc-content ul,.doc-content ol{margin:7px 0;padding-left:21px}.doc-content li{margin:6px 0}.doc-content b{color:var(--fg)}
+.doc-content a{color:var(--a1);font-weight:750}
+.doc-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.doc-badges span{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:999px;background:rgba(255,250,247,.1);color:rgba(255,250,247,.78);font-size:10px;font-weight:800;letter-spacing:.045em;text-transform:uppercase}
+.doc-footer{margin-top:18px;color:var(--muted);font-size:12px;line-height:1.6;text-align:center}
+.doc-note{border-left:4px solid var(--a1)}
+@media(max-width:560px){.doc-nav{grid-template-columns:1fr 1fr}.doc-hero{padding:24px 20px}.doc-top{padding-bottom:16px}}
+@media(prefers-reduced-motion:reduce){.release-link,.doc-home{transition:none}}
